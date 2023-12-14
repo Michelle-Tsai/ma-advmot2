@@ -1,0 +1,24 @@
+from enum import Enum
+
+class ADV_OBJ_TYPE(Enum):
+    ADV_DEVICE = 0
+    ADV_AXIS = 1
+    ADV_GROUP = 2
+    ADV_LATCH_CHANNEL = 3
+    ADV_COMPARE_CHANNEL = 4
+    ADV_RING = 5
+    ADV_GENERAL_DI_PORT = 6
+    ADV_GENERAL_DO_PORT = 7
+    ADV_GENERAL_AI_CHANNEL = 8
+    ADV_GENERAL_AO_CHANNEL = 9
+    ADV_COUNTER_CHANNEL = 10
+    ADV_MDAQ_CHANNEL = 11
+    ADV_EXT_DRIVE_CHANNEL = 12
+
+class DO_ONOFF(Enum):
+    DO_OFF = 0
+    DO_ON = 1
+
+class ECAT_ID_TYPE(Enum):
+    SUBDEVICE_ID = 0
+    SUBDEVICE_POS = 1

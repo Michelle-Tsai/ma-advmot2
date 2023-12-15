@@ -1,5 +1,5 @@
 from ctypes import *
-from utils import TypeDef
+from maAdvMot2.utils import TypeDef
 
 class DevInfoMap(Structure):
     _fields_ = [

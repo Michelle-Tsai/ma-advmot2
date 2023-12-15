@@ -15,11 +15,11 @@ class Color:
 class TypeDef:
     PVOID = HANDLE = c_void_p
     # ==float==
-    FLOAT = c_float
-    PFLOAT = POINTER(c_float)
+    F32 = FLOAT = c_float
+    PF32 = PFLOAT = POINTER(c_float)
     # ==double==
-    DOUBLE = c_double
-    PDOUBLE = POINTER(c_double)
+    F64 = DOUBLE = c_double
+    PF64 = PDOUBLE = POINTER(c_double)
     # ==char, uchar==
     CHAR = c_char
     PCHAR = c_char_p

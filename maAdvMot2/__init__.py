@@ -12,5 +12,5 @@
 #    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 #    License for the specific language governing permissions and limitations
 #    under the License.
-from AdvMotApi_CM2 import *
-from AdvCmnAPI_CM2 import *
+from .AdvCmnAPI_CM2 import AdvCmnAPI_CM2
+from .AdvMotApi_CM2 import *

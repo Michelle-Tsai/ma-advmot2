@@ -1,4 +1,4 @@
-export CURL_CA_BUNDLE="" # ssl
-rm -r dist
+# export CURL_CA_BUNDLE="" # ssl
+rm -r dist && rm -r build && rm -r maAdvMot2.egg-*
 python setup.py sdist bdist_wheel
-twine upload --repository-url https://test.pypi.org/legacy/ dist/*
+twine upload --repository testpypi dist/*

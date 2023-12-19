@@ -9,7 +9,7 @@ with open(os.path.join(os.path.dirname(__file__), 'README.md'), 'r') as f:
 setuptools.setup(
     # name = 名稱，盡量不要包含"-","_"
     name='maAdvMot2',
-    version='0.0.1',
+    version='0.0.3',
     description='For developers of Advantech PCIE-12xx series access to the AdvMot API.',
     long_description=long_description,
     long_description_content_type='text/markdown',

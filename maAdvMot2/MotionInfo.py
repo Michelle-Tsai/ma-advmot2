@@ -1,101 +1,100 @@
 from ctypes import *
-from maAdvMot2.utils import TypeDef
 
 class DevInfoMap(Structure):
     _fields_ = [
-        ("DevLogicID", TypeDef.U32),
-        ("DeviceNumber", TypeDef.U32),
-        ("DeviceHandle", TypeDef.I64),
+        ("DevLogicID", c_uint32),
+        ("DeviceNumber", c_uint32),
+        ("DeviceHandle", c_int64),
         ("DeviceName", c_char*48),
     ]
 
 class RingNoInfoMap(Structure):
     _fields_ = [
-        ("PhysicRingNo", TypeDef.U32),
-        ("LogicRingNo", TypeDef.U32),
+        ("PhysicRingNo", c_uint32),
+        ("LogicRingNo", c_uint32),
         ("DeviceInfo", DevInfoMap),
     ]
 
 class DiGenInfoMap(Structure):
     _fields_ = [
-        ("PhysicRingNo", TypeDef.U32),
-        ("LogicRingNo", TypeDef.U32),
-        ("PhysicPortID", TypeDef.U32),
-        ("LogicPortID", TypeDef.U32),
-        ("SubDeviceID", TypeDef.U32),
+        ("PhysicRingNo", c_uint32),
+        ("LogicRingNo", c_uint32),
+        ("PhysicPortID", c_uint32),
+        ("LogicPortID", c_uint32),
+        ("SubDeviceID", c_uint32),
         ("DeviceInfo", DevInfoMap),
     ]
 
 class DoGenInfoMap(Structure):
     _fields_ = [
-        ("PhysicRingNo", TypeDef.U32),
-        ("LogicRingNo", TypeDef.U32),
-        ("PhysicPortID", TypeDef.U32),
-        ("LogicPortID", TypeDef.U32),
-        ("SubDeviceID", TypeDef.U32),
+        ("PhysicRingNo", c_uint32),
+        ("LogicRingNo", c_uint32),
+        ("PhysicPortID", c_uint32),
+        ("LogicPortID", c_uint32),
+        ("SubDeviceID", c_uint32),
         ("DeviceInfo", DevInfoMap),
     ]
 
 class AiGenInfoMap(Structure):
     _fields_ = [
-        ("PhysicRingNo", TypeDef.U32),
-        ("LogicRingNo", TypeDef.U32),
-        ("PhysicChannelID", TypeDef.U32),
-        ("LogicChannelID", TypeDef.U32),
-        ("SubDeviceID", TypeDef.U32),
+        ("PhysicRingNo", c_uint32),
+        ("LogicRingNo", c_uint32),
+        ("PhysicChannelID", c_uint32),
+        ("LogicChannelID", c_uint32),
+        ("SubDeviceID", c_uint32),
         ("DeviceInfo", DevInfoMap),
     ]
 
 class AoGenInfoMap(Structure):
     _fields_ = [
-        ("PhysicRingNo", TypeDef.U32),
-        ("LogicRingNo", TypeDef.U32),
-        ("PhysicChannelID", TypeDef.U32),
-        ("LogicChannelID", TypeDef.U32),
-        ("SubDeviceID", TypeDef.U32),
+        ("PhysicRingNo", c_uint32),
+        ("LogicRingNo", c_uint32),
+        ("PhysicChannelID", c_uint32),
+        ("LogicChannelID", c_uint32),
+        ("SubDeviceID", c_uint32),
         ("DeviceInfo", DevInfoMap),
     ]
 
 class CntGenInfoMap(Structure):
     _fields_ = [
-        ("PhysicRingNo", TypeDef.U32),
-        ("LogicRingNo", TypeDef.U32),
-        ("PhysicChannelID", TypeDef.U32),
-        ("LogicChannelID", TypeDef.U32),
-        ("SubDeviceID", TypeDef.U32),
+        ("PhysicRingNo", c_uint32),
+        ("LogicRingNo", c_uint32),
+        ("PhysicChannelID", c_uint32),
+        ("LogicChannelID", c_uint32),
+        ("SubDeviceID", c_uint32),
         ("DeviceInfo", DevInfoMap),
     ]
 
 class MPGInfoMap(Structure):
     _fields_ = [
-        ("PhysicRingNo", TypeDef.U32),
-        ("LogicRingNo", TypeDef.U32),
-        ("PhysicChannelID", TypeDef.U32),
-        ("LogicChannelID", TypeDef.U32),
-        ("SubDeviceID", TypeDef.U32),
+        ("PhysicRingNo", c_uint32),
+        ("LogicRingNo", c_uint32),
+        ("PhysicChannelID", c_uint32),
+        ("LogicChannelID", c_uint32),
+        ("SubDeviceID", c_uint32),
         ("DeviceInfo", DevInfoMap),
     ]
 
 class DEVICEINFO(Structure):
     _fields_ = [
-        ("AxisCnt", TypeDef.U32),
-        ("GroupCnt", TypeDef.U32),
-        ("DIEXCnt", TypeDef.U32),
-        ("DOEXCnt", TypeDef.U32),
-        ("RingCnt", TypeDef.U32),
-        ("DIGenPortCnt", TypeDef.U32),
-        ("DOGenPortCnt", TypeDef.U32),
-        ("AIGenChannelCnt", TypeDef.U32),
-        ("AOGenChannelCnt", TypeDef.U32),
-        ("CounterChannelCnt", TypeDef.U32),
-        ("MDAQCHCnt", TypeDef.U32),
-        ("MPGChannelCnt", TypeDef.U32),
+        ("AxisCnt", c_uint32),
+        ("GroupCnt", c_uint32),
+        ("DIEXCnt", c_uint32),
+        ("DOEXCnt", c_uint32),
+        ("RingCnt", c_uint32),
+        ("DIGenPortCnt", c_uint32),
+        ("DOGenPortCnt", c_uint32),
+        ("AIGenChannelCnt", c_uint32),
+        ("AOGenChannelCnt", c_uint32),
+        ("CounterChannelCnt", c_uint32),
+        ("MDAQCHCnt", c_uint32),
+        ("MPGChannelCnt", c_uint32),
         ("DeviceName", c_char*48),
-        ("DevNumber", TypeDef.U32),
-        ("DeviceHandle", TypeDef.U64),
-        ("AxisHandle", TypeDef.PU64),
-        ("GroupHandle", TypeDef.PU64),
-        ("LatchCHHandle", TypeDef.PU64),
+        ("DevNumber", c_uint32),
+        ("DeviceHandle", c_uint64),
+        ("AxisHandle", POINTER(c_uint64)),
+        ("GroupHandle", POINTER(c_uint64)),
+        ("LatchCHHandle", POINTER(c_uint64)),
         ("RingInfo", POINTER(RingNoInfoMap)),
         ("GenDIInfo", POINTER(DiGenInfoMap)),
         ("GenDOInfo", POINTER(DoGenInfoMap)),

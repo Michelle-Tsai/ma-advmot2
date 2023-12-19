@@ -1,162 +1,160 @@
 from ctypes import *
-from maAdvMot2.utils import TypeDef
-from maAdvMot2.AdvMotDrv import *
 
 class DEVLIST(Structure):
     _fields_ = [
-        ("dwDeviceNum", TypeDef.U32),
+        ("dwDeviceNum", c_uint32),
         ("szDeviceName", c_char*50),
-        ("nNumOfSubdevices", TypeDef.I16)
+        ("nNumOfSubdevices", c_int16)
     ]
 
 class ADVAPI_MDEVICE_INFO(Structure):
     _fields_ = [
-        ('totalTxLen', TypeDef.U32),
-        ('totalRxLen', TypeDef.U32),
-        ('cyclicTimeNS', TypeDef.U32),
-        ('slave_count', TypeDef.U32),
-        ('link_up', TypeDef.U32),
-        ('phase', TypeDef.U8),
-        ('active', TypeDef.U8),
-        ('scan_busy', TypeDef.U8),
-        ('ring_type', TypeDef.U8),
-        ('num_devices', TypeDef.U32),
-        ('tx_count', TypeDef.U64),
-        ('rx_count', TypeDef.U64),
-        ('tx_bytes', TypeDef.U64),
-        ('rx_bytes', TypeDef.U64),
-        ('dc_ref_time', TypeDef.U64),
-        ('app_time', TypeDef.U64),
-        ('ref_clock', TypeDef.U16),
-        ('reserved2', TypeDef.U16)
+        ('totalTxLen', c_uint32),
+        ('totalRxLen', c_uint32),
+        ('cyclicTimeNS', c_uint32),
+        ('slave_count', c_uint32),
+        ('link_up', c_uint32),
+        ('phase', c_uint8),
+        ('active', c_uint8),
+        ('scan_busy', c_uint8),
+        ('ring_type', c_uint8),
+        ('num_devices', c_uint32),
+        ('tx_count', c_uint64),
+        ('rx_count', c_uint64),
+        ('tx_bytes', c_uint64),
+        ('rx_bytes', c_uint64),
+        ('dc_ref_time', c_uint64),
+        ('app_time', c_uint64),
+        ('ref_clock', c_uint16),
+        ('reserved2', c_uint16)
     ]
 
 class DEV_IO_MAP_INFO(Structure):
     _fields_ = [
         ('Name', c_char*50),
-        ('Index', TypeDef.ULONG),
-        ('Offset', TypeDef.ULONG),
-        ('ByteLength', TypeDef.ULONG),
-        ('SlotID', TypeDef.ULONG),
-        ('PortChanID', TypeDef.ULONG),
-        ('ModuleID', TypeDef.ULONG),
+        ('Index', c_uint32),
+        ('Offset', c_uint32),
+        ('ByteLength', c_uint32),
+        ('SlotID', c_uint32),
+        ('PortChanID', c_uint32),
+        ('ModuleID', c_uint32),
         ('ModuleName', c_char*16),
         ('Description', c_char*100),
     ]
 
 class LINK_PORT_INFO(Structure):
     _fields_ = [
-        ('desc', TypeDef.ULONG),
-        ('link_up', TypeDef.UCHAR),
-        ('loop_closed', TypeDef.UCHAR),
-        ('signal_detected', TypeDef.UCHAR),
-        ('receive_time', TypeDef.ULONG),
-        ('next_slave', TypeDef.USHORT),
-        ('delay_to_next_dc', TypeDef.ULONG)
+        ('desc', c_uint32),
+        ('link_up', c_ubyte),
+        ('loop_closed', c_ubyte),
+        ('signal_detected', c_ubyte),
+        ('receive_time', c_uint32),
+        ('next_slave', c_uint16),
+        ('delay_to_next_dc', c_uint32)
     ]
 
 class ADVAPI_SUBDEVICE_INFO_CM2(Structure):
     _fields_ = [
-        ('Position', TypeDef.USHORT),
-        ('VendorID', TypeDef.ULONG),
-        ('ProductID', TypeDef.ULONG),
-        ('RevisionNo', TypeDef.ULONG),
-        ('SerialNo', TypeDef.ULONG),
-        ('SubDeviceID', TypeDef.USHORT),
-        ('current_on_ebus', TypeDef.SHORT),
+        ('Position', c_uint16),
+        ('VendorID', c_uint32),
+        ('ProductID', c_uint32),
+        ('RevisionNo', c_uint32),
+        ('SerialNo', c_uint32),
+        ('SubDeviceID', c_uint16),
+        ('current_on_ebus', c_int16),
         ('ports', LINK_PORT_INFO*4),
-        ('al_state', TypeDef.UCHAR),
-        ('error_flag', TypeDef.UCHAR),
-        ('sync_count', TypeDef.UCHAR),
-        ('Reserved', TypeDef.UCHAR),
-        ('transmission_delay', TypeDef.ULONG),
-        ('dc_configure', TypeDef.USHORT),
+        ('al_state', c_ubyte),
+        ('error_flag', c_ubyte),
+        ('sync_count', c_ubyte),
+        ('Reserved', c_ubyte),
+        ('transmission_delay', c_uint32),
+        ('dc_configure', c_uint16),
         ('DeviceName', c_char*40)
     ]
 
-ADV_USER_CALLBACK_FUNC = CFUNCTYPE(TypeDef.U32, TypeDef.U32, TypeDef.PVOID)
+ADV_USER_CALLBACK_FUNC = CFUNCTYPE(c_uint32, c_uint32, c_void_p)
 def ADVUSERCALLBACKFUNC(EvtValue, UserParameter):
     pass
 PADV_USER_CALLBACK_FUNC = ADV_USER_CALLBACK_FUNC(ADVUSERCALLBACKFUNC)
 
 class PHASE_AXIS_PRM(Structure):
     _fields_ = [
-        ('Acc', TypeDef.F64),
-        ('Dec', TypeDef.F64),
-        ('PhaseVel', TypeDef.F64),
-        ('PhaseDistance', TypeDef.F64)
+        ('Acc', c_double),
+        ('Dec', c_double),
+        ('PhaseVel', c_double),
+        ('PhaseDistance', c_double)
     ]
 
 class SPEED_PROFILE_PRM(Structure):
     _fields_ = [
-        ('FH', TypeDef.F64),
-        ('FL', TypeDef.F64),
-        ('Acc', TypeDef.F64),
-        ('Dec', TypeDef.F64),
-        ('JerkFac', TypeDef.F64)
+        ('FH', c_double),
+        ('FL', c_double),
+        ('Acc', c_double),
+        ('Dec', c_double),
+        ('JerkFac', c_double)
     ]
 
 class MOTION_IO(Structure):
     _fields_ = [
-        ('RDY', TypeDef.U8),
-        ('ALM', TypeDef.U8),
-        ('LMT_P', TypeDef.U8),
-        ('LMT_N', TypeDef.U8),
-        ('ORG', TypeDef.U8),
-        ('DIR', TypeDef.U8),
-        ('EMG', TypeDef.U8),
-        ('PCS', TypeDef.U8),
-        ('ERC', TypeDef.U8),
-        ('EZ', TypeDef.U8),
-        ('CLR', TypeDef.U8),
-        ('LTC', TypeDef.U8),
-        ('SD', TypeDef.U8),
-        ('INP', TypeDef.U8),
-        ('SVON', TypeDef.U8),
-        ('ALRM', TypeDef.U8),
-        ('SLMT_P', TypeDef.U8),
-        ('SLMT_N', TypeDef.U8),
-        ('CMP', TypeDef.U8),
-        ('CAMDO', TypeDef.U8),
-        ('RESETREADY', TypeDef.U8)
+        ('RDY', c_uint8),
+        ('ALM', c_uint8),
+        ('LMT_P', c_uint8),
+        ('LMT_N', c_uint8),
+        ('ORG', c_uint8),
+        ('DIR', c_uint8),
+        ('EMG', c_uint8),
+        ('PCS', c_uint8),
+        ('ERC', c_uint8),
+        ('EZ', c_uint8),
+        ('CLR', c_uint8),
+        ('LTC', c_uint8),
+        ('SD', c_uint8),
+        ('INP', c_uint8),
+        ('SVON', c_uint8),
+        ('ALRM', c_uint8),
+        ('SLMT_P', c_uint8),
+        ('SLMT_N', c_uint8),
+        ('CMP', c_uint8),
+        ('CAMDO', c_uint8),
+        ('RESETREADY', c_uint8)
     ]
 
 class PATH_STATUS(Structure):
     _fields_ = [
-        ('CurIndex', TypeDef.U32),
-        ('CurCmdFunc', TypeDef.U32),
-        ('RemainCount', TypeDef.U32),
-        ('FreeSpaceCount', TypeDef.U32)
+        ('CurIndex', c_uint32),
+        ('CurCmdFunc', c_uint32),
+        ('RemainCount', c_uint32),
+        ('FreeSpaceCount', c_uint32)
     ]
 
 class CAM_IN_PRM(Structure):
     _fields_ = [
-        ('PrimaryOffset', TypeDef.F64),
-        ('FollowingOffset', TypeDef.F64),
-        ('PrimaryScaling', TypeDef.F64),
-        ('FollowingScaling', TypeDef.F64),
-        ('CamTableID', TypeDef.U32),
-        ('RefSrc', TypeDef.U32)
+        ('PrimaryOffset', c_double),
+        ('FollowingOffset', c_double),
+        ('PrimaryScaling', c_double),
+        ('FollowingScaling', c_double),
+        ('CamTableID', c_uint32),
+        ('RefSrc', c_uint32)
     ]
 
 class GEAR_RATIO_RATE(Structure):
     _fields_ = [
-        ('Num', TypeDef.F64),
-        ('Den', TypeDef.F64)
+        ('Num', c_double),
+        ('Den', c_double)
     ]
 
 class GEAR_IN_PRM(Structure):
     _fields_ = [
         ('RefSrc', c_uint),
         ('GearRatioRate', GEAR_RATIO_RATE),
-        ('Mode', TypeDef.U32),
-        ('GearPosition', TypeDef.F64)
+        ('Mode', c_uint32),
+        ('GearPosition', c_double)
     ]
 
 class TANGENT_IN_PRM(Structure):
     _fields_ = [
-        ('StartVectorArray', TypeDef.I32*3),
-        ('Working_plane', TypeDef.U32),
+        ('StartVectorArray', c_int32*3),
+        ('Working_plane', c_uint32),
         ('Direction', c_uint)
     ]
 
@@ -168,43 +166,43 @@ class GANTRY_IN_PRM(Structure):
 
 class BUFFER_STATUS(Structure):
     _fields_ = [
-        ('CurIndex', TypeDef.U32),
-        ('RemainCount', TypeDef.U32),
-        ('FreeSpaceCount', TypeDef.U32)
+        ('CurIndex', c_uint32),
+        ('RemainCount', c_uint32),
+        ('FreeSpaceCount', c_uint32)
     ]
 
 class JOG_SPEED_PROFILE_PRM(Structure):
     _fields_ = [
-        ('FH', TypeDef.F64),
-        ('FL', TypeDef.F64),
-        ('Acc', TypeDef.F64),
-        ('Dec', TypeDef.F64),
-        ('VLTime', TypeDef.F64)
+        ('FH', c_double),
+        ('FL', c_double),
+        ('Acc', c_double),
+        ('Dec', c_double),
+        ('VLTime', c_double)
     ]
 
 class PATH_DO_MODE0(Structure):
     _fields_ = [
-        ('DOPort', TypeDef.U32),
-        ('DOEnable', TypeDef.U32),
-        ('DOValue', TypeDef.U32)
+        ('DOPort', c_uint32),
+        ('DOEnable', c_uint32),
+        ('DOValue', c_uint32)
     ]
 
 class PATH_DO_MODE1(Structure):
     _fields_ = [
-        ('SubDeviceID', TypeDef.U32),
-        ('DOPort', TypeDef.U32),
-        ('DOEnable', TypeDef.U32),
-        ('DOValue', TypeDef.U32)
+        ('SubDeviceID', c_uint32),
+        ('DOPort', c_uint32),
+        ('DOEnable', c_uint32),
+        ('DOValue', c_uint32)
     ]
 
 class PATH_DO_MODE2(Structure):
     _fields_ = [
-        ('AxID', TypeDef.U32),
-        ('DOEnable', TypeDef.U32),
-        ('DOValue', TypeDef.U32)
+        ('AxID', c_uint32),
+        ('DOEnable', c_uint32),
+        ('DOValue', c_uint32)
     ]
 
-class PATH_DO_MODE(Union):
+class PATH_DO_MODE(Structure):
     _fields_ = [
         ('Mode0', PATH_DO_MODE0),
         ('Mode1', PATH_DO_MODE1),
@@ -213,34 +211,34 @@ class PATH_DO_MODE(Union):
 
 class PATH_DO_PRM(Structure):
     _fields_ = [
-        ('MoveMode', TypeDef.U32),
+        ('MoveMode', c_uint32),
         ('PathDO_Prm', PATH_DO_MODE),
-        ('DO_Output_Time', TypeDef.F64)
+        ('DO_Output_Time', c_double)
     ]
 
 class PATH_DI_WAIT_MODE0(Structure):
     _fields_ = [
-        ('DIPort', TypeDef.U32),
-        ('DIEnable', TypeDef.U32),
-        ('DIValue', TypeDef.U32)
+        ('DIPort', c_uint32),
+        ('DIEnable', c_uint32),
+        ('DIValue', c_uint32)
     ]
 
 class PATH_DI_WAIT_MODE1(Structure):
     _fields_ = [
-        ('SubDeviceID', TypeDef.U32),
-        ('DIPort', TypeDef.U32),
-        ('DIEnable', TypeDef.U32),
-        ('DIValue', TypeDef.U32)
+        ('SubDeviceID', c_uint32),
+        ('DIPort', c_uint32),
+        ('DIEnable', c_uint32),
+        ('DIValue', c_uint32)
     ]
 
 class PATH_DI_WAIT_MODE2(Structure):
     _fields_ = [
-        ('AxID', TypeDef.U32),
-        ('DIEnable', TypeDef.U32),
-        ('DIValue', TypeDef.U32)
+        ('AxID', c_uint32),
+        ('DIEnable', c_uint32),
+        ('DIValue', c_uint32)
     ]
 
-class PATH_DI_WAIT_MODE(Union):
+class PATH_DI_WAIT_MODE(Structure):
     _fields_ = [
         ('Mode0', PATH_DI_WAIT_MODE0),
         ('Mode1', PATH_DI_WAIT_MODE1),
@@ -249,36 +247,36 @@ class PATH_DI_WAIT_MODE(Union):
 
 class PATH_DI_WAIT_PRM(Structure):
     _fields_ = [
-        ('MoveMode', TypeDef.U32),
+        ('MoveMode', c_uint32),
         ('PathDI_Prm', PATH_DI_WAIT_MODE),
-        ('DI_Wait_Time', TypeDef.F64),
+        ('DI_Wait_Time', c_double),
     ]
 
 class PATH_AX_WAIT_PRM(Structure):
     _fields_ = [
-        ('AxID', TypeDef.U32),
-        ('CmpMethod', TypeDef.U32),
-        ('CmpValue', TypeDef.F64),
-        ('ValueRange', TypeDef.F64),
+        ('AxID', c_uint32),
+        ('CmpMethod', c_uint32),
+        ('CmpValue', c_double),
+        ('ValueRange', c_double),
         ('CmpSrc', c_uint),
-        ('Timeout', TypeDef.F64),
+        ('Timeout', c_double),
     ]
 
 class PWM_TABLE_STATUS(Structure):
     _fields_ = [
-        ('Velocity', TypeDef.U32),
-        ('PWMValue', TypeDef.U32)
+        ('Velocity', c_uint32),
+        ('PWMValue', c_uint32)
     ]
 
 class OSC_PROFILE_PRM(Structure):
     _fields_ = [
-        ('Enable', TypeDef.U32),
-        ('Period', TypeDef.U32),
-        ('AxidNo', TypeDef.U32),
-        ('ChanType', TypeDef.U32),
-        ('ChanProperty', TypeDef.U32),
-        ('TrigMode', TypeDef.U32),
-        ('TimeWidth', TypeDef.U32)
+        ('Enable', c_uint32),
+        ('Period', c_uint32),
+        ('AxidNo', c_uint32),
+        ('ChanType', c_uint32),
+        ('ChanProperty', c_uint32),
+        ('TrigMode', c_uint32),
+        ('TimeWidth', c_uint32)
     ]
 
 

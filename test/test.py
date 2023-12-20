@@ -1,19 +1,18 @@
-from maAdvMot2.AdvCmnAPI_CM2 import AdvCmnAPI_CM2
-from maAdvMot2.AdvMotApi_CM2 import DEVLIST, ADVAPI_MDEVICE_INFO
-from maAdvMot2.utils import *
-
-# GetAvailableDevs
-maxEnt = 10
-dev_list = (DEVLIST*maxEnt)()
-outEnt = c_uint32(0)
-err_cde = c_uint32(0)
-print(Color.GREEN + "GetAvailableDevs:0x{0:x}".format(dev_list[0].dwDeviceNum) + Color.END)
-err_cde = AdvCmnAPI_CM2.mAcm2_GetAvailableDevs(dev_list, maxEnt, byref(outEnt))
-print(Color.RED + "GetAvailableDevs:0x{0:x}, err:0x{1:x}".format(dev_list[0].dwDeviceNum, err_cde) + Color.END)
-
-AdvCmnAPI_CM2.mAcm2_DevInitialize()
-
-ringNo = c_uint32(0)
-MDevice_info = ADVAPI_MDEVICE_INFO()
-AdvCmnAPI_CM2.mAcm2_DevGetMDeviceInfo(ringNo, byref(MDevice_info))
-
+from ctypes import *
+from maAdvMot2.AdvCmnAPI_CM2 import AdvCmnAPI_CM2 as AdvMot
+from maAdvMot2.AdvMotApi_CM2 import DEVLIST
+from maAdvMot2.MotionInfo import DEVICEINFO
+number_hex = '0x63000000'
+number_int = int(number_hex, 16)
+device_number = c_uint32(number_int)
+dev_list = (DEVLIST*10)()
+device_info = DEVICEINFO()
+out_ent = c_uint32(0)
+errCde = c_uint32(0)
+# Get Available
+errCde = AdvMot.mAcm2_GetAvailableDevs(dev_list, 10, byref(out_ent))
+# Then open
+errCde = AdvMot.mAcm2_DevOpen(device_number, byref(device_info))
+handle = c_uint64(device_info.DeviceHandle)
+# Close device
+errCde = AdvMot.mAcm2_DevClose(byref(handle))

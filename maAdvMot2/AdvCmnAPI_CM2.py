@@ -23,9 +23,9 @@ class AdvCmnAPI_CM2:
     mAcm2_DevExportMappingTable.argtypes = [c_char_p]
     mAcm2_DevExportMappingTable.restype = c_uint32
 
-    # mAcm2_DevImportMappingTable = lib.Acm2_DevImportMappingTable
-    # mAcm2_DevImportMappingTable.argtypes = [POINTER(c_int8)]
-    # mAcm2_DevImportMappingTable.restype = c_uint32
+    mAcm2_DevImportMappingTable = lib.Acm2_DevImportMappingTable
+    mAcm2_DevImportMappingTable.argtypes = [POINTER(c_int8)]
+    mAcm2_DevImportMappingTable.restype = c_uint32
 
     # mAcm2_GetMappedPhysicalID = lib.Acm2_GetMappedPhysicalID
     # mAcm2_GetMappedPhysicalID.argtypes = [c_int, c_uint32, POINTER(c_uint32), POINTER(c_uint32)]
@@ -226,13 +226,13 @@ class AdvCmnAPI_CM2:
     mAcm2_DevLoadENI.argtypes = [c_uint32, c_char_p]
     mAcm2_DevLoadENI.restype = c_uint32
 
-    # mAcm2_DevConnect = lib.Acm2_DevConnect
-    # mAcm2_DevConnect.argtypes = [c_uint32]
-    # mAcm2_DevConnect.restype = c_uint32
+    mAcm2_DevConnect = lib.Acm2_DevConnect
+    mAcm2_DevConnect.argtypes = [c_uint32]
+    mAcm2_DevConnect.restype = c_uint32
 
-    # mAcm2_DevDisConnect = lib.Acm2_DevDisConnect
-    # mAcm2_DevDisConnect.argtypes = [c_uint32]
-    # mAcm2_DevDisConnect.restype = c_uint32
+    mAcm2_DevDisConnect = lib.Acm2_DevDisConnect
+    mAcm2_DevDisConnect.argtypes = [c_uint32]
+    mAcm2_DevDisConnect.restype = c_uint32
 
     # mAcm2_DevReOpen = lib.Acm2_DevReOpen
     # mAcm2_DevReOpen.argtypes = [c_uint32]
@@ -250,17 +250,17 @@ class AdvCmnAPI_CM2:
     # mAcm2_DevGetSubDeviceFwVersion.argtypes = [c_uint32, c_int, c_uint32, c_char_p]
     # mAcm2_DevGetSubDeviceFwVersion.restype = c_uint32
 
-    # mAcm2_DevSetSubDeviceID = lib.Acm2_DevSetSubDeviceID
-    # mAcm2_DevSetSubDeviceID.argtypes = [c_uint32, c_int, c_uint32, c_uint32]
-    # mAcm2_DevSetSubDeviceID.restype = c_uint32
+    mAcm2_DevSetSubDeviceID = lib.Acm2_DevSetSubDeviceID
+    mAcm2_DevSetSubDeviceID.argtypes = [c_uint32, c_int, c_uint32, c_uint32]
+    mAcm2_DevSetSubDeviceID.restype = c_uint32
 
-    # mAcm2_DevGetSubDeviceID = lib.Acm2_DevGetSubDeviceID
-    # mAcm2_DevGetSubDeviceID.argtypes = [c_uint32, c_uint32, POINTER(c_uint32)]
-    # mAcm2_DevGetSubDeviceID.restype = c_uint32
+    mAcm2_DevGetSubDeviceID = lib.Acm2_DevGetSubDeviceID
+    mAcm2_DevGetSubDeviceID.argtypes = [c_uint32, c_uint32, POINTER(c_uint32)]
+    mAcm2_DevGetSubDeviceID.restype = c_uint32
 
-    # mAcm2_DevGetSubDevicesID = lib.Acm2_DevGetSubDevicesID
-    # mAcm2_DevGetSubDevicesID.argtypes = [c_uint32, c_int, POINTER(c_uint32), POINTER(c_uint32)]
-    # mAcm2_DevGetSubDevicesID.restype = c_uint32
+    mAcm2_DevGetSubDevicesID = lib.Acm2_DevGetSubDevicesID
+    mAcm2_DevGetSubDevicesID.argtypes = [c_uint32, c_int, POINTER(c_uint32), POINTER(c_uint32)]
+    mAcm2_DevGetSubDevicesID.restype = c_uint32
 
     # mAcm2_DevSaveMapFile = lib.Acm2_DevSaveMapFile
     # mAcm2_DevSaveMapFile.argtypes = [c_uint32, POINTER(c_int8)]
@@ -290,9 +290,9 @@ class AdvCmnAPI_CM2:
     # mAcm2_DevGetIOInfo.argtypes = [c_uint32, c_uint, c_uint32, c_uint32, c_uint32, c_void_p]
     # mAcm2_DevGetIOInfo.restype = c_uint32
 
-    # mAcm2_DevSetSubDeviceStates = lib.Acm2_DevSetSubDeviceStates
-    # mAcm2_DevSetSubDeviceStates.argtypes = [c_uint32, c_uint, c_uint32, POINTER(c_uint32)]
-    # mAcm2_DevSetSubDeviceStates.restype = c_uint32
+    mAcm2_DevSetSubDeviceStates = lib.Acm2_DevSetSubDeviceStates
+    mAcm2_DevSetSubDeviceStates.argtypes = [c_uint32, c_uint, c_uint32, POINTER(c_uint32)]
+    mAcm2_DevSetSubDeviceStates.restype = c_uint32
 
     mAcm2_DevGetSubDeviceStates = lib.Acm2_DevGetSubDeviceStates
     mAcm2_DevGetSubDeviceStates.argtypes = [c_uint32, c_uint, c_uint32, POINTER(c_uint32)]
@@ -1114,29 +1114,29 @@ class AdvCmnAPI_CM2:
     # mAcm2_DevReadMailBox.argtypes = [c_uint, c_uint32, c_uint32, c_uint32, c_uint32, POINTER(c_uint32)]
     # mAcm2_DevReadMailBox.restype = c_uint32
 
-    # mAcm2_DevWriteSDO = lib.Acm2_DevWriteSDO
-    # mAcm2_DevWriteSDO.argtypes = [c_uint32, c_uint, c_uint32, c_uint32, c_uint32, c_uint32, c_uint32, c_void_p]
-    # mAcm2_DevWriteSDO.restype = c_uint32
+    mAcm2_DevWriteSDO = lib.Acm2_DevWriteSDO
+    mAcm2_DevWriteSDO.argtypes = [c_uint32, c_uint, c_uint32, c_uint32, c_uint32, c_uint32, c_uint32, c_void_p]
+    mAcm2_DevWriteSDO.restype = c_uint32
 
-    # mAcm2_DevReadSDO = lib.Acm2_DevReadSDO
-    # mAcm2_DevReadSDO.argtypes = [c_uint32, c_uint, c_uint32, c_uint32, c_uint32, c_uint32, c_uint32, c_void_p]
-    # mAcm2_DevReadSDO.restype = c_uint32
+    mAcm2_DevReadSDO = lib.Acm2_DevReadSDO
+    mAcm2_DevReadSDO.argtypes = [c_uint32, c_uint, c_uint32, c_uint32, c_uint32, c_uint32, c_uint32, c_void_p]
+    mAcm2_DevReadSDO.restype = c_uint32
 
-    # mAcm2_DevWritePDO = lib.Acm2_DevWritePDO
-    # mAcm2_DevWritePDO.argtypes = [c_uint32, c_uint, c_uint32, c_uint32, c_uint32, c_uint32, c_uint32, c_void_p]
-    # mAcm2_DevWritePDO.restype = c_uint32
+    mAcm2_DevWritePDO = lib.Acm2_DevWritePDO
+    mAcm2_DevWritePDO.argtypes = [c_uint32, c_uint, c_uint32, c_uint32, c_uint32, c_uint32, c_uint32, c_void_p]
+    mAcm2_DevWritePDO.restype = c_uint32
 
-    # mAcm2_DevReadPDO = lib.Acm2_DevReadPDO
-    # mAcm2_DevReadPDO.argtypes = [c_uint32, c_uint, c_uint32, c_uint32, c_uint32, c_uint32, c_uint32, c_void_p]
-    # mAcm2_DevReadPDO.restype = c_uint32
+    mAcm2_DevReadPDO = lib.Acm2_DevReadPDO
+    mAcm2_DevReadPDO.argtypes = [c_uint32, c_uint, c_uint32, c_uint32, c_uint32, c_uint32, c_uint32, c_void_p]
+    mAcm2_DevReadPDO.restype = c_uint32
 
-    # mAcm2_DevWriteReg = lib.Acm2_DevWriteReg
-    # mAcm2_DevWriteReg.argtypes = [c_uint32, c_uint, c_uint32, c_uint32, c_uint32, c_uint32, c_void_p]
-    # mAcm2_DevWriteReg.restype = c_uint32
+    mAcm2_DevWriteReg = lib.Acm2_DevWriteReg
+    mAcm2_DevWriteReg.argtypes = [c_uint32, c_uint, c_uint32, c_uint32, c_uint32, c_uint32, c_void_p]
+    mAcm2_DevWriteReg.restype = c_uint32
 
-    # mAcm2_DevReadReg = lib.Acm2_DevReadReg
-    # mAcm2_DevReadReg.argtypes = [c_uint32, c_uint, c_uint32, c_uint32, c_uint32, c_uint32, c_void_p]
-    # mAcm2_DevReadReg.restype = c_uint32
+    mAcm2_DevReadReg = lib.Acm2_DevReadReg
+    mAcm2_DevReadReg.argtypes = [c_uint32, c_uint, c_uint32, c_uint32, c_uint32, c_uint32, c_void_p]
+    mAcm2_DevReadReg.restype = c_uint32
 
     # mAcm2_DevReadEmgMessage = lib.Acm2_DevReadEmgMessage
     # mAcm2_DevReadEmgMessage.argtypes = [c_uint32, c_uint, c_uint32, c_uint32, POINTER(c_uint8)]

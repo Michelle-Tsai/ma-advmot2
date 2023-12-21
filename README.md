@@ -45,6 +45,7 @@ from ctypes import *
 from maAdvMot2.AdvCmnAPI_CM2 import AdvCmnAPI_CM2 as AdvMot
 from maAdvMot2.AdvMotApi_CM2 import DEVLIST
 from maAdvMot2.MotionInfo import DEVICEINFO
+
 number_hex = '0x63000000'
 number_int = int(number_hex, 16)
 device_number = c_uint32(number_int)
@@ -56,7 +57,6 @@ errCde = c_uint32(0)
 errCde = AdvMot.mAcm2_GetAvailableDevs(dev_list, 10, byref(out_ent))
 # Then open
 errCde = AdvMot.mAcm2_DevOpen(device_number, byref(device_info))
-handle = c_uint64(device_info.DeviceHandle)
 # Close device
-errCde = AdvMot.mAcm2_DevClose(byref(handle))
+errCde = AdvMot.mAcm2_DevAllClose()
 ```

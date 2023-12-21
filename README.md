@@ -1,10 +1,5 @@
 # MA-AdvMot SDK
 This SDK package allows developers to esaily use Advantech AdvMot api.
-<div style="background-color:#fcf8e3;color:#8a6d3b;padding:15px;border-radius:4px">
-<span style="font-weight:bold;font-size:16px">
-This SDK is for Linux Only.
-</span>
-</div>
 
 # Installation
 This SDK supports Python version 3.10 or later
@@ -12,6 +7,7 @@ This SDK supports Python version 3.10 or later
 $ pip install -i https://test.pypi.org/simple/ maAdvMot2
 ```
 Before using this package, please ensure the following items are already installed:
+## Linux
 1. PCIE-1203.ko
 2. libadvmot.so
 3. libpcie1203.so
@@ -20,6 +16,15 @@ You can check the installation using the following commands.
 $ lsmod | grep PCI
 $ ls /lib | grep adv
 $ ls /lib | grep pci
+```
+## Windows
+1. PCIE1203s.sys
+2. ADVMOT.dll
+3. PCIE1203.dll
+You can check the installation using the following commands.
+```shell
+ls C:\Windows\System32\ | findstr ADVMOT
+ls C:\Windows\System32\ | findstr PCIE1203
 ```
 ## Available Devices
 * <a href="https://www.advantech.com/en/products/7d3c9775-8c30-4f65-83ec-755bee93b1d4/pcie-1203/mod_bb3ec42a-e9b1-4839-8b26-96551d894bb9">Advantech PCIE-1203</a>

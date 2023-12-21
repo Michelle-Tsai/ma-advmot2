@@ -34,9 +34,11 @@ ls C:\Windows\System32\ | findstr PCIE1203
 + <a href="#Acm2_DevClose">mAcm2_DevClose</a>
 ----
 <a name="Acm2_DevOpen"></a>
+
 #### mAcm2_DevOpen
 ##### Open device with device number.
 <a name="Acm2_DevClose"></a>
+
 #### mAcm2_DevClose
 ##### Close device with device handle.
 

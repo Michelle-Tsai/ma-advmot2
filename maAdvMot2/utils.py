@@ -1,4 +1,8 @@
 from ctypes import *
+import sys
+
+def LINE():
+    return sys._getframe(1).f_lineno
 
 class Color:
     PURPLE = '\033[95m'

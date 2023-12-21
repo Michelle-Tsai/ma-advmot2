@@ -1,16 +1,21 @@
 from maAdvMot2.AdvMotApi_CM2 import *
 from maAdvMot2.MotionInfo import *
 from maAdvMot2.AdvMotDrv import *
-lib = CDLL('/usr/lib/libadvmot.so')
+import os
+
+if os.name == 'nt':
+    lib = CDLL(r'C:\Windows\System32\ADVMOT.dll')
+else:
+    lib = CDLL('/usr/lib/libadvmot.so')
 
 class AdvCmnAPI_CM2:
     mAcm2_DevOpen = lib.Acm2_DevOpen
     mAcm2_DevOpen.argtypes = [c_uint32, POINTER(DEVICEINFO)]
     mAcm2_DevOpen.restype = c_uint32
 
-    mAcm2_DevClose = lib.Acm2_DevClose
-    mAcm2_DevClose.argtypes = [POINTER(c_uint64)]
-    mAcm2_DevClose.restype = c_uint32
+    mAcm2_DevAllClose = lib.Acm2_DevAllClose
+    mAcm2_DevAllClose.argtypes = []
+    mAcm2_DevAllClose.restype = c_uint32
 
     mAcm2_DevInitialize = lib.Acm2_DevInitialize
     mAcm2_DevInitialize.restype = c_uint32
@@ -250,17 +255,17 @@ class AdvCmnAPI_CM2:
     # mAcm2_DevGetSubDeviceFwVersion.argtypes = [c_uint32, c_int, c_uint32, c_char_p]
     # mAcm2_DevGetSubDeviceFwVersion.restype = c_uint32
 
-    mAcm2_DevSetSubDeviceID = lib.Acm2_DevSetSubDeviceID
-    mAcm2_DevSetSubDeviceID.argtypes = [c_uint32, c_int, c_uint32, c_uint32]
-    mAcm2_DevSetSubDeviceID.restype = c_uint32
+    # mAcm2_DevSetSubDeviceID = lib.Acm2_DevSetSubDeviceID
+    # mAcm2_DevSetSubDeviceID.argtypes = [c_uint32, c_int, c_uint32, c_uint32]
+    # mAcm2_DevSetSubDeviceID.restype = c_uint32
 
-    mAcm2_DevGetSubDeviceID = lib.Acm2_DevGetSubDeviceID
-    mAcm2_DevGetSubDeviceID.argtypes = [c_uint32, c_uint32, POINTER(c_uint32)]
-    mAcm2_DevGetSubDeviceID.restype = c_uint32
+    # mAcm2_DevGetSubDeviceID = lib.Acm2_DevGetSubDeviceID
+    # mAcm2_DevGetSubDeviceID.argtypes = [c_uint32, c_uint32, POINTER(c_uint32)]
+    # mAcm2_DevGetSubDeviceID.restype = c_uint32
 
-    mAcm2_DevGetSubDevicesID = lib.Acm2_DevGetSubDevicesID
-    mAcm2_DevGetSubDevicesID.argtypes = [c_uint32, c_int, POINTER(c_uint32), POINTER(c_uint32)]
-    mAcm2_DevGetSubDevicesID.restype = c_uint32
+    # mAcm2_DevGetSubDevicesID = lib.Acm2_DevGetSubDevicesID
+    # mAcm2_DevGetSubDevicesID.argtypes = [c_uint32, c_int, POINTER(c_uint32), POINTER(c_uint32)]
+    # mAcm2_DevGetSubDevicesID.restype = c_uint32
 
     # mAcm2_DevSaveMapFile = lib.Acm2_DevSaveMapFile
     # mAcm2_DevSaveMapFile.argtypes = [c_uint32, POINTER(c_int8)]

@@ -11,6 +11,7 @@ Before using this package, please ensure the following items are already install
 1. PCIE-1203.ko
 2. libadvmot.so
 3. libpcie1203.so
+
 You can check the installation using the following commands.
 ```shell
 $ lsmod | grep PCI
@@ -21,6 +22,7 @@ $ ls /lib | grep pci
 1. PCIE1203s.sys
 2. ADVMOT.dll
 3. PCIE1203.dll
+
 You can check the installation using the following commands.
 ```shell
 ls C:\Windows\System32\ | findstr ADVMOT
@@ -31,7 +33,6 @@ ls C:\Windows\System32\ | findstr PCIE1203
 ## API
 ### How to use?
 #### Due to our driver running with admin/root authentication, it's important to execute the project with admin/root privileges.
-
 ### AdvCmnAPI_CM2
 * Device
     + <a href="#Acm2_DevOpen"><code>Acm2_DevOpen</code></a>

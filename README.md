@@ -28,11 +28,12 @@ You can check the installation using the following commands.
 ls C:\Windows\System32\ | findstr ADVMOT
 ls C:\Windows\System32\ | findstr PCIE1203
 ```
-## Available Devices
+# Available Devices
 * <a href="https://www.advantech.com/en/products/7d3c9775-8c30-4f65-83ec-755bee93b1d4/pcie-1203/mod_bb3ec42a-e9b1-4839-8b26-96551d894bb9">Advantech PCIE-1203</a>
-## API
-### How to use?
-#### Due to our driver running with admin/root authentication, it's important to execute the project with admin/root privileges.
+# API
+## How to use?
+Due to our driver running with admin/root authentication, it's important to execute the project with admin/root privileges.
+
 ### AdvCmnAPI_CM2
 * Device
     + <a href="#Acm2_DevOpen"><code>Acm2_DevOpen</code></a>

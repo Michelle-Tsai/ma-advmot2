@@ -1,10 +1,10 @@
-# MA-AdvMot SDK
+# AcmP SDK
 This SDK package allows developers to esaily use Advantech AdvMot api.
 
 # Installation
 This SDK supports Python version 3.10 or later
 ```shell
-$ pip install -i https://test.pypi.org/simple/ AcmP
+$ pip install -i pip install -i https://test.pypi.org/simple/ AcmP
 ```
 Before using this package, please ensure the following items are already installed:
 ## Linux

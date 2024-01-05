@@ -402,6 +402,36 @@ Set multiple properties at once.
 #### Acm2_GetMultiProperty
 Get multiple properties at once.
 
+```python
+from ctypes import *
+from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI_CM2 as AdvMot
+from AcmP.AdvMotApi_CM2 import DEVLIST
+from AcmP.AdvMotPropID_CM2 import PropertyID2
+
+dev_list = (DEVLIST*10)()
+out_ent = c_uint32(0)
+errCde = c_uint32(0)
+# Get Available
+errCde = AdvMot.Acm2_GetAvailableDevs(dev_list, 10, byref(out_ent))
+# Initial device
+errCde = AdvMot.Acm2_DevInitialize()
+# Set axis 0 speed info at once
+ax_id = c_uint32(0)
+property_arr = [c_uint32(PropertyID2.PAR_AxVelLow.value), c_uint32(PropertyID2.PAR_AxVelHigh.value)]
+trans_ppt_arr = (c_uint32 * len(property_arr))(*property_arr)
+# Default value of velocity low is 2000, and velocity high is 8000.
+value_arr = [c_double(1000), c_double(2000)]
+trans_val_arr = (c_double * len(value_arr))(*value_arr)
+data_cnt = c_uint32(2)
+err_buffer = (c_uint32 * data_cnt.value)()
+# Set value
+errCde = AdvMot.Acm2_SetMultiProperty(ax_id, trans_ppt_arr, trans_val_arr, data_cnt, err_buffer)
+# Check value
+get_val = (c_double * data_cnt.value)()
+errCde = AdvMot.Acm2_GetMultiProperty(ax_id, trans_ppt_arr, get_val, data_cnt, err_buffer)
+for i in range(data_cnt.value):
+    print('set[{0}]:{1}, get:{2}'.format(i, value_arr[i].value, get_val[i]))
+```
 <a name="Acm2_GetRawProperty"></a>
 
 #### Acm2_GetRawProperty
@@ -570,6 +600,28 @@ Reset error of axis.
 #### Acm2_DevResetAllError
 Reset all device error.
 
+```python
+from ctypes import *
+from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI_CM2 as AdvMot
+from AcmP.AdvMotApi_CM2 import DEVLIST
+from AcmP.AdvMotPropID_CM2 import PropertyID2
+
+dev_list = (DEVLIST*10)()
+out_ent = c_uint32(0)
+errCde = c_uint32(0)
+# Get Available
+errCde = AdvMot.Acm2_GetAvailableDevs(dev_list, 10, byref(out_ent))
+# Initial device
+errCde = AdvMot.Acm2_DevInitialize()
+# Clear all error
+errCde = AdvMot.Acm2_DevResetAllError()
+
+ax_id = c_uint32(0)
+pos_type = c_uint(POSITION_TYPE.POSITION_CMD.value)
+pos = c_double(0)
+# Set axis 0 command position as 0
+errCde = AdvMot.Acm2_AxSetPosition(ax_id, pos_type, pos)
+```
 <a name="Acm2_AxGetMotionIO"></a>
 
 #### Acm2_AxGetMotionIO

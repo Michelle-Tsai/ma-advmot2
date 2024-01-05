@@ -3,9 +3,15 @@ import time
 import os
 from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI_CM2
 from AcmP.AdvMotApi_CM2 import *
-from AcmP.AdvMotDrv import ABS_MODE, POSITION_TYPE, AXIS_STATUS_TYPE, AXIS_STATE
+from AcmP.AdvMotDrv import ABS_MODE, POSITION_TYPE, AXIS_STATUS_TYPE, AXIS_STATE, ADV_OBJ_TYPE
 from AcmP.MotionInfo import *
 from AcmP.AdvMotPropID_CM2 import PropertyID2
+
+# if os.name == 'nt':
+#     from colorama import init as colorama_init, Fore
+#     colorama_init(autoreset=True, wrap=True, convert=True)
+# else:
+#     from AcmP.utils import Color
 
 class AdvCmnAPI_Test(unittest.TestCase):
     def setUp(self):
@@ -107,8 +113,10 @@ class AdvCmnAPI_Test(unittest.TestCase):
         excepted_err = 0
         pos_type = c_uint(POSITION_TYPE.POSITION_CMD.value)
         pos = c_double(0)
+        # Clear all error
         self.errCde = self.AdvMot.Acm2_DevResetAllError()
         self.assertEqual(excepted_err, self.errCde)
+        # Set axis 0 command position as 0
         self.errCde = self.AdvMot.Acm2_AxSetPosition(ax_id, pos_type, pos)
         self.assertEqual(excepted_err, self.errCde)
     
@@ -176,6 +184,64 @@ class AdvCmnAPI_Test(unittest.TestCase):
         self.errCde = self.AdvMot.Acm2_GpCreate(self.gpid, self.axis_array, remove_all_axes)
         self.assertEqual(excepted_err, self.errCde)
 
+    def test_GetLastError_Device(self):
+        excepted_err = 0
+        obj_logicID = c_uint32(0)
+        obj_type = c_uint(ADV_OBJ_TYPE.ADV_DEVICE.value)
+        self.errCde = self.AdvMot.Acm2_GetLastError(obj_type, obj_logicID)
+        self.assertEqual(excepted_err, self.errCde)
+
+    def test_GetLastError_AXIS(self):
+        excepted_err = 0
+        for i in range(64):
+            obj_logicID = c_uint32(i)
+            obj_type = c_uint(ADV_OBJ_TYPE.ADV_AXIS.value)
+            self.errCde = self.AdvMot.Acm2_GetLastError(obj_type, obj_logicID)
+            self.assertEqual(excepted_err, self.errCde)
+
+    def test_GetLastError_Group(self):
+        excepted_err = 0
+        for i in range(8):
+            obj_logicID = c_uint32(i)
+            obj_type = c_uint(ADV_OBJ_TYPE.ADV_GROUP.value)
+            self.errCde = self.AdvMot.Acm2_GetLastError(obj_type, obj_logicID)
+            self.assertEqual(excepted_err, self.errCde)
+
+    def test_SetMultiPropertyAndCheck_AxisSpeed(self):
+        excepted_err = 0
+        # Set axis 0 speed info at once
+        ax_id = c_uint32(0)
+        property_arr = [c_uint32(PropertyID2.PAR_AxVelLow.value), c_uint32(PropertyID2.PAR_AxVelHigh.value)]
+        trans_ppt_arr = (c_uint32 * len(property_arr))(*property_arr)
+        # Default value of velocity low is 2000, and velocity high is 8000.
+        value_arr = [c_double(1000), c_double(2000)]
+        trans_val_arr = (c_double * len(value_arr))(*value_arr)
+        data_cnt = c_uint32(2)
+        err_buffer = (c_uint32 * data_cnt.value)()
+        # Set value
+        self.errCde = self.AdvMot.Acm2_SetMultiProperty(ax_id, trans_ppt_arr, trans_val_arr, data_cnt, err_buffer)
+        self.assertEqual(excepted_err, self.errCde)
+        # Check value
+        get_val = (c_double * data_cnt.value)()
+        self.errCde = self.AdvMot.Acm2_GetMultiProperty(ax_id, trans_ppt_arr, get_val, data_cnt, err_buffer)
+        self.assertEqual(excepted_err, self.errCde)
+        for i in range(data_cnt.value):
+            # print('set[{0}]:{1}, get:{2}'.format(i, value_arr[i].value, get_val[i]))
+            self.assertEqual(value_arr[i].value, get_val[i])
+    
+    def test_SetAxSpeedInfoAndCheck(self):
+        excepted_err = 0
+        ax_id = c_uint32(0)
+        speed_info = SPEED_PROFILE_PRM()
+        speed_info.FH = c_double(3000)
+        speed_info.FL = c_double(1500)
+        speed_info.Acc = c_double(11000)
+        speed_info.Dec = c_double(9900)
+        speed_info.JerkFac = c_double(0)
+        self.errCde = self.AdvMot.Acm2_AxSetSpeedProfile(ax_id, speed_info)
+        self.assertEqual(excepted_err, self.errCde)
+
+
 def DownloadENISuite():
     tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_LoadENI']
     suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
@@ -221,15 +287,33 @@ def GroupCreateCheck():
     suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
     return suite
 
+def GetAllError():
+    tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_GetLastError_Device', 'test_GetLastError_AXIS', 'test_GetLastError_Group']
+    suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
+    return suite
+
+def SetAxis0SpeedLimit():
+    tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_SetMultiPropertyAndCheck_AxisSpeed', 'test_GetLastError_AXIS']
+    suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
+    return suite
+
+def SetAxis0SpeedWithProfile():
+    tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_SetAxSpeedInfoAndCheck', 'test_GetLastError_AXIS']
+    suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
+    return suite
+
 if __name__ == '__main__':
     # Test all case without order
     # unittest.main()
     # Test case with self-defined order
     runner = unittest.TextTestRunner()
     # runner.run(DownloadENISuite())
-    # runner.run(GetMDevice())
+    runner.run(GetMDevice())
     # runner.run(ExportMappingTable())
     # runner.run(ImportMappingTable())
     # runner.run(AxPTP_Check())
-    runner.run(DeviceDO())
+    # runner.run(DeviceDO())
     # runner.run(GroupCreateCheck())
+    # runner.run(GetAllError())
+    # runner.run(SetAxis0SpeedLimit())
+    # runner.run(SetAxis0SpeedWithProfile())

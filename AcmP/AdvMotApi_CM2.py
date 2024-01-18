@@ -1,6 +1,7 @@
 from ctypes import *
 
 class DEVLIST(Structure):
+    _pack_ = 1
     _fields_ = [
         ("dwDeviceNum", c_uint32),
         ("szDeviceName", c_char*50),
@@ -8,6 +9,7 @@ class DEVLIST(Structure):
     ]
 
 class ADVAPI_MDEVICE_INFO(Structure):
+    _pack_ = 1
     _fields_ = [
         ('totalTxLen', c_uint32),
         ('totalRxLen', c_uint32),
@@ -30,6 +32,7 @@ class ADVAPI_MDEVICE_INFO(Structure):
     ]
 
 class DEV_IO_MAP_INFO(Structure):
+    _pack_ = 1
     _fields_ = [
         ('Name', c_char*50),
         ('Index', c_uint32),
@@ -43,6 +46,7 @@ class DEV_IO_MAP_INFO(Structure):
     ]
 
 class LINK_PORT_INFO(Structure):
+    _pack_ = 1
     _fields_ = [
         ('desc', c_uint32),
         ('link_up', c_ubyte),
@@ -54,6 +58,7 @@ class LINK_PORT_INFO(Structure):
     ]
 
 class ADVAPI_SUBDEVICE_INFO_CM2(Structure):
+    _pack_ = 1
     _fields_ = [
         ('Position', c_uint16),
         ('VendorID', c_uint32),
@@ -78,6 +83,7 @@ def ADVUSERCALLBACKFUNC(EvtValue, UserParameter):
 PADV_USER_CALLBACK_FUNC = ADV_USER_CALLBACK_FUNC(ADVUSERCALLBACKFUNC)
 
 class PHASE_AXIS_PRM(Structure):
+    _pack_ = 1
     _fields_ = [
         ('Acc', c_double),
         ('Dec', c_double),
@@ -86,6 +92,7 @@ class PHASE_AXIS_PRM(Structure):
     ]
 
 class SPEED_PROFILE_PRM(Structure):
+    _pack_ = 1
     _fields_ = [
         ('FH', c_double),
         ('FL', c_double),
@@ -95,6 +102,7 @@ class SPEED_PROFILE_PRM(Structure):
     ]
 
 class MOTION_IO(Structure):
+    _pack_ = 1
     _fields_ = [
         ('RDY', c_uint8),
         ('ALM', c_uint8),
@@ -120,6 +128,7 @@ class MOTION_IO(Structure):
     ]
 
 class PATH_STATUS(Structure):
+    _pack_ = 1
     _fields_ = [
         ('CurIndex', c_uint32),
         ('CurCmdFunc', c_uint32),
@@ -128,6 +137,7 @@ class PATH_STATUS(Structure):
     ]
 
 class CAM_IN_PRM(Structure):
+    _pack_ = 1
     _fields_ = [
         ('PrimaryOffset', c_double),
         ('FollowingOffset', c_double),
@@ -138,12 +148,14 @@ class CAM_IN_PRM(Structure):
     ]
 
 class GEAR_RATIO_RATE(Structure):
+    _pack_ = 1
     _fields_ = [
         ('Num', c_double),
         ('Den', c_double)
     ]
 
 class GEAR_IN_PRM(Structure):
+    _pack_ = 1
     _fields_ = [
         ('RefSrc', c_uint),
         ('GearRatioRate', GEAR_RATIO_RATE),
@@ -152,6 +164,7 @@ class GEAR_IN_PRM(Structure):
     ]
 
 class TANGENT_IN_PRM(Structure):
+    _pack_ = 1
     _fields_ = [
         ('StartVectorArray', c_int32*3),
         ('Working_plane', c_uint32),
@@ -159,12 +172,14 @@ class TANGENT_IN_PRM(Structure):
     ]
 
 class GANTRY_IN_PRM(Structure):
+    _pack_ = 1
     _fields_ = [
         ('RefSrc', c_uint),
         ('Direction', c_uint),
     ]
 
 class BUFFER_STATUS(Structure):
+    _pack_ = 1
     _fields_ = [
         ('CurIndex', c_uint32),
         ('RemainCount', c_uint32),
@@ -172,6 +187,7 @@ class BUFFER_STATUS(Structure):
     ]
 
 class JOG_SPEED_PROFILE_PRM(Structure):
+    _pack_ = 1
     _fields_ = [
         ('FH', c_double),
         ('FL', c_double),
@@ -181,6 +197,7 @@ class JOG_SPEED_PROFILE_PRM(Structure):
     ]
 
 class PATH_DO_MODE0(Structure):
+    _pack_ = 1
     _fields_ = [
         ('DOPort', c_uint32),
         ('DOEnable', c_uint32),
@@ -188,6 +205,7 @@ class PATH_DO_MODE0(Structure):
     ]
 
 class PATH_DO_MODE1(Structure):
+    _pack_ = 1
     _fields_ = [
         ('SubDeviceID', c_uint32),
         ('DOPort', c_uint32),
@@ -196,6 +214,7 @@ class PATH_DO_MODE1(Structure):
     ]
 
 class PATH_DO_MODE2(Structure):
+    _pack_ = 1
     _fields_ = [
         ('AxID', c_uint32),
         ('DOEnable', c_uint32),
@@ -203,6 +222,7 @@ class PATH_DO_MODE2(Structure):
     ]
 
 class PATH_DO_MODE(Structure):
+    _pack_ = 1
     _fields_ = [
         ('Mode0', PATH_DO_MODE0),
         ('Mode1', PATH_DO_MODE1),
@@ -210,6 +230,7 @@ class PATH_DO_MODE(Structure):
     ]
 
 class PATH_DO_PRM(Structure):
+    _pack_ = 1
     _fields_ = [
         ('MoveMode', c_uint32),
         ('PathDO_Prm', PATH_DO_MODE),
@@ -217,6 +238,7 @@ class PATH_DO_PRM(Structure):
     ]
 
 class PATH_DI_WAIT_MODE0(Structure):
+    _pack_ = 1
     _fields_ = [
         ('DIPort', c_uint32),
         ('DIEnable', c_uint32),
@@ -224,6 +246,7 @@ class PATH_DI_WAIT_MODE0(Structure):
     ]
 
 class PATH_DI_WAIT_MODE1(Structure):
+    _pack_ = 1
     _fields_ = [
         ('SubDeviceID', c_uint32),
         ('DIPort', c_uint32),
@@ -232,6 +255,7 @@ class PATH_DI_WAIT_MODE1(Structure):
     ]
 
 class PATH_DI_WAIT_MODE2(Structure):
+    _pack_ = 1
     _fields_ = [
         ('AxID', c_uint32),
         ('DIEnable', c_uint32),
@@ -239,6 +263,7 @@ class PATH_DI_WAIT_MODE2(Structure):
     ]
 
 class PATH_DI_WAIT_MODE(Structure):
+    _pack_ = 1
     _fields_ = [
         ('Mode0', PATH_DI_WAIT_MODE0),
         ('Mode1', PATH_DI_WAIT_MODE1),
@@ -246,6 +271,7 @@ class PATH_DI_WAIT_MODE(Structure):
     ]
 
 class PATH_DI_WAIT_PRM(Structure):
+    _pack_ = 1
     _fields_ = [
         ('MoveMode', c_uint32),
         ('PathDI_Prm', PATH_DI_WAIT_MODE),
@@ -253,6 +279,7 @@ class PATH_DI_WAIT_PRM(Structure):
     ]
 
 class PATH_AX_WAIT_PRM(Structure):
+    _pack_ = 1
     _fields_ = [
         ('AxID', c_uint32),
         ('CmpMethod', c_uint32),
@@ -263,12 +290,14 @@ class PATH_AX_WAIT_PRM(Structure):
     ]
 
 class PWM_TABLE_STATUS(Structure):
+    _pack_ = 1
     _fields_ = [
         ('Velocity', c_uint32),
         ('PWMValue', c_uint32)
     ]
 
 class OSC_PROFILE_PRM(Structure):
+    _pack_ = 1
     _fields_ = [
         ('Enable', c_uint32),
         ('Period', c_uint32),

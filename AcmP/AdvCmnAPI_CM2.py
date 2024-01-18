@@ -507,7 +507,7 @@ class AdvCmnAPI_CM2:
 
     try:
         Acm2_GpArc_3P = lib.Acm2_GpArc_3P
-        Acm2_GpArc_3P.argtypes = [c_uint32, c_uint, POINTER(c_double), POINTER(c_double), POINTER(c_uint32), c_double, c_uint]
+        Acm2_GpArc_3P.argtypes = [c_uint32, c_uint, POINTER(c_double), POINTER(c_double), POINTER(c_uint32), c_uint]
         Acm2_GpArc_3P.restype = c_uint32
     except:
         pass

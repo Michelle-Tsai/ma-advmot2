@@ -138,14 +138,14 @@ Due to our driver running with admin/root authentication, it's important to exec
     + <a href="#Acm2_GpPathWaitForAxis"><code>Acm2_GpPathWaitForAxis</code></a>
     + <a href="#Acm2_GpLookAheadPath"><code>Acm2_GpLookAheadPath</code></a>
     + <a href="#Acm2_GpLookAheadPathFile"><code>Acm2_GpLookAheadPathFile</code></a>
-    + <a href="#Acm2_GpLoadAndMovePath"><code>Acm2_GpLoadAndMovePath</code></a>
+    <!-- + <a href="#Acm2_GpLoadAndMovePath"><code>Acm2_GpLoadAndMovePath</code></a> -->
 * DIO
     + <a href="#Acm2_ChSetDOBit"><code>Acm2_ChSetDOBit</code></a>
     + <a href="#Acm2_ChGetDOBit"><code>Acm2_ChGetDOBit</code></a>
     + <a href="#Acm2_ChGetDIBit"><code>Acm2_ChGetDIBit</code></a>
-    + <a href="#Acm2_ChSetDOBitByRingN"><code>Acm2_ChSetDOBitByRingN</code></a>
-    + <a href="#Acm2_ChGetDOBitByRingN"><code>Acm2_ChGetDOBitByRingN</code></a>
-    + <a href="#Acm2_ChGetDIBitByRingN"><code>Acm2_ChGetDIBitByRingN</code></a>
+    + <a href="#Acm2_ChSetDOBitByRingNo"><code>Acm2_ChSetDOBitByRingNo</code></a>
+    + <a href="#Acm2_ChGetDOBitByRingNo"><code>Acm2_ChGetDOBitByRingNo</code></a>
+    + <a href="#Acm2_ChGetDIBitByRingNo"><code>Acm2_ChGetDIBitByRingNo</code></a>
     + <a href="#Acm2_ChSetDOByte"><code>Acm2_ChSetDOByte</code></a>
     + <a href="#Acm2_ChGetDOByte"><code>Acm2_ChGetDOByte</code></a>
     + <a href="#Acm2_ChGetDIByte"><code>Acm2_ChGetDIByte</code></a>
@@ -482,6 +482,39 @@ Preview motion.
 #### Acm2_ChSetDOBit
 Set DO bit by channel.
 
+```python
+# Using the example code after LoadENI & Connect
+import time
+import os
+from ctypes import *
+from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI_CM2 as AdvMot
+from AcmP.AdvMotApi_CM2 import DEVLIST
+from AcmP.AdvMotPropID_CM2 import PropertyID2
+
+dev_list = (DEVLIST*10)()
+out_ent = c_uint32(0)
+errCde = c_uint32(0)
+# Get Available
+errCde = AdvMot.Acm2_GetAvailableDevs(dev_list, 10, byref(out_ent))
+# Initial device
+errCde = AdvMot.Acm2_DevInitialize()
+
+# Set DO channel, local DO on PCIE-1203 is 0~1, rest of device will set from channel 8~
+do_channel8 = c_uint32(8)
+do_channel14 = c_uint32(14)
+bit_data = c_uint32(DO_ONOFF.DO_ON.value)
+# Set DO(8) on
+errCde = AdvMot.Acm2_ChSetDOBit(do_channel8, bit_data)
+# Set DO(14) on
+errCde = AdvMot.Acm2_ChSetDOBit(do_channel14, bit_data)
+time.sleep(0.5)
+get_data8 = c_uint32(0)
+get_data14 = c_uint32(0)
+# Get DO(8) value
+errCde = AdvMot.Acm2_ChGetDOBit(do_channel8, byref(get_data8))
+# Get DO(14) value
+errCde = AdvMot.Acm2_ChGetDOBit(do_channel8, byref(get_data14))
+```
 <a name="Acm2_ChGetDOBit"></a>
 
 #### Acm2_ChGetDOBit
@@ -500,6 +533,7 @@ errCde = c_uint32(0)
 errCde = AdvMot.Acm2_GetAvailableDevs(dev_list, 10, byref(out_ent))
 # Initial device
 errCde = AdvMot.Acm2_DevInitialize()
+
 do_ch = c_uint32(0)
 property_id = c_uint(PropertyID2.CFG_CH_DaqDoFuncSelect.value)
 val = c_double(1)
@@ -555,6 +589,45 @@ Set aixs continue move.
 #### Acm2_AxMotionStop
 Force axis stop motion.
 
+```python
+import time
+import os
+from ctypes import *
+from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI_CM2 as AdvMot
+from AcmP.AdvMotApi_CM2 import *
+from AcmP.AdvMotDrv import *
+from AcmP.AdvMotPropID_CM2 import PropertyID2
+
+dev_list = (DEVLIST*10)()
+out_ent = c_uint32(0)
+errCde = c_uint32(0)
+# Get Available
+errCde = AdvMot.Acm2_GetAvailableDevs(dev_list, 10, byref(out_ent))
+# Initial device
+errCde = AdvMot.Acm2_DevInitialize()
+
+ax_id = c_uint32(0)
+move_dir = c_uint(MOTION_DIRECTION.DIRECTION_POS.value)
+errCde = AdvMot.Acm2_AxMoveContinue(ax_id, move_dir)
+time.sleep(2)
+ax_arr = [c_uint32(0)]
+axArr = (c_uint32 * len(ax_arr))(*ax_arr)
+stop_mode = c_uint(MOTION_STOP_MODE.MOTION_STOP_MODE_DEC.value)
+new_dec = c_double(3000)
+errCde = AdvMot.Acm2_AxMotionStop(axArr, len(ax_arr), stop_mode, new_dec)
+# Check status
+state = c_uint32(0)
+state_type = c_uint(AXIS_STATUS_TYPE.AXIS_STATE.value)
+AdvMot.Acm2_AxGetState(ax_id, state_type, byref(state))
+while (state.value != AXIS_STATE.STA_AX_READY.value):
+    time.sleep(1)
+    AdvMot.Acm2_AxGetState(ax_id, state_type, byref(state))
+# Get axis position
+starting_pos = c_double(0)
+pos = c_double(0)
+pos_type = c_uint(POSITION_TYPE.POSITION_CMD.value)
+errCde = AdvMot.Acm2_AxGetPosition(ax_id, pos_type, byref(pos))
+```
 <a name="Acm2_AxHome"></a>
 
 #### Acm2_AxHome
@@ -762,6 +835,8 @@ Continuous loading PVT table.
 Move PVT motion.
 
 ```python
+import time
+import os
 from ctypes import *
 from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI_CM2 as AdvMot
 from AcmP.AdvMotApi_CM2 import *
@@ -831,11 +906,21 @@ Move PT motion.
 Reset axis PT data.
 
 ```python
+import time
+import os
 from ctypes import *
 from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI_CM2 as AdvMot
 from AcmP.AdvMotApi_CM2 import *
 from AcmP.AdvMotDrv import *
 from AcmP.AdvMotPropID_CM2 import PropertyID2
+
+dev_list = (DEVLIST*10)()
+out_ent = c_uint32(0)
+errCde = c_uint32(0)
+# Get Available
+errCde = AdvMot.Acm2_GetAvailableDevs(dev_list, 10, byref(out_ent))
+# Initial device
+errCde = AdvMot.Acm2_DevInitialize()
 
 ax_id = c_uint32(0)
 # Reset PT table
@@ -862,7 +947,7 @@ get_pos = c_double(0)
 state = c_uint32(0)
 state_type = c_uint(AXIS_STATUS_TYPE.AXIS_STATE.value)
 AdvMot.Acm2_AxGetState(ax_id, state_type, byref(state))
-if (state.value != AXIS_STATE.STA_AX_READY.value):
+while (state.value != AXIS_STATE.STA_AX_READY.value):
     time.sleep(1)
     AdvMot.Acm2_AxGetState(ax_id, state_type, byref(state))
 # Get axis 0 position
@@ -879,11 +964,21 @@ Set axis gear.
 Set axis gantry.
 
 ```python
+import time
+import os
 from ctypes import *
 from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI_CM2 as AdvMot
 from AcmP.AdvMotApi_CM2 import *
 from AcmP.AdvMotDrv import *
 from AcmP.AdvMotPropID_CM2 import PropertyID2
+
+dev_list = (DEVLIST*10)()
+out_ent = c_uint32(0)
+errCde = c_uint32(0)
+# Get Available
+errCde = AdvMot.Acm2_GetAvailableDevs(dev_list, 10, byref(out_ent))
+# Initial device
+errCde = AdvMot.Acm2_DevInitialize()
 
 primary_ax = c_uint32(0)
 follow_ax = c_uint32(1)
@@ -905,7 +1000,7 @@ errCde = AdvMot.Acm2_AxPTP(primary_ax, abs_mode, distance)
 state = c_uint32(0)
 state_type = c_uint(AXIS_STATUS_TYPE.AXIS_STATE.value)
 AdvMot.Acm2_AxGetState(ax_id, state_type, byref(state))
-if (state.value != AXIS_STATE.STA_AX_READY.value):
+while (state.value != AXIS_STATE.STA_AX_READY.value):
     time.sleep(1)
     AdvMot.Acm2_AxGetState(ax_id, state_type, byref(state))
 get_pos_0 = c_double(0)
@@ -929,11 +1024,21 @@ Set axis phase.
 Lift the gantry.
 
 ```python
+import time
+import os
 from ctypes import *
 from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI_CM2 as AdvMot
 from AcmP.AdvMotApi_CM2 import *
 from AcmP.AdvMotDrv import *
 from AcmP.AdvMotPropID_CM2 import PropertyID2
+
+dev_list = (DEVLIST*10)()
+out_ent = c_uint32(0)
+errCde = c_uint32(0)
+# Get Available
+errCde = AdvMot.Acm2_GetAvailableDevs(dev_list, 10, byref(out_ent))
+# Initial device
+errCde = AdvMot.Acm2_DevInitialize()
 
 primary_ax = c_uint32(0)
 follow_ax = c_uint32(1)
@@ -958,7 +1063,7 @@ errCde = AdvMot.Acm2_AxPTP(primary_ax, abs_mode, distance)
 state = c_uint32(0)
 state_type = c_uint(AXIS_STATUS_TYPE.AXIS_STATE.value)
 AdvMot.Acm2_AxGetState(ax_id, state_type, byref(state))
-if (state.value != AXIS_STATE.STA_AX_READY.value):
+while (state.value != AXIS_STATE.STA_AX_READY.value):
     time.sleep(1)
     AdvMot.Acm2_AxGetState(ax_id, state_type, byref(state))
 get_pos_0 = c_double(0)
@@ -997,11 +1102,21 @@ Reset error of group.
 Move group in line.
 
 ```python
+import time
+import os
 from ctypes import *
 from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI_CM2 as AdvMot
 from AcmP.AdvMotApi_CM2 import *
 from AcmP.AdvMotDrv import *
 from AcmP.AdvMotPropID_CM2 import PropertyID2
+
+dev_list = (DEVLIST*10)()
+out_ent = c_uint32(0)
+errCde = c_uint32(0)
+# Get Available
+errCde = AdvMot.Acm2_GetAvailableDevs(dev_list, 10, byref(out_ent))
+# Initial device
+errCde = AdvMot.Acm2_DevInitialize()
 
 gp_ax_arr = [c_uint32(0), c_uint32(1)]
 gp_id = c_uint32(0)
@@ -1015,7 +1130,6 @@ len_get = c_uint32(64)
 get_axes = (c_uint32 * len_get.value)()
 # Get axes in group 0 and check
 errCde = AdvMot.Acm2_GpGetAxesInGroup(gp_id, get_axes, len_get)
-for idx in range(len_get.value):
 # Set group move as relative
 gp_move_mode = c_uint(GP_LINE_MODE.LINE_REL.value)
 # Set group end position: axis(0) = 10000, axis(1) = 10000
@@ -1028,7 +1142,7 @@ errCde = AdvMot.Acm2_GpLine(gp_id, gp_move_mode, end_arr, byref(arr_element))
 state = c_uint32(0)
 state_type = c_uint(AXIS_STATUS_TYPE.AXIS_STATE.value)
 AdvMot.Acm2_AxGetState(ax_id, state_type, byref(state))
-if (state.value != AXIS_STATE.STA_AX_READY.value):
+while (state.value != AXIS_STATE.STA_AX_READY.value):
     time.sleep(1)
     AdvMot.Acm2_AxGetState(ax_id, state_type, byref(state))
 # Get axis 0 position
@@ -1048,11 +1162,21 @@ errCde = AdvMot.Acm2_GpCreate(gp_id, gp_arr, 0)
 Set group arc center.
 
 ```python
+import time
+import os
 from ctypes import *
 from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI_CM2 as AdvMot
 from AcmP.AdvMotApi_CM2 import *
 from AcmP.AdvMotDrv import *
 from AcmP.AdvMotPropID_CM2 import PropertyID2
+
+dev_list = (DEVLIST*10)()
+out_ent = c_uint32(0)
+errCde = c_uint32(0)
+# Get Available
+errCde = AdvMot.Acm2_GetAvailableDevs(dev_list, 10, byref(out_ent))
+# Initial device
+errCde = AdvMot.Acm2_DevInitialize()
 
 gp_ax_arr = [c_uint32(0), c_uint32(1)]
 gp_id = c_uint32(0)
@@ -1066,7 +1190,6 @@ len_get = c_uint32(64)
 get_axes = (c_uint32 * len_get.value)()
 # Get axes in group 0 and check
 errCde = AdvMot.Acm2_GpGetAxesInGroup(gp_id, get_axes, len_get)
-for idx in range(len_get.value):
 # Set 2D Arc mode
 arc_mode = c_uint(ABS_MODE.MOVE_REL.value)
 # Set 2D Arc CW center, end position
@@ -1087,7 +1210,7 @@ errCde = AdvMot.Acm2_GpArc_Center(gp_id, arc_mode, center_arr, end_arr, byref(ar
 state = c_uint32(0)
 state_type = c_uint(AXIS_STATUS_TYPE.AXIS_STATE.value)
 AdvMot.Acm2_AxGetState(ax_id, state_type, byref(state))
-if (state.value != AXIS_STATE.STA_AX_READY.value):
+while (state.value != AXIS_STATE.STA_AX_READY.value):
     time.sleep(1)
     AdvMot.Acm2_AxGetState(ax_id, state_type, byref(state))
 # Get axis 0 position
@@ -1107,11 +1230,21 @@ errCde = AdvMot.Acm2_GpCreate(gp_id, gp_arr, 0)
 Set group arc point.
 
 ```python
+import time
+import os
 from ctypes import *
 from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI_CM2 as AdvMot
 from AcmP.AdvMotApi_CM2 import *
 from AcmP.AdvMotDrv import *
 from AcmP.AdvMotPropID_CM2 import PropertyID2
+
+dev_list = (DEVLIST*10)()
+out_ent = c_uint32(0)
+errCde = c_uint32(0)
+# Get Available
+errCde = AdvMot.Acm2_GetAvailableDevs(dev_list, 10, byref(out_ent))
+# Initial device
+errCde = AdvMot.Acm2_DevInitialize()
 
 gp_ax_arr = [c_uint32(0), c_uint32(1)]
 gp_id = c_uint32(0)
@@ -1125,8 +1258,7 @@ len_get = c_uint32(64)
 get_axes = (c_uint32 * len_get.value)()
 # Get axes in group 0 and check
 errCde = AdvMot.Acm2_GpGetAxesInGroup(gp_id, get_axes, len_get)
-for idx in range(len_get.value):
-# Set 2D Arc mode
+# # Set 2D Arc mode as relative, which the starting point of circular is (0, 0)
 arc_mode = c_uint(ABS_MODE.MOVE_REL.value)
 # Set 2D Arc CW center, end position
 '''
@@ -1147,7 +1279,7 @@ errCde = AdvMot.Acm2_GpArc_3P(gp_id, arc_mode, refArr, endArr, byref(arr_element
 state = c_uint32(0)
 state_type = c_uint(AXIS_STATUS_TYPE.AXIS_STATE.value)
 AdvMot.Acm2_AxGetState(ax_id, state_type, byref(state))
-if (state.value != AXIS_STATE.STA_AX_READY.value):
+while (state.value != AXIS_STATE.STA_AX_READY.value):
     time.sleep(1)
     AdvMot.Acm2_AxGetState(ax_id, state_type, byref(state))
 # Get axis 0 position
@@ -1166,17 +1298,85 @@ errCde = AdvMot.Acm2_GpCreate(gp_id, gp_arr, 0)
 #### Acm2_GpArc_Angle
 Set group arc angle.
 
+```python
+import time
+import os
+from ctypes import *
+from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI_CM2 as AdvMot
+from AcmP.AdvMotApi_CM2 import *
+from AcmP.AdvMotDrv import *
+from AcmP.AdvMotPropID_CM2 import PropertyID2
+
+dev_list = (DEVLIST*10)()
+out_ent = c_uint32(0)
+errCde = c_uint32(0)
+# Get Available
+errCde = AdvMot.Acm2_GetAvailableDevs(dev_list, 10, byref(out_ent))
+# Initial device
+errCde = AdvMot.Acm2_DevInitialize()
+
+gp_ax_arr = [c_uint32(0), c_uint32(1)]
+gp_id = c_uint32(0)
+gp_arr = (c_uint32 * len(gp_ax_arr))(*gp_ax_arr)
+# Reset all axes from group 0
+errCde = AdvMot.Acm2_GpCreate(gp_id, gp_arr, 0)
+# Creat group 0, and set axis 0, 1 into group
+errCde = AdvMot.Acm2_GpCreate(gp_id, gp_arr, len(gp_arr))
+# get_axes size must be same as len_get
+len_get = c_uint32(64)
+get_axes = (c_uint32 * len_get.value)()
+# Get axes in group 0 and check
+errCde = AdvMot.Acm2_GpGetAxesInGroup(gp_id, get_axes, len_get)
+# Set 2D Arc mode as relative, which the starting point of circular is (0, 0)
+arc_mode = c_uint(ABS_MODE.MOVE_REL.value)
+# Set center as (20000, 20000)
+center_arr = [c_double(20000), c_double(20000)]
+centerArr = (c_double * len(center_arr))(*center_arr)
+arr_element = c_uint32(len(center_arr))
+# Set degree as 45
+degree = c_double(45)
+# Set arc movement as CW
+dir_mode = c_uint(ARC_DIRECTION.ARC_CW.value)
+errCde = AdvMot.Acm2_GpArc_Angle(gp_id, arc_mode, centerArr, byref(arr_element), degree, dir_mode)
+# Check status
+state = c_uint32(0)
+state_type = c_uint(AXIS_STATUS_TYPE.AXIS_STATE.value)
+AdvMot.Acm2_AxGetState(ax_id, state_type, byref(state))
+while (state.value != AXIS_STATE.STA_AX_READY.value):
+    time.sleep(1)
+    AdvMot.Acm2_AxGetState(ax_id, state_type, byref(state))
+# Get axis 0 position
+get_pos_0 = c_double(0)
+get_pos_1 = c_double(0)
+pos_type = c_uint(POSITION_TYPE.POSITION_CMD.value)
+# Get axis 0 position
+errCde = AdvMot.Acm2_AxGetPosition(gp_ax_arr[0], pos_type, byref(get_pos_0))
+# Get axis 1 position
+errCde = AdvMot.Acm2_AxGetPosition(gp_ax_arr[1], pos_type, byref(get_pos_1))
+# Reset all axes from group 0
+errCde = AdvMot.Acm2_GpCreate(gp_id, gp_arr, 0)
+```
 <a name="Acm2_Gp3DArc_Center"></a>
 
 #### Acm2_Gp3DArc_Center
 Set 3D group arc center.
 
 ```python
+import time
+import os
 from ctypes import *
 from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI_CM2 as AdvMot
 from AcmP.AdvMotApi_CM2 import *
 from AcmP.AdvMotDrv import *
 from AcmP.AdvMotPropID_CM2 import PropertyID2
+
+dev_list = (DEVLIST*10)()
+out_ent = c_uint32(0)
+errCde = c_uint32(0)
+# Get Available
+errCde = AdvMot.Acm2_GetAvailableDevs(dev_list, 10, byref(out_ent))
+# Initial device
+errCde = AdvMot.Acm2_DevInitialize()
 
 gp_ax_arr = [c_uint32(0), c_uint32(1), c_uint32(2)]
 gp_id = c_uint32(0)
@@ -1190,10 +1390,9 @@ len_get = c_uint32(64)
 get_axes = (c_uint32 * len_get.value)()
 # Get axes in group 0 and check
 errCde = AdvMot.Acm2_GpGetAxesInGroup(gp_id, get_axes, len_get)
-for idx in range(len_get.value):
 # Set 3D Arc mode
 arc_mode = c_uint(ABS_MODE.MOVE_REL.value)
-# Set 3D Arc CW, with 60 degree
+# Set 3D Arc CW, with 120 degree
 '''
 | axis | Arc center | Arc end |
 |------|------------|---------|
@@ -1212,7 +1411,7 @@ errCde = AdvMot.Acm2_Gp3DArc_Center(gp_id, arc_mode, center_arr, end_arr, byref(
 state = c_uint32(0)
 state_type = c_uint(AXIS_STATUS_TYPE.AXIS_STATE.value)
 AdvMot.Acm2_AxGetState(ax_id, state_type, byref(state))
-if (state.value != AXIS_STATE.STA_AX_READY.value):
+while (state.value != AXIS_STATE.STA_AX_READY.value):
     time.sleep(1)
     AdvMot.Acm2_AxGetState(ax_id, state_type, byref(state))
 # Get axis 0 position
@@ -1234,17 +1433,22 @@ errCde = AdvMot.Acm2_GpCreate(gp_id, gp_arr, 0)
 #### Acm2_Gp3DArc_NormVec
 Set 3D group arc norm vector.
 
-<a name="Acm2_Gp3DArc_3P"></a>
-
-#### Acm2_Gp3DArc_3P
-Set arc movement with 3 points of circular.
-
 ```python
+import time
+import os
 from ctypes import *
 from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI_CM2 as AdvMot
 from AcmP.AdvMotApi_CM2 import *
 from AcmP.AdvMotDrv import *
 from AcmP.AdvMotPropID_CM2 import PropertyID2
+
+dev_list = (DEVLIST*10)()
+out_ent = c_uint32(0)
+errCde = c_uint32(0)
+# Get Available
+errCde = AdvMot.Acm2_GetAvailableDevs(dev_list, 10, byref(out_ent))
+# Initial device
+errCde = AdvMot.Acm2_DevInitialize()
 
 gp_ax_arr = [c_uint32(0), c_uint32(1), c_uint32(2)]
 gp_id = c_uint32(0)
@@ -1258,10 +1462,88 @@ len_get = c_uint32(64)
 get_axes = (c_uint32 * len_get.value)()
 # Get axes in group 0 and check
 errCde = AdvMot.Acm2_GpGetAxesInGroup(gp_id, get_axes, len_get)
-for idx in range(len_get.value):
 # Set 3D Arc mode
 arc_mode = c_uint(ABS_MODE.MOVE_REL.value)
-# Set 3D Arc CW, with 60 degree
+# Set direction as CW
+dir_mode = c_uint(ARC_DIRECTION.ARC_CW.value)
+# Set 3D Arc CW, with 120 degree
+'''
+| axis | Arc center | Arc end |
+|------|------------|---------|
+|   0  |    20000   |  20000  |
+|   1  |    20000   |  40000  |
+|   2  |      0     |  20000  |
+'''
+center_arr = [c_double(20000), c_double(20000), c_double(0)]
+centerArr = (c_double * len(center_arr))(*center_arr)
+v1 = np.array([(0-center_arr[0].value), (0-center_arr[1].value), (0-center_arr[2].value)])
+arc_end_arr = [c_double(20000), c_double(40000), c_double(20000)]
+v2 = np.array([(arc_end_arr[0].value-center_arr[0].value), (arc_end_arr[1].value-center_arr[1].value), (arc_end_arr[2].value-center_arr[2].value)])
+cross_product = np.cross(v1, v2)
+normalize_cross = cross_product / (center_arr[0].value * center_arr[0].value)
+norm_vec_arr = [c_double(normalize_cross[0]), c_double(normalize_cross[1]), c_double(normalize_cross[2])]
+normVecArr = (c_double * len(norm_vec_arr))(*norm_vec_arr)
+arr_element = c_uint32(len(center_arr))
+angle = c_double(120)
+errCde = AdvMot.Acm2_Gp3DArc_NormVec(gp_id, arc_mode, centerArr, normVecArr, byref(arr_element), angle, dir_mode)
+# Check status
+state = c_uint32(0)
+state_type = c_uint(AXIS_STATUS_TYPE.AXIS_STATE.value)
+AdvMot.Acm2_AxGetState(ax_id, state_type, byref(state))
+while (state.value != AXIS_STATE.STA_AX_READY.value):
+    time.sleep(1)
+    AdvMot.Acm2_AxGetState(ax_id, state_type, byref(state))
+# Get axis 0 position
+get_pos_0 = c_double(0)
+get_pos_1 = c_double(0)
+get_pos_2 = c_double(0)
+pos_type = c_uint(POSITION_TYPE.POSITION_CMD.value)
+# Get axis 0 position
+errCde = AdvMot.Acm2_AxGetPosition(gp_ax_arr[0], pos_type, byref(get_pos_0))
+# Get axis 1 position
+errCde = AdvMot.Acm2_AxGetPosition(gp_ax_arr[1], pos_type, byref(get_pos_1))
+# Get axis 2 position
+errCde = AdvMot.Acm2_AxGetPosition(gp_ax_arr[2], pos_type, byref(get_pos_2))
+# Reset all axes from group 0
+errCde = AdvMot.Acm2_GpCreate(gp_id, gp_arr, 0)
+```
+<a name="Acm2_Gp3DArc_3P"></a>
+
+#### Acm2_Gp3DArc_3P
+Set arc movement with 3 points of circular.
+
+```python
+import time
+import os
+from ctypes import *
+from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI_CM2 as AdvMot
+from AcmP.AdvMotApi_CM2 import *
+from AcmP.AdvMotDrv import *
+from AcmP.AdvMotPropID_CM2 import PropertyID2
+
+dev_list = (DEVLIST*10)()
+out_ent = c_uint32(0)
+errCde = c_uint32(0)
+# Get Available
+errCde = AdvMot.Acm2_GetAvailableDevs(dev_list, 10, byref(out_ent))
+# Initial device
+errCde = AdvMot.Acm2_DevInitialize()
+
+gp_ax_arr = [c_uint32(0), c_uint32(1), c_uint32(2)]
+gp_id = c_uint32(0)
+gp_arr = (c_uint32 * len(gp_ax_arr))(*gp_ax_arr)
+# Reset all axes from group 0
+errCde = AdvMot.Acm2_GpCreate(gp_id, gp_arr, 0)
+# Creat group 0, and set axis 0, 1, 2 into group
+errCde = AdvMot.Acm2_GpCreate(gp_id, gp_arr, len(gp_arr))
+# get_axes size must be same as len_get
+len_get = c_uint32(64)
+get_axes = (c_uint32 * len_get.value)()
+# Get axes in group 0 and check
+errCde = AdvMot.Acm2_GpGetAxesInGroup(gp_id, get_axes, len_get)
+# # Set 3D Arc mode as relative, which the starting point of circular is (0, 0, 0)
+arc_mode = c_uint(ABS_MODE.MOVE_REL.value)
+# Set 3D Arc CW, with 120 degree
 '''
 | axis | point 1 | end point |
 |------|---------|-----------|
@@ -1283,7 +1565,7 @@ errCde = AdvMot.Acm2_Gp3DArc_3P(gp_id, arc_mode, refArr, endArr, byref(arr_eleme
 state = c_uint32(0)
 state_type = c_uint(AXIS_STATUS_TYPE.AXIS_STATE.value)
 AdvMot.Acm2_AxGetState(ax_id, state_type, byref(state))
-if (state.value != AXIS_STATE.STA_AX_READY.value):
+while (state.value != AXIS_STATE.STA_AX_READY.value):
     time.sleep(1)
     AdvMot.Acm2_AxGetState(ax_id, state_type, byref(state))
 # Get axis 0 position
@@ -1305,21 +1587,284 @@ errCde = AdvMot.Acm2_GpCreate(gp_id, gp_arr, 0)
 #### Acm2_Gp3DArc_3PAngle
 Set 3D group arc points, angle.
 
+```python
+import time
+import os
+from ctypes import *
+from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI_CM2 as AdvMot
+from AcmP.AdvMotApi_CM2 import *
+from AcmP.AdvMotDrv import *
+from AcmP.AdvMotPropID_CM2 import PropertyID2
+
+dev_list = (DEVLIST*10)()
+out_ent = c_uint32(0)
+errCde = c_uint32(0)
+# Get Available
+errCde = AdvMot.Acm2_GetAvailableDevs(dev_list, 10, byref(out_ent))
+# Initial device
+errCde = AdvMot.Acm2_DevInitialize()
+
+gp_ax_arr = [c_uint32(0), c_uint32(1), c_uint32(2)]
+gp_id = c_uint32(0)
+gp_arr = (c_uint32 * len(gp_ax_arr))(*gp_ax_arr)
+# Reset all axes from group 0
+errCde = AdvMot.Acm2_GpCreate(gp_id, gp_arr, 0)
+# Creat group 0, and set axis 0, 1, 2 into group
+errCde = AdvMot.Acm2_GpCreate(gp_id, gp_arr, len(gp_arr))
+# get_axes size must be same as len_get
+len_get = c_uint32(64)
+get_axes = (c_uint32 * len_get.value)()
+# Get axes in group 0 and check
+errCde = AdvMot.Acm2_GpGetAxesInGroup(gp_id, get_axes, len_get)
+# # Set 3D Arc mode as relative, which the starting point of circular is (0, 0, 0)
+arc_mode = c_uint(ABS_MODE.MOVE_REL.value)
+# Set direction as CW
+dir_mode = c_uint(ARC_DIRECTION.ARC_CW.value)
+# Set 3D Arc CW, with 120 degree
+'''
+| axis | point 1 | end point |
+|------|---------|-----------|
+| 0(x) |  20000  |   20000   |
+| 1(y) |  20000  |   40000   |
+| 2(z) |    0    |   20000   |
+'''
+ref_arr = [c_double(20000), c_double(20000), c_double(0)]
+refArr = (c_double * len(ref_arr))(*ref_arr)
+end_arr = [c_double(20000), c_double(40000), c_double(20000)]
+endArr = (c_double * len(end_arr))(*end_arr)
+arr_element = c_uint32(len(ref_arr))
+degree = c_double(120)
+# Set arc movement with 3 point of circular
+errCde = AdvMot.Acm2_Gp3DArc_3PAngle(gp_id, arc_mode, refArr, endArr, byref(arr_element), degree, dir_mode)
+# Check status
+state = c_uint32(0)
+state_type = c_uint(AXIS_STATUS_TYPE.AXIS_STATE.value)
+AdvMot.Acm2_AxGetState(ax_id, state_type, byref(state))
+while (state.value != AXIS_STATE.STA_AX_READY.value):
+    time.sleep(1)
+    AdvMot.Acm2_AxGetState(ax_id, state_type, byref(state))
+# Get axis 0 position
+get_pos_0 = c_double(0)
+get_pos_1 = c_double(0)
+get_pos_2 = c_double(0)
+pos_type = c_uint(POSITION_TYPE.POSITION_CMD.value)
+# Get axis 0 position
+errCde = AdvMot.Acm2_AxGetPosition(gp_ax_arr[0], pos_type, byref(get_pos_0))
+# Get axis 1 position
+errCde = AdvMot.Acm2_AxGetPosition(gp_ax_arr[1], pos_type, byref(get_pos_1))
+# Get axis 2 position
+errCde = AdvMot.Acm2_AxGetPosition(gp_ax_arr[2], pos_type, byref(get_pos_2))
+# Check value
+# Reset all axes from group 0
+errCde = AdvMot.Acm2_GpCreate(gp_id, gp_arr, 0)
+```
 <a name="Acm2_GpHelix_Center"></a>
 
 #### Acm2_GpHelix_Center
 Set group helix center.
 
+```python
+import time
+import os
+from ctypes import *
+from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI_CM2 as AdvMot
+from AcmP.AdvMotApi_CM2 import *
+from AcmP.AdvMotDrv import *
+from AcmP.AdvMotPropID_CM2 import PropertyID2
+
+dev_list = (DEVLIST*10)()
+out_ent = c_uint32(0)
+errCde = c_uint32(0)
+# Get Available
+errCde = AdvMot.Acm2_GetAvailableDevs(dev_list, 10, byref(out_ent))
+# Initial device
+errCde = AdvMot.Acm2_DevInitialize()
+
+gp_ax_arr = [c_uint32(0), c_uint32(1), c_uint32(2)]
+gp_id = c_uint32(0)
+gp_arr = (c_uint32 * len(gp_ax_arr))(*gp_ax_arr)
+# Reset all axes from group 0
+errCde = AdvMot.Acm2_GpCreate(gp_id, gp_arr, 0)
+# Creat group 0, and set axis 0, 1, 2 into group
+errCde = AdvMot.Acm2_GpCreate(gp_id, gp_arr, len(gp_arr))
+# get_axes size must be same as len_get
+len_get = c_uint32(64)
+get_axes = (c_uint32 * len_get.value)()
+# Get axes in group 0 and check
+errCde = AdvMot.Acm2_GpGetAxesInGroup(gp_id, get_axes, len_get)
+# Set mode as relative
+helix_mode = c_uint(ABS_MODE.MOVE_REL.value)
+# Set center as (10000, 0, 0)
+center_arr = [c_double(10000), c_double(0), c_double(0)]
+centerArr = (c_double * len(center_arr))(*center_arr)
+# Set end position as (20000, 0, 20000)
+end_arr = [c_double(20000), c_double(0), c_double(20000)]
+endArr = (c_double * len(end_arr))(*end_arr)
+arr_element = c_uint32(len(end_arr))
+# Set direction as CW
+dir_mode = c_uint(ARC_DIRECTION.ARC_CW.value)
+# Set Helix movement
+errCde = AdvMot.Acm2_GpHelix_Center(gp_id, helix_mode, centerArr, endArr, byref(arr_element), dir_mode)
+# Check status
+state = c_uint32(0)
+state_type = c_uint(AXIS_STATUS_TYPE.AXIS_STATE.value)
+AdvMot.Acm2_AxGetState(ax_id, state_type, byref(state))
+while (state.value != AXIS_STATE.STA_AX_READY.value):
+    time.sleep(1)
+    AdvMot.Acm2_AxGetState(ax_id, state_type, byref(state))
+# Get axis 0 position
+get_pos_0 = c_double(0)
+get_pos_1 = c_double(0)
+get_pos_2 = c_double(0)
+pos_type = c_uint(POSITION_TYPE.POSITION_CMD.value)
+# Get axis 0 position
+errCde = AdvMot.Acm2_AxGetPosition(gp_ax_arr[0], pos_type, byref(get_pos_0))
+# Get axis 1 position
+errCde = AdvMot.Acm2_AxGetPosition(gp_ax_arr[1], pos_type, byref(get_pos_1))
+# Get axis 2 position
+errCde = AdvMot.Acm2_AxGetPosition(gp_ax_arr[2], pos_type, byref(get_pos_2))
+# Check value
+# Reset all axes from group 0
+errCde = AdvMot.Acm2_GpCreate(gp_id, gp_arr, 0)
+```
 <a name="Acm2_GpHelix_3P"></a>
 
 #### Acm2_GpHelix_3P
 Set group helix points.
 
+```python
+import time
+import os
+from ctypes import *
+from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI_CM2 as AdvMot
+from AcmP.AdvMotApi_CM2 import *
+from AcmP.AdvMotDrv import *
+from AcmP.AdvMotPropID_CM2 import PropertyID2
+
+dev_list = (DEVLIST*10)()
+out_ent = c_uint32(0)
+errCde = c_uint32(0)
+# Get Available
+errCde = AdvMot.Acm2_GetAvailableDevs(dev_list, 10, byref(out_ent))
+# Initial device
+errCde = AdvMot.Acm2_DevInitialize()
+
+gp_ax_arr = [c_uint32(0), c_uint32(1), c_uint32(2)]
+gp_id = c_uint32(0)
+gp_arr = (c_uint32 * len(gp_ax_arr))(*gp_ax_arr)
+# Reset all axes from group 0
+errCde = AdvMot.Acm2_GpCreate(gp_id, gp_arr, 0)
+# Creat group 0, and set axis 0, 1, 2 into group
+errCde = AdvMot.Acm2_GpCreate(gp_id, gp_arr, len(gp_arr))
+# get_axes size must be same as len_get
+len_get = c_uint32(64)
+get_axes = (c_uint32 * len_get.value)()
+# Get axes in group 0 and check
+errCde = AdvMot.Acm2_GpGetAxesInGroup(gp_id, get_axes, len_get)
+# Set mode as relative
+helix_mode = c_uint(ABS_MODE.MOVE_REL.value)
+# Set center as (8000, 0, 0)
+center_arr = [c_double(8000), c_double(0), c_double(0)]
+centerArr = (c_double * len(center_arr))(*center_arr)
+# Set end position as (16000, 16000, 10000)
+end_arr = [c_double(16000), c_double(16000), c_double(10000)]
+endArr = (c_double * len(end_arr))(*end_arr)
+arr_element = c_uint32(len(center_arr))
+# Set direction as CW
+dir_mode = c_uint(ARC_DIRECTION.ARC_CW.value)
+# Set Helix movement
+errCde = AdvMot.Acm2_GpHelix_3P(gp_id, helix_mode, centerArr, endArr, byref(arr_element), dir_mode)
+# Check status
+state = c_uint32(0)
+state_type = c_uint(AXIS_STATUS_TYPE.AXIS_STATE.value)
+AdvMot.Acm2_AxGetState(ax_id, state_type, byref(state))
+while (state.value != AXIS_STATE.STA_AX_READY.value):
+    time.sleep(1)
+    AdvMot.Acm2_AxGetState(ax_id, state_type, byref(state))
+# Get axis 0 position
+get_pos_0 = c_double(0)
+get_pos_1 = c_double(0)
+get_pos_2 = c_double(0)
+pos_type = c_uint(POSITION_TYPE.POSITION_CMD.value)
+# Get axis 0 position
+errCde = AdvMot.Acm2_AxGetPosition(gp_ax_arr[0], pos_type, byref(get_pos_0))
+# Get axis 1 position
+errCde = AdvMot.Acm2_AxGetPosition(gp_ax_arr[1], pos_type, byref(get_pos_1))
+# Get axis 2 position
+errCde = AdvMot.Acm2_AxGetPosition(gp_ax_arr[2], pos_type, byref(get_pos_2))
+# Check value
+# Reset all axes from group 0
+errCde = AdvMot.Acm2_GpCreate(gp_id, gp_arr, 0)
+```
 <a name="Acm2_GpHelix_Angle"></a>
 
 #### Acm2_GpHelix_Angle
 Set group helix angle.
 
+```python
+import time
+import os
+from ctypes import *
+from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI_CM2 as AdvMot
+from AcmP.AdvMotApi_CM2 import *
+from AcmP.AdvMotDrv import *
+from AcmP.AdvMotPropID_CM2 import PropertyID2
+
+dev_list = (DEVLIST*10)()
+out_ent = c_uint32(0)
+errCde = c_uint32(0)
+# Get Available
+errCde = AdvMot.Acm2_GetAvailableDevs(dev_list, 10, byref(out_ent))
+# Initial device
+errCde = AdvMot.Acm2_DevInitialize()
+
+gp_ax_arr = [c_uint32(0), c_uint32(1), c_uint32(2)]
+gp_id = c_uint32(0)
+gp_arr = (c_uint32 * len(gp_ax_arr))(*gp_ax_arr)
+# Reset all axes from group 0
+errCde = AdvMot.Acm2_GpCreate(gp_id, gp_arr, 0)
+# Creat group 0, and set axis 0, 1, 2 into group
+errCde = AdvMot.Acm2_GpCreate(gp_id, gp_arr, len(gp_arr))
+# get_axes size must be same as len_get
+len_get = c_uint32(64)
+get_axes = (c_uint32 * len_get.value)()
+# Get axes in group 0 and check
+errCde = AdvMot.Acm2_GpGetAxesInGroup(gp_id, get_axes, len_get)
+# Set mode as relative
+helix_mode = c_uint(ABS_MODE.MOVE_REL.value)
+# Set center as (200, 0)
+center_arr = [c_double(200), c_double(0), c_double(0)]
+centerArr = (c_double * len(center_arr))(*center_arr)
+# Set 120 as degree
+end_arr = [c_double(4000), c_double(4000), c_double(120)]
+endArr = (c_double * len(end_arr))(*end_arr)
+arr_element = c_uint32(len(center_arr))
+# Set direction as CW
+dir_mode = c_uint(ARC_DIRECTION.ARC_CW.value)
+# Set Helix movement
+errCde = AdvMot.Acm2_GpHelix_Angle(gp_id, helix_mode, centerArr, endArr, byref(arr_element), dir_mode)
+# Check status
+state = c_uint32(0)
+state_type = c_uint(AXIS_STATUS_TYPE.AXIS_STATE.value)
+AdvMot.Acm2_AxGetState(ax_id, state_type, byref(state))
+while (state.value != AXIS_STATE.STA_AX_READY.value):
+    time.sleep(1)
+    AdvMot.Acm2_AxGetState(ax_id, state_type, byref(state))
+# Get axis 0 position
+get_pos_0 = c_double(0)
+get_pos_1 = c_double(0)
+get_pos_2 = c_double(0)
+pos_type = c_uint(POSITION_TYPE.POSITION_CMD.value)
+# Get axis 0 position
+errCde = AdvMot.Acm2_AxGetPosition(gp_ax_arr[0], pos_type, byref(get_pos_0))
+# Get axis 1 position
+errCde = AdvMot.Acm2_AxGetPosition(gp_ax_arr[1], pos_type, byref(get_pos_1))
+# Get axis 2 position
+errCde = AdvMot.Acm2_AxGetPosition(gp_ax_arr[2], pos_type, byref(get_pos_2))
+# Check value
+# Reset all axes from group 0
+errCde = AdvMot.Acm2_GpCreate(gp_id, gp_arr, 0)
+```
 <a name="Acm2_GpResume"></a>
 
 #### Acm2_GpResume
@@ -1329,6 +1874,84 @@ Set group helix angle.
 #### Acm2_GpPause
 Set group pause motion.
 
+```python
+import time
+import os
+from ctypes import *
+from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI_CM2 as AdvMot
+from AcmP.AdvMotApi_CM2 import *
+from AcmP.AdvMotDrv import *
+from AcmP.AdvMotPropID_CM2 import PropertyID2
+
+dev_list = (DEVLIST*10)()
+out_ent = c_uint32(0)
+errCde = c_uint32(0)
+# Get Available
+errCde = AdvMot.Acm2_GetAvailableDevs(dev_list, 10, byref(out_ent))
+# Initial device
+errCde = AdvMot.Acm2_DevInitialize()
+
+gp_ax_arr = [c_uint32(0), c_uint32(1), c_uint32(2)]
+gp_id = c_uint32(0)
+gp_arr = (c_uint32 * len(gp_ax_arr))(*gp_ax_arr)
+# Reset all axes from group 0
+errCde = AdvMot.Acm2_GpCreate(gp_id, gp_arr, 0)
+# Creat group 0, and set axis 0, 1, 2 into group
+errCde = AdvMot.Acm2_GpCreate(gp_id, gp_arr, len(gp_arr))
+# get_axes size must be same as len_get
+len_get = c_uint32(64)
+get_axes = (c_uint32 * len_get.value)()
+# Get axes in group 0 and check
+errCde = AdvMot.Acm2_GpGetAxesInGroup(gp_id, get_axes, len_get)
+for idx in range(len_get.value):
+# Set mode as relative
+move_mode = c_uint(GP_LINE_MODE.LINE_REL.value)
+end_arr = [c_double(20000), c_double(20000), c_double(20000)]
+endArr = (c_double * len(end_arr))(*end_arr)
+arr_element = c_uint32(len(end_arr))
+errCde = AdvMot.Acm2_GpLine(gp_id, move_mode, endArr, arr_element)
+# Pause movement
+errCde = AdvMot.Acm2_GpPause(gp_id)
+# Check status
+state = c_uint32(0)
+state_type = c_uint(AXIS_STATUS_TYPE.AXIS_STATE.value)
+AdvMot.Acm2_AxGetState(ax_id, state_type, byref(state))
+while (state.value != AXIS_STATE.STA_AX_READY.value):
+    time.sleep(1)
+    AdvMot.Acm2_AxGetState(ax_id, state_type, byref(state))
+# Get axis 0 position
+get_pos_0 = c_double(0)
+get_pos_1 = c_double(0)
+get_pos_2 = c_double(0)
+pos_type = c_uint(POSITION_TYPE.POSITION_CMD.value)
+# Get axis 0 position
+errCde = AdvMot.Acm2_AxGetPosition(gp_ax_arr[0], pos_type, byref(get_pos_0))
+# Get axis 1 position
+errCde = AdvMot.Acm2_AxGetPosition(gp_ax_arr[1], pos_type, byref(get_pos_1))
+# Get axis 2 position
+errCde = AdvMot.Acm2_AxGetPosition(gp_ax_arr[2], pos_type, byref(get_pos_2))
+# Check value: Not equal to target position
+# Resume movement
+errCde = AdvMot.Acm2_GpResume(gp_id)
+# Check status
+while state.value != AXIS_STATE.STA_AX_READY.value:
+    time.sleep(1)
+    test_GetAxState()
+# Get axis 0 position
+get_pos_0 = c_double(0)
+get_pos_1 = c_double(0)
+get_pos_2 = c_double(0)
+pos_type = c_uint(POSITION_TYPE.POSITION_CMD.value)
+# Get axis 0 position
+errCde = AdvMot.Acm2_AxGetPosition(gp_ax_arr[0], pos_type, byref(get_pos_0))
+# Get axis 1 position
+errCde = AdvMot.Acm2_AxGetPosition(gp_ax_arr[1], pos_type, byref(get_pos_1))
+# Get axis 2 position
+errCde = AdvMot.Acm2_AxGetPosition(gp_ax_arr[2], pos_type, byref(get_pos_2))
+# Check value: Equal to target position
+# Reset all axes from group 0
+errCde = AdvMot.Acm2_GpCreate(gp_id, gp_arr, 0)
+```
 <a name="Acm2_GpMotionStop"></a>
 
 #### Acm2_GpMotionStop
@@ -1349,6 +1972,83 @@ Change group velocity by rate.
 #### Acm2_GpGetVel
 Get group velocity.
 
+
+```python
+import time
+import os
+from ctypes import *
+from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI_CM2 as AdvMot
+from AcmP.AdvMotApi_CM2 import *
+from AcmP.AdvMotDrv import *
+from AcmP.AdvMotPropID_CM2 import PropertyID2
+
+dev_list = (DEVLIST*10)()
+out_ent = c_uint32(0)
+errCde = c_uint32(0)
+# Get Available
+errCde = AdvMot.Acm2_GetAvailableDevs(dev_list, 10, byref(out_ent))
+# Initial device
+errCde = AdvMot.Acm2_DevInitialize()
+
+gp_ax_arr = [c_uint32(0), c_uint32(1), c_uint32(2)]
+gp_id = c_uint32(0)
+gp_arr = (c_uint32 * len(gp_ax_arr))(*gp_ax_arr)
+# Reset all axes from group 0
+errCde = AdvMot.Acm2_GpCreate(gp_id, gp_arr, 0)
+# Creat group 0, and set axis 0, 1, 2 into group
+errCde = AdvMot.Acm2_GpCreate(gp_id, gp_arr, len(gp_arr))
+# get_axes size must be same as len_get
+len_get = c_uint32(64)
+get_axes = (c_uint32 * len_get.value)()
+# Get axes in group 0 and check
+errCde = AdvMot.Acm2_GpGetAxesInGroup(gp_id, get_axes, len_get)
+for idx in range(len_get.value):
+# Set mode as relative
+move_mode = c_uint(GP_LINE_MODE.LINE_REL.value)
+end_arr = [c_double(200000), c_double(200000), c_double(200000)]
+endArr = (c_double * len(end_arr))(*end_arr)
+arr_element = c_uint32(len(end_arr))
+errCde = AdvMot.Acm2_GpLine(gp_id, move_mode, endArr, arr_element)
+# Check group status
+time.sleep(2)
+gp_state = c_uint32(0)
+errCde = AdvMot.Acm2_GpGetState(gp_id, byref(gp_state))
+print('gp_state:0x{0:x}'.format(gp_state.value))
+# Change velocity
+new_vel = c_double(5000)
+new_acc = c_double(9000)
+new_dec = c_double(4000)
+errCde = AdvMot.Acm2_GpChangeVel(gp_id, new_vel, new_acc, new_dec)
+vel_type = c_uint(VELOCITY_TYPE.VELOCITY_CMD.value)
+get_gp_vel = c_double(0)
+time.sleep(2)
+errCde = AdvMot.Acm2_GpGetVel(gp_id, vel_type, byref(get_gp_vel))
+print('gp vel:{0}'.format(get_gp_vel.value))
+# Set stop mode as deceleration to stop
+stop_mode = c_uint(MOTION_STOP_MODE.MOTION_STOP_MODE_DEC.value)
+errCde = AdvMot.Acm2_GpMotionStop(gp_id, stop_mode, new_dec)
+# Check status
+state = c_uint32(0)
+state_type = c_uint(AXIS_STATUS_TYPE.AXIS_STATE.value)
+AdvMot.Acm2_AxGetState(ax_id, state_type, byref(state))
+while (state.value != AXIS_STATE.STA_AX_READY.value):
+    time.sleep(1)
+    AdvMot.Acm2_AxGetState(ax_id, state_type, byref(state))
+# Get axis 0 position
+get_pos_0 = c_double(0)
+get_pos_1 = c_double(0)
+get_pos_2 = c_double(0)
+pos_type = c_uint(POSITION_TYPE.POSITION_CMD.value)
+# Get axis 0 position
+errCde = AdvMot.Acm2_AxGetPosition(gp_ax_arr[0], pos_type, byref(get_pos_0))
+# Get axis 1 position
+errCde = AdvMot.Acm2_AxGetPosition(gp_ax_arr[1], pos_type, byref(get_pos_1))
+# Get axis 2 position
+errCde = AdvMot.Acm2_AxGetPosition(gp_ax_arr[2], pos_type, byref(get_pos_2))
+# Check value: Not equal to target position
+# Reset all axes from group 0
+errCde = AdvMot.Acm2_GpCreate(gp_id, gp_arr, 0)
+```
 <a name="Acm2_GpSetSpeedProfile"></a>
 
 #### Acm2_GpSetSpeedProfile
@@ -1379,11 +2079,167 @@ Start move group after add path.
 #### Acm2_GpResetPath
 Reset group path table.
 
+```python
+import time
+import os
+from ctypes import *
+from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI_CM2 as AdvMot
+from AcmP.AdvMotApi_CM2 import *
+from AcmP.AdvMotDrv import *
+from AcmP.AdvMotPropID_CM2 import PropertyID2
+
+dev_list = (DEVLIST*10)()
+out_ent = c_uint32(0)
+errCde = c_uint32(0)
+# Get Available
+errCde = AdvMot.Acm2_GetAvailableDevs(dev_list, 10, byref(out_ent))
+# Initial device
+errCde = AdvMot.Acm2_DevInitialize()
+
+gp_ax_arr = [c_uint32(0), c_uint32(1)]
+gp_id = c_uint32(0)
+gp_arr = (c_uint32 * len(gp_ax_arr))(*gp_ax_arr)
+# Reset all axes from group 0
+errCde = AdvMot.Acm2_GpCreate(gp_id, gp_arr, 0)
+# Creat group 0, and set axis 0, 1 into group
+errCde = AdvMot.Acm2_GpCreate(gp_id, gp_arr, len(gp_arr))
+# get_axes size must be same as len_get
+len_get = c_uint32(64)
+get_axes = (c_uint32 * len_get.value)()
+# Get axes in group 0 and check
+errCde = AdvMot.Acm2_GpGetAxesInGroup(gp_id, get_axes, len_get)
+for idx in range(len_get.value):
+# Reset group path
+errCde = AdvMot.Acm2_GpResetPath(gp_id)
+# Set 2D Arc CW center, end position
+'''
+| axis | Arc center | Arc end |
+|------|------------|---------|
+|   0  |    8000    |  16000  |
+|   1  |      0     |    0    |
+'''
+# Set path table
+'''
+| index | move command | move mode | Vel High | Vel Low | Acc | Dec |   End Point  | Center Point |
+|-------|--------------|-----------|----------|---------|-----|-----|--------------|--------------|
+|   0   |  Rel2DArcCCW |BUFFER_MODE|   8000   |   1000  |10000|10000|(16000, 16000)| (8000, 8000) |
+|   1   |    EndPath   |BUFFER_MODE|     0    |     0   |  0  |  0  |       0      |      0       |
+'''
+move_cmd_arr = [c_uint32(MOTION_PATH_CMD.Rel2DArcCCW.value), c_uint32(MOTION_PATH_CMD.EndPath.value)]
+move_mode = c_uint(PATH_MOVE_MODE_CM2.BUFFER_MODE.value)
+fh = [c_double(8000), c_double(0)]
+fl = [c_double(1000), c_double(0)]
+acc = [c_double(10000), c_double(0)]
+dec = [c_double(10000), c_double(0)]
+end_arr = [
+    [c_double(16000), c_double(16000)], 
+    [c_double(0), c_double(0)]
+]
+center_arr = [
+    [c_double(8000), c_double(8000)], 
+    [c_double(0), c_double(0)]
+]
+arr_element = c_uint32(len(end_arr[0]))
+for i in range(1):
+    endArr = (c_double * len(end_arr[i]))(*end_arr[i])
+    centerArr = (c_double * len(center_arr[i]))(*center_arr[i])
+    errCde = AdvMot.Acm2_GpAddPath(gp_id, move_cmd_arr[i], move_mode, fh[i], fl[i], acc[i], dec[i], endArr, centerArr, arr_element)
+# Start move path
+errCde = AdvMot.Acm2_GpMovePath(gp_id)
+# Check status
+state = c_uint32(0)
+state_type = c_uint(AXIS_STATUS_TYPE.AXIS_STATE.value)
+AdvMot.Acm2_AxGetState(ax_id, state_type, byref(state))
+while (state.value != AXIS_STATE.STA_AX_READY.value):
+    time.sleep(1)
+    AdvMot.Acm2_AxGetState(ax_id, state_type, byref(state))
+# Get axis 0 position
+get_pos_0 = c_double(0)
+get_pos_1 = c_double(0)
+pos_type = c_uint(POSITION_TYPE.POSITION_CMD.value)
+# Get axis 0 position
+errCde = AdvMot.Acm2_AxGetPosition(gp_ax_arr[0], pos_type, byref(get_pos_0))
+# Get axis 1 position
+errCde = AdvMot.Acm2_AxGetPosition(gp_ax_arr[1], pos_type, byref(get_pos_1))
+# Check value: Equal to target position
+# Reset group path
+errCde = AdvMot.Acm2_GpResetPath(gp_id)
+# Reset all axes from group 0
+errCde = AdvMot.Acm2_GpCreate(gp_id, gp_arr, 0)
+```
 <a name="Acm2_GpGetPathStatus"></a>
 
 #### Acm2_GpGetPathStatus
 Get group path status.
 
+```python
+import time
+import os
+from ctypes import *
+from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI_CM2 as AdvMot
+from AcmP.AdvMotApi_CM2 import *
+from AcmP.AdvMotDrv import *
+from AcmP.AdvMotPropID_CM2 import PropertyID2
+
+dev_list = (DEVLIST*10)()
+out_ent = c_uint32(0)
+errCde = c_uint32(0)
+# Get Available
+errCde = AdvMot.Acm2_GetAvailableDevs(dev_list, 10, byref(out_ent))
+# Initial device
+errCde = AdvMot.Acm2_DevInitialize()
+
+gp_ax_arr = [c_uint32(0), c_uint32(1)]
+gp_id = c_uint32(0)
+gp_arr = (c_uint32 * len(gp_ax_arr))(*gp_ax_arr)
+# Reset all axes from group 0
+errCde = AdvMot.Acm2_GpCreate(gp_id, gp_arr, 0)
+# Creat group 0, and set axis 0, 1 into group
+errCde = AdvMot.Acm2_GpCreate(gp_id, gp_arr, len(gp_arr))
+# get_axes size must be same as len_get
+len_get = c_uint32(64)
+get_axes = (c_uint32 * len_get.value)()
+# Get axes in group 0 and check
+errCde = AdvMot.Acm2_GpGetAxesInGroup(gp_id, get_axes, len_get)
+for idx in range(len_get.value):
+# Reset group path
+errCde = AdvMot.Acm2_GpResetPath(gp_id)
+# Create path file by path editor inside the Utility
+path_bin_file = b'test\\testPath.bin'
+'''
+| index | move command | move mode | Vel High | Vel Low | Acc | Dec |   End Point  |
+|-------|--------------|-----------|----------|---------|-----|-----|--------------|
+|   0   |   Rel2DLine  |BUFFER_MODE|   8000   |   1000  |10000|10000|(10000, 10000)|
+|   1   |   Rel2DLine  |BUFFER_MODE|   8000   |   1000  |10000|10000|(10000, 10000)|
+|   2   |    EndPath   |BUFFER_MODE|     0    |     0   |  0  |  0  |       0      |
+'''
+cnt = c_uint32(0)
+errCde = AdvMot.Acm2_GpLoadPath(gp_id, path_bin_file, byref(cnt))
+# Start move path
+errCde = AdvMot.Acm2_GpMovePath(gp_id)
+path_status = c_uint(0)
+errCde = AdvMot.Acm2_GpGetPathStatus(gp_id, byref(path_status))
+# Check status
+state = c_uint32(0)
+state_type = c_uint(AXIS_STATUS_TYPE.AXIS_STATE.value)
+AdvMot.Acm2_AxGetState(ax_id, state_type, byref(state))
+while (state.value != AXIS_STATE.STA_AX_READY.value):
+    time.sleep(1)
+    AdvMot.Acm2_AxGetState(ax_id, state_type, byref(state))
+# Get axis 0 position
+get_pos_0 = c_double(0)
+get_pos_1 = c_double(0)
+pos_type = c_uint(POSITION_TYPE.POSITION_CMD.value)
+# Get axis 0 position
+errCde = AdvMot.Acm2_AxGetPosition(gp_ax_arr[0], pos_type, byref(get_pos_0))
+# Get axis 1 position
+errCde = AdvMot.Acm2_AxGetPosition(gp_ax_arr[1], pos_type, byref(get_pos_1))
+# Check value: Equal to target position
+# Reset group path
+errCde = AdvMot.Acm2_GpResetPath(gp_id)
+# Reset all axes from group 0
+errCde = AdvMot.Acm2_GpCreate(gp_id, gp_arr, 0)
+```
 <a name="Acm2_GpMoveSelPath"></a>
 
 #### Acm2_GpMoveSelPath
@@ -1421,28 +2277,28 @@ Wait axis between path.
 
 #### Acm2_GpLookAheadPathFile
 
-<a name="Acm2_GpLoadAndMovePath"></a>
+<!-- <a name="Acm2_GpLoadAndMovePath"></a>
 
-#### Acm2_GpLoadAndMovePath
+#### Acm2_GpLoadAndMovePath -->
 
 <a name="Acm2_ChGetDIBit"></a>
 
 #### Acm2_ChGetDIBit
 Get DI bit by channel.
 
-<a name="Acm2_ChSetDOBitByRingN"></a>
+<a name="Acm2_ChSetDOBitByRingNo"></a>
 
-#### Acm2_ChSetDOBitByRingN
+#### Acm2_ChSetDOBitByRingNo
 Set DO bit by channel, and ring number.
 
-<a name="Acm2_ChGetDOBitByRingN"></a>
+<a name="Acm2_ChGetDOBitByRingNo"></a>
 
-#### Acm2_ChGetDOBitByRingN
+#### Acm2_ChGetDOBitByRingNo
 Get DO bit by ring number, and channel.
 
-<a name="Acm2_ChGetDIBitByRingN"></a>
+<a name="Acm2_ChGetDIBitByRingNo"></a>
 
-#### Acm2_ChGetDIBitByRingN
+#### Acm2_ChGetDIBitByRingNo
 Get DI bit by ring number, and channel.
 
 <a name="Acm2_ChSetDOByte"></a>
@@ -1455,6 +2311,47 @@ Set DO channel byte.
 #### Acm2_ChGetDOByte
 Get DO channel byte.
 
+```python
+import time
+import os
+from ctypes import *
+from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI_CM2 as AdvMot
+from AcmP.AdvMotApi_CM2 import *
+from AcmP.AdvMotDrv import *
+from AcmP.AdvMotPropID_CM2 import PropertyID2
+
+# Using this example code after connect AMAX-5057SO
+# Check how to start a EtherCAT subdevice by Acm2_DevConnect
+
+dev_list = (DEVLIST*10)()
+out_ent = c_uint32(0)
+errCde = c_uint32(0)
+# Get Available
+errCde = AdvMot.Acm2_GetAvailableDevs(dev_list, 10, byref(out_ent))
+# Initial device
+errCde = AdvMot.Acm2_DevInitialize()
+
+# Local DO of PCIE1203 is port 0
+port_num = c_uint32(1)
+start_ch = c_uint32(0)
+get_byte_value = [c_uint32(0)] * 8
+time.sleep(0.5)
+# Get DO byte of 5057SO (0~7)
+errCde = AdvMot.Acm2_ChGetDOByte(start_ch, port_num, byref(get_byte_value[0]))
+set_byte_value_on = [c_uint32(DO_ONOFF.DO_ON.value)] * 8
+set_byte_value_off = [c_uint32(DO_ONOFF.DO_OFF.value)] * 8
+set_value_arr_on = (c_uint32 * len(set_byte_value_on))(*set_byte_value_on)
+set_value_arr_off = (c_uint32 * len(set_byte_value_off))(*set_byte_value_off)
+time.sleep(0.5)
+# Set DO byte of 5057SO (0~7)
+errCde = AdvMot.Acm2_ChSetDOByte(start_ch, port_num, set_value_arr_on)
+time.sleep(1)
+# Get DO byte of 5057SO (0~7)
+errCde = AdvMot.Acm2_ChGetDOByte(start_ch, port_num, byref(get_byte_value[0]))
+time.sleep(0.5)
+# Set DO byte of 5057SO (0~7)
+errCde = AdvMot.Acm2_ChSetDOByte(start_ch, port_num, set_value_arr_off)
+```
 <a name="Acm2_ChGetDIByte"></a>
 
 #### Acm2_ChGetDIByte
@@ -1740,11 +2637,74 @@ Download ENI file.
 #### Acm2_DevConnect
 Connect subdevices.
 
+```python
+import time
+import os
+from ctypes import *
+from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI_CM2 as AdvMot
+from AcmP.AdvMotApi_CM2 import *
+from AcmP.AdvMotDrv import *
+from AcmP.AdvMotPropID_CM2 import PropertyID2
+
+dev_list = (DEVLIST*10)()
+out_ent = c_uint32(0)
+errCde = c_uint32(0)
+# Get Available
+errCde = AdvMot.Acm2_GetAvailableDevs(dev_list, 10, byref(out_ent))
+# Initial device
+errCde = AdvMot.Acm2_DevInitialize()
+
+# eni file can be create by the Utility
+eni_path = b'test\\63000000_eni1.xml'
+# Motion ring number:0, IO Ring number:1, IORing is SM mode only
+ring_no = c_uint32(1)
+errCde = AdvMot.Acm2_DevLoadENI(ring_no, eni_path)
+# After load eni file, StartFieldbus/Connect to subdevices.
+errCde = AdvMot.Acm2_DevConnect(ring_no)
+# Set EtherCAT type as position
+ecat_type = c_uint(ECAT_ID_TYPE.SUBDEVICE_POS.value)
+# SubDevice position 0 is AMAX-5074
+sub_dev0 = c_uint32(0)
+# SubDevice position 1 is AMAX-5057SO
+sub_dev1 = c_uint32(1)
+get_sub_dev_state0 = c_uint32(0)
+get_sub_dev_state1 = c_uint32(0)
+while (get_sub_dev_state0.value != SUB_DEV_STATE.EC_SLAVE_STATE_OP.value) or (get_sub_dev_state1.value != SUB_DEV_STATE.EC_SLAVE_STATE_OP.value):
+    # Get AMAX-5074 status
+    errCde = AdvMot.Acm2_DevGetSubDeviceStates(ring_no, ecat_type, sub_dev0, byref(get_sub_dev_state0))
+    # Get AMAX-5057SO status
+    errCde = AdvMot.Acm2_DevGetSubDeviceStates(ring_no, ecat_type, sub_dev1, byref(get_sub_dev_state1))
+    time.sleep(0.5)
+```
 <a name="Acm2_DevDisConnect"></a>
 
 #### Acm2_DevDisConnect
 Disconnect subdevices
 
+```python
+import time
+import os
+from ctypes import *
+from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI_CM2 as AdvMot
+from AcmP.AdvMotApi_CM2 import *
+from AcmP.AdvMotDrv import *
+from AcmP.AdvMotPropID_CM2 import PropertyID2
+
+dev_list = (DEVLIST*10)()
+out_ent = c_uint32(0)
+errCde = c_uint32(0)
+# Get Available
+errCde = AdvMot.Acm2_GetAvailableDevs(dev_list, 10, byref(out_ent))
+# Initial device
+errCde = AdvMot.Acm2_DevInitialize()
+
+# Motion ring number:0, IO Ring number:1, IORing is SM mode only
+ring_no0 = c_uint32(0)
+ring_no1 = c_uint32(1)
+# Disconnect devices
+errCde = AdvMot.Acm2_DevDisConnect(ring_no0)
+errCde = AdvMot.Acm2_DevDisConnect(ring_no1)
+```
 <a name="Acm2_DevGetSubDevicesID"></a>
 
 #### Acm2_DevGetSubDevicesID
@@ -1755,11 +2715,74 @@ Get subdevices id.
 #### Acm2_DevGetMDeviceInfo
 Get main device information.
 
+```python
+import os
+import time
+import xml.etree.ElementTree as xml
+from ctypes import *
+from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI_CM2 as AdvMot
+from AcmP.AdvMotApi_CM2 import *
+from AcmP.AdvMotDrv import *
+from AcmP.AdvMotPropID_CM2 import PropertyID2
+
+dev_list = (DEVLIST*10)()
+out_ent = c_uint32(0)
+errCde = c_uint32(0)
+# Get Available
+errCde = AdvMot.Acm2_GetAvailableDevs(dev_list, 10, byref(out_ent))
+# Initial device
+errCde = AdvMot.Acm2_DevInitialize()
+
+ring_no = c_uint32(1)
+main_dev_info = ADVAPI_MDEVICE_INFO()
+errCde = AdvMot.Acm2_DevGetMDeviceInfo(ring_no, byref(main_dev_info))
+print('slave_count:{0}'.format(main_dev_info.slave_count))
+```
 <a name="Acm2_DevGetSubDeviceInfo"></a>
 
 #### Acm2_DevGetSubDeviceInfo
 Get subdevice information.
 
+```python
+import os
+import time
+import xml.etree.ElementTree as xml
+from ctypes import *
+from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI_CM2 as AdvMot
+from AcmP.AdvMotApi_CM2 import *
+from AcmP.AdvMotDrv import *
+from AcmP.AdvMotPropID_CM2 import PropertyID2
+
+dev_list = (DEVLIST*10)()
+out_ent = c_uint32(0)
+errCde = c_uint32(0)
+# Get Available
+errCde = AdvMot.Acm2_GetAvailableDevs(dev_list, 10, byref(out_ent))
+# Initial device
+errCde = AdvMot.Acm2_DevInitialize()
+
+ring_no = c_uint32(1)
+# Get subdevice ID
+id_type = c_uint(ECAT_ID_TYPE.SUBDEVICE_ID.value)
+id_cnt = c_uint32(3)
+phys_addr_arr = [0] * id_cnt.value
+sub_dev_info_arr = (ADVAPI_SUBDEVICE_INFO_CM2*2)()
+id_arr = (c_uint32 * id_cnt.value)()
+errCde = AdvMot.Acm2_DevGetSubDevicesID(ring_no, id_type, id_arr, byref(id_cnt))
+if os.name == 'nt':
+    tree = xml.parse('test\\eni1.xml')
+else:
+    tree = xml.parse('test/eni1.xml')
+idx = 0
+# Check value from xml
+for subdev in tree.findall('.//Slave'):
+    phys_addr = int(subdev.find('Info/PhysAddr').text)
+    phys_addr_arr[idx] = phys_addr
+    idx += 1
+for i in range(id_cnt.value):
+    sub_dev_info = ADVAPI_SUBDEVICE_INFO_CM2()
+    errCde = AdvMot.Acm2_DevGetSubDeviceInfo(ring_no, c_uint(ECAT_ID_TYPE.SUBDEVICE_POS.value), i, byref(sub_dev_info))
+```
 <a name="Acm2_DevGetSubDeviceFwVersion"></a>
 
 #### Acm2_DevGetSubDeviceFwVersion
@@ -1780,6 +2803,49 @@ Set subdevice status.
 #### Acm2_DevGetSubDeviceStates
 Get subdevice states.
 
+```python
+import os
+import time
+import xml.etree.ElementTree as xml
+from ctypes import *
+from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI_CM2 as AdvMot
+from AcmP.AdvMotApi_CM2 import *
+from AcmP.AdvMotDrv import *
+from AcmP.AdvMotPropID_CM2 import PropertyID2
+
+dev_list = (DEVLIST*10)()
+out_ent = c_uint32(0)
+errCde = c_uint32(0)
+# Get Available
+errCde = AdvMot.Acm2_GetAvailableDevs(dev_list, 10, byref(out_ent))
+# Initial device
+errCde = AdvMot.Acm2_DevInitialize()
+
+# eni file can be create by the Utility
+if os.name == 'nt':
+    eni_path = b'test\\eni1.xml'
+else:
+    eni_path = b'test/eni1.xml'
+# Motion ring number:0, IO Ring number:1, IORing is SM mode only
+ring_no = c_uint32(1)
+errCde = AdvMot.Acm2_DevLoadENI(ring_no, eni_path)
+# After load eni file, StartFieldbus/Connect to subdevices.
+errCde = AdvMot.Acm2_DevConnect(ring_no)
+# Set EtherCAT type as position
+ecat_type = c_uint(ECAT_ID_TYPE.SUBDEVICE_POS.value)
+# SubDevice position 0 is AMAX-5074
+sub_dev0 = c_uint32(0)
+# SubDevice position 1 is AMAX-5057SO
+sub_dev1 = c_uint32(1)
+get_sub_dev_state0 = c_uint32(0)
+get_sub_dev_state1 = c_uint32(0)
+while (get_sub_dev_state0.value != SUB_DEV_STATE.EC_SLAVE_STATE_OP.value) or (get_sub_dev_state1.value != SUB_DEV_STATE.EC_SLAVE_STATE_OP.value):
+    # Get AMAX-5074 status
+    errCde = AdvMot.Acm2_DevGetSubDeviceStates(ring_no, ecat_type, sub_dev0, byref(get_sub_dev_state0))
+    # Get AMAX-5057SO status
+    errCde = AdvMot.Acm2_DevGetSubDeviceStates(ring_no, ecat_type, sub_dev1, byref(get_sub_dev_state1))
+    time.sleep(0.5)
+```
 <a name="Acm2_DevWriteSDO"></a>
 
 #### Acm2_DevWriteSDO
@@ -1800,6 +2866,47 @@ Write data by PDO.
 #### Acm2_DevReadPDO
 Read data by PDO.
 
+```python
+import os
+import time
+import xml.etree.ElementTree as xml
+from ctypes import *
+from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI_CM2 as AdvMot
+from AcmP.AdvMotApi_CM2 import *
+from AcmP.AdvMotDrv import *
+from AcmP.AdvMotPropID_CM2 import PropertyID2
+
+dev_list = (DEVLIST*10)()
+out_ent = c_uint32(0)
+errCde = c_uint32(0)
+# Get Available
+errCde = AdvMot.Acm2_GetAvailableDevs(dev_list, 10, byref(out_ent))
+# Initial device
+errCde = AdvMot.Acm2_DevInitialize()
+
+# Ring as IO Ring
+ring_no = c_uint32(1)
+# set by position
+id_type = c_uint(ECAT_ID_TYPE.SUBDEVICE_POS.value)
+sub_dev_pos = c_uint32(1)
+# AMAX-5057SO 0x3101:01 is DO(0)
+pdo_idx = c_uint32(0x3101)
+pdo_sub_idx = c_uint32(0x01)
+# DO(0) data type is boolean
+pdo_type = c_uint32(ECAT_TYPE.ECAT_TYPE_BOOL.value)
+pdo_data_size = c_uint32(sizeof(c_bool))
+val_on = c_bool(1)
+val_off = c_bool(0)
+get_value = c_bool(0)
+# Set DO(0) on by PDO
+errCde = AdvMot.Acm2_DevWritePDO(ring_no, id_type, sub_dev_pos, pdo_idx, pdo_sub_idx, pdo_type, pdo_data_size, byref(val_on))
+# Get DO(0) value by PDO
+errCde = AdvMot.Acm2_DevReadPDO(ring_no, id_type, sub_dev_pos, pdo_idx, pdo_sub_idx, pdo_type, pdo_data_size, byref(get_value))
+# Set DO(0) off by PDO
+errCde = AdvMot.Acm2_DevWritePDO(ring_no, id_type, sub_dev_pos, pdo_idx, pdo_sub_idx, pdo_type, pdo_data_size, byref(val_off))
+# Get DO(0) value by PDO
+errCde = AdvMot.Acm2_DevReadPDO(ring_no, id_type, sub_dev_pos, pdo_idx, pdo_sub_idx, pdo_type, pdo_data_size, byref(get_value))
+```
 <a name="Acm2_DevWriteReg"></a>
 
 #### Acm2_DevWriteReg

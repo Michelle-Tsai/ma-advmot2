@@ -129,7 +129,7 @@ class AdvCmnAPI_CM2:
 
     try:
         Acm2_DevLoadConfig = lib.Acm2_DevLoadConfig
-        Acm2_DevLoadConfig.argtypes = [c_uint32, POINTER(c_int8)]
+        Acm2_DevLoadConfig.argtypes = [c_uint32, c_char_p]
         Acm2_DevLoadConfig.restype = c_uint32
     except:
         pass
@@ -164,7 +164,7 @@ class AdvCmnAPI_CM2:
 
     try:
         Acm2_DevPreviewMotion = lib.Acm2_DevPreviewMotion
-        Acm2_DevPreviewMotion.argtypes = [c_uint32, POINTER(c_int8), POINTER(c_int8), c_uint16]
+        Acm2_DevPreviewMotion.argtypes = [c_uint32, c_char_p, c_char_p, c_uint16]
         Acm2_DevPreviewMotion.restype = c_uint32
     except:
         pass
@@ -627,7 +627,7 @@ class AdvCmnAPI_CM2:
 # Path
     try:
         Acm2_GpLoadPath = lib.Acm2_GpLoadPath
-        Acm2_GpLoadPath.argtypes = [c_uint32, POINTER(c_int8), POINTER(c_uint32)]
+        Acm2_GpLoadPath.argtypes = [c_uint32, c_char_p, POINTER(c_uint32)]
         Acm2_GpLoadPath.restype = c_uint32
     except:
         pass
@@ -655,7 +655,7 @@ class AdvCmnAPI_CM2:
 
     try:
         Acm2_GpGetPathStatus = lib.Acm2_GpGetPathStatus
-        Acm2_GpGetPathStatus.argtypes = [c_uint32, POINTER(PATH_STATUS)]
+        Acm2_GpGetPathStatus.argtypes = [c_uint32, POINTER(c_uint)]
         Acm2_GpGetPathStatus.restype = c_uint32
     except:
         pass
@@ -704,24 +704,24 @@ class AdvCmnAPI_CM2:
 
     try:
         Acm2_GpLookAheadPath = lib.Acm2_GpLookAheadPath
-        Acm2_GpLookAheadPath.argtypes = [c_uint32, c_uint16, POINTER(c_int8)]
+        Acm2_GpLookAheadPath.argtypes = [c_uint32, c_uint16, c_char_p]
         Acm2_GpLookAheadPath.restype = c_uint32
     except:
         pass
 
     try:
         Acm2_GpLookAheadPathFile = lib.Acm2_GpLookAheadPathFile
-        Acm2_GpLookAheadPathFile.argtypes = [c_uint32, c_uint16, POINTER(c_int8), POINTER(c_int8), POINTER(c_uint32)]
+        Acm2_GpLookAheadPathFile.argtypes = [c_uint32, c_uint16, c_char_p, c_char_p, POINTER(c_uint32)]
         Acm2_GpLookAheadPathFile.restype = c_uint32
     except:
         pass
 
-    try:
-        Acm2_GpLoadAndMovePath = lib.Acm2_GpLoadAndMovePath
-        Acm2_GpLoadAndMovePath.argtypes = [c_uint32, POINTER(c_int8), POINTER(c_uint32)]
-        Acm2_GpLoadAndMovePath.restype = c_uint32
-    except:
-        pass
+    # try:
+    #     Acm2_GpLoadAndMovePath = lib.Acm2_GpLoadAndMovePath
+    #     Acm2_GpLoadAndMovePath.argtypes = [c_uint32, c_char_p, POINTER(c_uint32)]
+    #     Acm2_GpLoadAndMovePath.restype = c_uint32
+    # except:
+    #     pass
 
 # DIO
     try:
@@ -746,23 +746,23 @@ class AdvCmnAPI_CM2:
         pass
 
     try:
-        Acm2_ChSetDOBitByRingN = lib.Acm2_ChSetDOBitByRingN
-        Acm2_ChSetDOBitByRingN.argtypes = [c_uint32, c_uint32, c_uint32, c_uint32]
-        Acm2_ChSetDOBitByRingN.restype = c_uint32
+        Acm2_ChSetDOBitByRingNo = lib.Acm2_ChSetDOBitByRingNo
+        Acm2_ChSetDOBitByRingNo.argtypes = [c_uint32, c_uint32, c_uint32, c_uint32]
+        Acm2_ChSetDOBitByRingNo.restype = c_uint32
     except:
         pass
 
     try:
-        Acm2_ChGetDOBitByRingN = lib.Acm2_ChGetDOBitByRingN
-        Acm2_ChGetDOBitByRingN.argtypes = [c_uint32, c_uint32, c_uint32, POINTER(c_uint32)]
-        Acm2_ChGetDOBitByRingN.restype = c_uint32
+        Acm2_ChGetDOBitByRingNo = lib.Acm2_ChGetDOBitByRingNo
+        Acm2_ChGetDOBitByRingNo.argtypes = [c_uint32, c_uint32, c_uint32, POINTER(c_uint32)]
+        Acm2_ChGetDOBitByRingNo.restype = c_uint32
     except:
         pass
 
     try:
-        Acm2_ChGetDIBitByRingN = lib.Acm2_ChGetDIBitByRingN
-        Acm2_ChGetDIBitByRingN.argtypes = [c_uint32, c_uint32, c_uint32, POINTER(c_uint32)]
-        Acm2_ChGetDIBitByRingN.restype = c_uint32
+        Acm2_ChGetDIBitByRingNo = lib.Acm2_ChGetDIBitByRingNo
+        Acm2_ChGetDIBitByRingNo.argtypes = [c_uint32, c_uint32, c_uint32, POINTER(c_uint32)]
+        Acm2_ChGetDIBitByRingNo.restype = c_uint32
     except:
         pass
 
@@ -1069,7 +1069,7 @@ class AdvCmnAPI_CM2:
 
     try:
         Acm2_ChLoadPWMTableFile = lib.Acm2_ChLoadPWMTableFile
-        Acm2_ChLoadPWMTableFile.argtypes = [c_uint32, POINTER(c_int8), POINTER(c_uint32)]
+        Acm2_ChLoadPWMTableFile.argtypes = [c_uint32, c_char_p, POINTER(c_uint32)]
         Acm2_ChLoadPWMTableFile.restype = c_uint32
     except:
         pass
@@ -1167,7 +1167,7 @@ class AdvCmnAPI_CM2:
 
     try:
         Acm2_DevDownLoadDSPFrmWare_STP2 = lib.Acm2_DevDownLoadDSPFrmWare_STP2
-        Acm2_DevDownLoadDSPFrmWare_STP2.argtypes = [c_uint32, POINTER(c_int8)]
+        Acm2_DevDownLoadDSPFrmWare_STP2.argtypes = [c_uint32, c_char_p]
         Acm2_DevDownLoadDSPFrmWare_STP2.restype = c_uint32
     except:
         pass
@@ -1195,7 +1195,7 @@ class AdvCmnAPI_CM2:
 
     try:
         Acm2_DevGetSubDevicesID = lib.Acm2_DevGetSubDevicesID
-        Acm2_DevGetSubDevicesID.argtypes = [c_uint32, c_int, POINTER(c_uint32), POINTER(c_uint32)]
+        Acm2_DevGetSubDevicesID.argtypes = [c_uint32, c_uint, POINTER(c_uint32), POINTER(c_uint32)]
         Acm2_DevGetSubDevicesID.restype = c_uint32
     except:
         pass
@@ -1216,7 +1216,7 @@ class AdvCmnAPI_CM2:
 
     try:
         Acm2_DevGetSubDeviceFwVersion = lib.Acm2_DevGetSubDeviceFwVersion
-        Acm2_DevGetSubDeviceFwVersion.argtypes = [c_uint32, c_int, c_uint32, c_char_p]
+        Acm2_DevGetSubDeviceFwVersion.argtypes = [c_uint32, c_uint, c_uint32, c_char_p]
         Acm2_DevGetSubDeviceFwVersion.restype = c_uint32
     except:
         pass

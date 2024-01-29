@@ -295,6 +295,230 @@
         </CoE>
       </Mailbox>
     </Slave>
+    <Slave>
+      <Info>
+        <Name>AMAX-4820 4-ch Isolated Analog Output EtherCAT I/O Module</Name>
+        <PhysAddr>33</PhysAddr>
+        <AutoIncAddr>2</AutoIncAddr>
+        <Physics>YY</Physics>
+        <VendorId>5118</VendorId>
+        <ProductCode>18464</ProductCode>
+        <RevisionNo>0</RevisionNo>
+        <SerialNo>0</SerialNo>
+        <ProductRevision>Advantech Co., Ltd.%AMAX-4800_v1.9.5.xml</ProductRevision>
+      </Info>
+      <ProcessData>
+        <Send>
+          <BitStart>16</BitStart>
+          <BitLength xsi:type="xsd:int">64</BitLength>
+        </Send>
+        <Sm0>
+          <Type>MBoxOut</Type>
+          <DefaultSize>128</DefaultSize>
+          <StartAddress>4096</StartAddress>
+          <ControlByte>38</ControlByte>
+          <Enable>true</Enable>
+        </Sm0>
+        <Sm1>
+          <Type>MBoxIn</Type>
+          <DefaultSize>128</DefaultSize>
+          <StartAddress>4608</StartAddress>
+          <ControlByte>34</ControlByte>
+          <Enable>true</Enable>
+        </Sm1>
+        <Sm2>
+          <Type>Outputs</Type>
+          <DefaultSize>2</DefaultSize>
+          <StartAddress>5120</StartAddress>
+          <ControlByte>100</ControlByte>
+          <Enable>true</Enable>
+          <Pdo>5632</Pdo>
+        </Sm2>
+        <Sm3>
+          <Type>Inputs</Type>
+          <DefaultSize>2</DefaultSize>
+          <StartAddress>5632</StartAddress>
+          <ControlByte>32</ControlByte>
+          <Enable>false</Enable>
+        </Sm3>
+        <RxPdo Fixed="true" Mandatory="true" Sm="2">
+          <Index>#x1600</Index>
+          <Name>Analog output</Name>
+          <Entry>
+            <Index>#x7000</Index>
+            <SubIndex>#x01</SubIndex>
+            <BitLen>16</BitLen>
+            <Name>AO 0</Name>
+            <DataType>UINT</DataType>
+          </Entry>
+          <Entry>
+            <Index>#x7000</Index>
+            <SubIndex>#x02</SubIndex>
+            <BitLen>16</BitLen>
+            <Name>AO 1</Name>
+            <DataType>UINT</DataType>
+          </Entry>
+          <Entry>
+            <Index>#x7000</Index>
+            <SubIndex>#x03</SubIndex>
+            <BitLen>16</BitLen>
+            <Name>AO 2</Name>
+            <DataType>UINT</DataType>
+          </Entry>
+          <Entry>
+            <Index>#x7000</Index>
+            <SubIndex>#x04</SubIndex>
+            <BitLen>16</BitLen>
+            <Name>AO 3</Name>
+            <DataType>UINT</DataType>
+          </Entry>
+        </RxPdo>
+      </ProcessData>
+      <Mailbox>
+        <CoE>
+          <InitCmds />
+          <Profile>
+            <ChannelInfo>
+              <ProfileNo xsi:type="xsd:int">5001</ProfileNo>
+            </ChannelInfo>
+          </Profile>
+        </CoE>
+      </Mailbox>
+    </Slave>
+    <Slave>
+      <Info>
+        <Name>AMAX-4817 8-ch Isolated Analog Input EtherCAT I/O Module</Name>
+        <PhysAddr>85</PhysAddr>
+        <AutoIncAddr>3</AutoIncAddr>
+        <Physics>YY</Physics>
+        <VendorId>5118</VendorId>
+        <ProductCode>18455</ProductCode>
+        <RevisionNo>0</RevisionNo>
+        <SerialNo>0</SerialNo>
+        <ProductRevision>Advantech Co., Ltd.%AMAX-4800_v1.9.5.xml</ProductRevision>
+      </Info>
+      <ProcessData>
+        <Send>
+          <BitStart>80</BitStart>
+          <BitLength xsi:type="xsd:int">8</BitLength>
+        </Send>
+        <Recv>
+          <BitStart>192</BitStart>
+          <BitLength xsi:type="xsd:int">128</BitLength>
+        </Recv>
+        <Sm0>
+          <Type>MBoxOut</Type>
+          <DefaultSize>128</DefaultSize>
+          <StartAddress>4096</StartAddress>
+          <ControlByte>38</ControlByte>
+          <Enable>true</Enable>
+        </Sm0>
+        <Sm1>
+          <Type>MBoxIn</Type>
+          <DefaultSize>128</DefaultSize>
+          <StartAddress>4608</StartAddress>
+          <ControlByte>34</ControlByte>
+          <Enable>true</Enable>
+        </Sm1>
+        <Sm2>
+          <Type>Outputs</Type>
+          <DefaultSize>0</DefaultSize>
+          <StartAddress>5120</StartAddress>
+          <ControlByte>100</ControlByte>
+          <Enable>true</Enable>
+          <Pdo>5632</Pdo>
+        </Sm2>
+        <Sm3>
+          <Type>Inputs</Type>
+          <DefaultSize>1</DefaultSize>
+          <StartAddress>5632</StartAddress>
+          <ControlByte>32</ControlByte>
+          <Enable>true</Enable>
+          <Pdo>6656</Pdo>
+        </Sm3>
+        <RxPdo Fixed="true" Mandatory="true" Sm="2">
+          <Index>#x1600</Index>
+          <Name>Dummy output</Name>
+          <Entry>
+            <Index>#x7000</Index>
+            <SubIndex>#x01</SubIndex>
+            <BitLen>8</BitLen>
+            <Name>Dummy output 0</Name>
+            <DataType>USINT</DataType>
+          </Entry>
+        </RxPdo>
+        <TxPdo Fixed="true" Mandatory="true" Sm="3">
+          <Index>#x1a00</Index>
+          <Name>Analog input</Name>
+          <Entry>
+            <Index>#x6000</Index>
+            <SubIndex>#x01</SubIndex>
+            <BitLen>16</BitLen>
+            <Name>AI 0</Name>
+            <DataType>UINT</DataType>
+          </Entry>
+          <Entry>
+            <Index>#x6000</Index>
+            <SubIndex>#x02</SubIndex>
+            <BitLen>16</BitLen>
+            <Name>AI 1</Name>
+            <DataType>UINT</DataType>
+          </Entry>
+          <Entry>
+            <Index>#x6000</Index>
+            <SubIndex>#x03</SubIndex>
+            <BitLen>16</BitLen>
+            <Name>AI 2</Name>
+            <DataType>UINT</DataType>
+          </Entry>
+          <Entry>
+            <Index>#x6000</Index>
+            <SubIndex>#x04</SubIndex>
+            <BitLen>16</BitLen>
+            <Name>AI 3</Name>
+            <DataType>UINT</DataType>
+          </Entry>
+          <Entry>
+            <Index>#x6000</Index>
+            <SubIndex>#x05</SubIndex>
+            <BitLen>16</BitLen>
+            <Name>AI 4</Name>
+            <DataType>UINT</DataType>
+          </Entry>
+          <Entry>
+            <Index>#x6000</Index>
+            <SubIndex>#x06</SubIndex>
+            <BitLen>16</BitLen>
+            <Name>AI 5</Name>
+            <DataType>UINT</DataType>
+          </Entry>
+          <Entry>
+            <Index>#x6000</Index>
+            <SubIndex>#x07</SubIndex>
+            <BitLen>16</BitLen>
+            <Name>AI 6</Name>
+            <DataType>UINT</DataType>
+          </Entry>
+          <Entry>
+            <Index>#x6000</Index>
+            <SubIndex>#x08</SubIndex>
+            <BitLen>16</BitLen>
+            <Name>AI 7</Name>
+            <DataType>UINT</DataType>
+          </Entry>
+        </TxPdo>
+      </ProcessData>
+      <Mailbox>
+        <CoE>
+          <InitCmds />
+          <Profile>
+            <ChannelInfo>
+              <ProfileNo xsi:type="xsd:int">5001</ProfileNo>
+            </ChannelInfo>
+          </Profile>
+        </CoE>
+      </Mailbox>
+    </Slave>
     <Cyclic>
       <Comment>Advantech MotionNavi Series Cyclic</Comment>
       <CycleTime>1000</CycleTime>

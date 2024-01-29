@@ -1421,14 +1421,26 @@ class AdvCmnAPI_Test(unittest.TestCase):
         sub_dev0 = c_uint32(0)
         # SubDevice position 1 is AMAX-5057SO
         sub_dev1 = c_uint32(1)
+        # Sundevice position 2 is AMAX-4820
+        sub_dev2 = c_uint32(2)
+        # Sundevice position 3 is AMAX-4817
+        sub_dev3 = c_uint32(3)
         get_sub_dev_state0 = c_uint32(0)
         get_sub_dev_state1 = c_uint32(0)
-        while (get_sub_dev_state0.value != SUB_DEV_STATE.EC_SLAVE_STATE_OP.value) or (get_sub_dev_state1.value != SUB_DEV_STATE.EC_SLAVE_STATE_OP.value):
+        get_sub_dev_state2 = c_uint32(0)
+        get_sub_dev_state3 = c_uint32(0)
+        while (get_sub_dev_state0.value != SUB_DEV_STATE.EC_SLAVE_STATE_OP.value) or (get_sub_dev_state1.value != SUB_DEV_STATE.EC_SLAVE_STATE_OP.value) or (get_sub_dev_state2.value != SUB_DEV_STATE.EC_SLAVE_STATE_OP.value) or (get_sub_dev_state3.value != SUB_DEV_STATE.EC_SLAVE_STATE_OP.value):
             # Get AMAX-5074 status
             self.errCde = self.AdvMot.Acm2_DevGetSubDeviceStates(ring_no, ecat_type, sub_dev0, byref(get_sub_dev_state0))
             self.assertEqual(excepted_err, self.errCde)
             # Get AMAX-5057SO status
             self.errCde = self.AdvMot.Acm2_DevGetSubDeviceStates(ring_no, ecat_type, sub_dev1, byref(get_sub_dev_state1))
+            self.assertEqual(excepted_err, self.errCde)
+            # Get AMAX-4820 status
+            self.errCde = self.AdvMot.Acm2_DevGetSubDeviceStates(ring_no, ecat_type, sub_dev2, byref(get_sub_dev_state2))
+            self.assertEqual(excepted_err, self.errCde)
+            # Get AMAX-4817 status
+            self.errCde = self.AdvMot.Acm2_DevGetSubDeviceStates(ring_no, ecat_type, sub_dev3, byref(get_sub_dev_state3))
             self.assertEqual(excepted_err, self.errCde)
             time.sleep(0.5)
     
@@ -1577,6 +1589,44 @@ class AdvCmnAPI_Test(unittest.TestCase):
         self.assertEqual(excepted_err, self.errCde)
         self.assertEqual(val_off.value, get_value.value)
 
+    def test_Set4820AOData(self):
+        excepted_err = 0
+        # Ring as IO Ring
+        ring_no = c_uint32(1)
+        # set by position
+        id_type = c_uint(ECAT_ID_TYPE.SUBDEVICE_POS.value)
+        # Sort AMAX-4820 in second posiotn
+        sub_dev_pos = c_uint32(2)
+        # Set AO(0) output range as -10V ~ 10V
+        pdo_type = c_uint32(ECAT_TYPE.ECAT_TYPE_U16.value)
+        pdo_data_size = c_uint32(sizeof(c_uint16))
+        pdo_index = c_uint32(0x2180)
+        val_range = c_uint16(3)
+        pdo_range_sub_index = c_uint32(0x02)
+        self.errCde = self.AdvMot.Acm2_DevWriteSDO(ring_no, id_type, sub_dev_pos, pdo_index, pdo_range_sub_index, pdo_type, pdo_data_size, byref(val_range))
+        self.assertEqual(excepted_err, self.errCde)
+        # Set AO(0) output enable
+        pdo_enable_sub_index = c_uint32(0x01)
+        val_enable = c_uint16(1)
+        self.errCde = self.AdvMot.Acm2_DevWriteSDO(ring_no, id_type, sub_dev_pos, pdo_index, pdo_enable_sub_index, pdo_type, pdo_data_size, byref(val_enable))
+        self.assertEqual(excepted_err, self.errCde)
+        # AMAX-4820 default AO(0) ~ AO(3)
+        ao_ch = c_uint32(0)
+        # Set AO(0) as 10V
+        data_type = c_uint(DAQ_DATA_TYPE.SCALED_DATA.value)
+        ao_data = c_double(10)
+        self.errCde = self.AdvMot.Acm2_ChSetAOData(ao_ch, data_type, ao_data)
+        self.assertEqual(excepted_err, self.errCde)
+        # Get AO(0) data
+        get_data_ao = c_double(0)
+        self.errCde = self.AdvMot.Acm2_ChGetAOData(ao_ch, data_type, byref(get_data_ao))
+        self.assertEqual(excepted_err, self.errCde)
+        self.assertAlmostEqual(ao_data.value, get_data_ao.value, delta=1.0)
+        # Get AI(0) data
+        get_data_ai = c_double(0)
+        self.errCde = self.AdvMot.Acm2_ChGetAIData(ao_ch, data_type, byref(get_data_ai))
+        self.assertEqual(excepted_err, self.errCde)
+        self.assertAlmostEqual(ao_data.value, get_data_ai.value, delta=1.0)
 
 def DownloadENISuite():
     tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_LoadENI']
@@ -1768,6 +1818,11 @@ def SetValueByPDO():
     suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
     return suite
 
+def SetAOGetAI():
+    tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_ResetAll', 'test_LoadConnect5074And5057SO', 'test_Set4820AOData', 'test_DisConnectAll', 'test_ResetAll']
+    suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
+    return suite
+
 if __name__ == '__main__':
     # Test all case without order
     # unittest.main()
@@ -1806,8 +1861,8 @@ if __name__ == '__main__':
     # runner.run(ECATLoadConnect5074_5057SO())
     # runner.run(SetAndCheck5057SO())
     # runner.run(SetAndCheck5057SOByte())
-    runner.run(GetSubdeviceInfo())
+    # runner.run(GetSubdeviceInfo())
     # runner.run(GetMaindeviceInfo())
     # runner.run(SetValueByPDO())
-    
+    runner.run(SetAOGetAI())
     

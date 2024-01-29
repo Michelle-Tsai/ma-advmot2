@@ -2738,6 +2738,58 @@ Set AO data.
 ```cpp
 U32 Acm2_ChSetAOData(U32 AoChannel, DAQ_DATA_TYPE Type, F64 AoData)
 ```
+```python
+# Example code
+import time
+import os
+from ctypes import *
+from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI_CM2 as AdvMot
+from AcmP.AdvMotApi_CM2 import *
+from AcmP.AdvMotDrv import *
+from AcmP.AdvMotPropID_CM2 import PropertyID2
+
+# Using this example code after connect AMAX-4820, AMAX-4817
+# Check how to start a EtherCAT subdevice by Acm2_DevConnect
+
+dev_list = (DEVLIST*10)()
+out_ent = c_uint32(0)
+errCde = c_uint32(0)
+# Get Available
+errCde = AdvMot.Acm2_GetAvailableDevs(dev_list, 10, byref(out_ent))
+# Initial device
+errCde = AdvMot.Acm2_DevInitialize()
+
+# Ring as IO Ring
+ring_no = c_uint32(1)
+# set by position
+id_type = c_uint(ECAT_ID_TYPE.SUBDEVICE_POS.value)
+# Sort AMAX-4820 in second posiotn
+sub_dev_pos = c_uint32(2)
+# Set AO(0) output range as -10V ~ 10V
+pdo_type = c_uint32(ECAT_TYPE.ECAT_TYPE_U16.value)
+pdo_data_size = c_uint32(sizeof(c_uint16))
+pdo_index = c_uint32(0x2180)
+val_range = c_uint16(3)
+pdo_range_sub_index = c_uint32(0x02)
+errCde = AdvMot.Acm2_DevWriteSDO(ring_no, id_type, sub_dev_pos, pdo_index, pdo_range_sub_index, pdo_type, pdo_data_size, byref(val_range))
+# Set AO(0) output enable
+pdo_enable_sub_index = c_uint32(0x01)
+val_enable = c_uint16(1)
+errCde = AdvMot.Acm2_DevWriteSDO(ring_no, id_type, sub_dev_pos, pdo_index, pdo_enable_sub_index, pdo_type, pdo_data_size, byref(val_enable))
+# AMAX-4820 default AO(0) ~ AO(3)
+ao_ch = c_uint32(0)
+# Set AO(0) as 10V
+data_type = c_uint(DAQ_DATA_TYPE.SCALED_DATA.value)
+ao_data = c_double(10)
+errCde = AdvMot.Acm2_ChSetAOData(ao_ch, data_type, ao_data)
+# Get AO(0) data
+get_data_ao = c_double(0)
+errCde = AdvMot.Acm2_ChGetAOData(ao_ch, data_type, byref(get_data_ao))
+assertAlmostEqual(ao_data.value, get_data_ao.value, delta=1.0)
+# Get AI(0) data
+get_data_ai = c_double(0)
+errCde = AdvMot.Acm2_ChGetAIData(ao_ch, data_type, byref(get_data_ai))
+```
 <a name="Acm2_ChGetAOData"></a>
 
 #### Acm2_ChGetAOData

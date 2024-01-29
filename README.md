@@ -238,42 +238,67 @@ Due to our driver running with admin/root authentication, it's important to exec
 ### Acm2_GetAvailableDevs
 Get all device list.
 
+```cpp
+U32 Acm2_GetAvailableDevs(DEVLIST *DeviceList, U32 MaxEntries, PU32 OutEntries)
+```
 <a name="Acm2_DevOpen"></a>
 
 #### Acm2_DevOpen
 Open device with device number.
 
+```cpp
+U32 Acm2_DevOpen(U32 DeviceNumber, DEVICEINFO *DeviceHandle)
+```
 <a name="Acm2_DevExportMappingTable"></a>
 
 #### Acm2_DevExportMappingTable
 Export mapping table of device.
 
+```cpp
+U32 Acm2_DevExportMappingTable(PI8 FilePath)
+```
 <a name="Acm2_DevImportMappingTable"></a>
 
 #### Acm2_DevImportMappingTable
 Import mapping table of device.
 
+```cpp
+U32 Acm2_DevImportMappingTable(PI8 FilePath)
+```
 <a name="Acm2_GetMappedPhysicalID"></a>
 
 #### Acm2_GetMappedPhysicalID
 Get mapped physical id of device.
 
+```cpp
+U32 Acm2_GetMappedPhysicalID(ADV_OBJ_TYPE ObjType, U32 ObjLogicalID, PU32 DeviceNumber, PU32 ObjPhysicalID)
+```
 <a name="Acm2_GetMappedLogicalIDList"></a>
 
 #### Acm2_GetMappedLogicalIDList
 Get mapped list of logical id.
 
+```cpp
+U32 Acm2_GetMappedLogicalIDList(ADV_OBJ_TYPE ObjType, U32 DeviceLogicalID, PU32 LogicallIDList, PU32 ObjCnt)
+```
 <a name="Acm2_GetMappedObjInfo"></a>
 
 #### Acm2_GetMappedObjInfo
 Get mapped object information.
 
+```cpp
+U32 Acm2_GetMappedObjInfo(ADV_OBJ_TYPE ObjType, U32 ObjLogicalID, OUT VOID *pObjInfo)
+```
 <a name="Acm2_DevAllClose"></a>
 
 #### Acm2_DevAllClose
 Close all device at same time.
 
+```cpp
+U32 Acm2_DevAllClose()
+```
 ```python
+# Example code
 from ctypes import *
 from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI_CM2 as AdvMot
 from AcmP.AdvMotApi_CM2 import DEVLIST
@@ -293,18 +318,24 @@ errCde = AdvMot.Acm2_DevOpen(device_number, byref(device_info))
 # Close device
 errCde = AdvMot.Acm2_DevAllClose()
 ```
-
 <a name="Acm2_DevInitialize"></a>
 
 #### Acm2_DevInitialize
 Initial the device.
 
+```cpp
+U32 Acm2_DevInitialize()
+```
 <a name="Acm2_AxGetPosition"></a>
 
 #### Acm2_AxGetPosition
 Get axis position by axis number, and position type.
 
+```cpp
+U32 Acm2_AxGetPosition(U32 AxID, POSITION_TYPE PosType, PF64 Position)
+```
 ```python
+# Example code
 from ctypes import *
 from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI_CM2 as AdvMot
 from AcmP.AdvMotApi_CM2 import DEVLIST
@@ -328,12 +359,19 @@ errCde = AdvMot.Acm2_AxGetPosition(axid, pos_type, byref(pos))
 #### Acm2_AxPTP
 Set axis move with position.
 
+```cpp
+U32 Acm2_AxPTP(U32 AxID, ABS_MODE ptpMode, F64 Distance)
+```
 <a name="Acm2_AxGetState"></a>
 
 #### Acm2_AxGetState
 Get axis state.
 
+```cpp
+U32 Acm2_AxGetState(U32 AxID, AXIS_STATUS_TYPE StatusType, PU32 State)
+```
 ```python
+# Example code
 from ctypes import *
 from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI_CM2 as AdvMot
 from AcmP.AdvMotApi_CM2 import DEVLIST
@@ -365,12 +403,19 @@ errCde = AdvMot.Acm2_AxGetState(axid, state_type, byref(state))
 #### Acm2_SetProperty
 Set device/axis property.
 
+```cpp
+U32 Acm2_SetProperty(U32 ObjID, U32 PropertyID, F64 Value)
+```
 <a name="Acm2_GetProperty"></a>
 
 #### Acm2_GetProperty
 Get device/axis property.
 
+```cpp
+U32 Acm2_GetProperty(U32 ObjID, U32 PropertyID, PF64 Value)
+```
 ```python
+# Example code
 from ctypes import *
 from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI_CM2 as AdvMot
 from AcmP.AdvMotApi_CM2 import DEVLIST
@@ -397,12 +442,19 @@ errCde = AdvMot.Acm2_GetProperty(do_ch, property_id, byref(get_val))
 #### Acm2_SetMultiProperty
 Set multiple properties at once.
 
+```cpp
+U32 Acm2_SetMultiProperty(U32 ObjID, PU32 PropertyID, PF64 Value, U32 Data_Cnt, PU32 ErrorBuffer)
+```
 <a name="Acm2_GetMultiProperty"></a>
 
 #### Acm2_GetMultiProperty
 Get multiple properties at once.
 
+```cpp
+U32 Acm2_GetMultiProperty(U32 ObjID, PU32 PropertyID, PF64 Value, U32 Data_Cnt, PU32 ErrorBuffer)
+```
 ```python
+# Example code
 from ctypes import *
 from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI_CM2 as AdvMot
 from AcmP.AdvMotApi_CM2 import DEVLIST
@@ -437,52 +489,83 @@ for i in range(data_cnt.value):
 #### Acm2_GetRawProperty
 Get raw property value.
 
+```cpp
+U32 Acm2_GetRawProperty(U32 ObjID, U32 PropertyID, PVOID Value, PU32 BufferLength)
+```
 <a name="Acm2_EnableCallBackFuncForOneEvent"></a>
 
 #### Acm2_EnableCallBackFuncForOneEvent
 Set callback function for event.
 
+```cpp
+U32 Acm2_EnableCallBackFuncForOneEvent(U32 ObjID, ADV_EVENT_SUBSCRIBE EventID, ADV_USER_CALLBACK_FUNC CallBackFun)
+```
 <a name="Acm2_DevLoadAllConfig"></a>
 
 #### Acm2_DevLoadAllConfig
 Load all configuration at once.
 
+```cpp
+U32 Acm2_DevLoadAllConfig(PI8 ConfigPath)
+```
 <a name="Acm2_DevLoadConfig"></a>
 
 #### Acm2_DevLoadConfig
 Load configuration.
 
+```cpp
+U32 Acm2_DevLoadConfig(U32 DevID, PI8 ConfigPath)
+```
 <a name="Acm2_DevReadMailBox"></a>
 
 #### Acm2_DevReadMailBox
 Read mailbox of device.
 
+```cpp
+U32 Acm2_DevReadMailBox(ADV_OBJ_TYPE ObjType, U32 ObjID, U32 par_id, U32 data_index, U32 data_count, PU32 DataBuffer)
+```
 <a name="Acm2_DevWriteMailBox"></a>
 
 #### Acm2_DevWriteMailBox
 Write mailbox of device.
 
+```cpp
+U32 Acm2_DevWriteMailBox(ADV_OBJ_TYPE ObjType, U32 ObjID, U32 par_id, U32 data_index, U32 data_count, PU32 DataBuffer)
+```
 <a name="Acm2_GetErrors"></a>
 
 #### Acm2_GetErrors
 Get error of device.
 
+```cpp
+U32 Acm2_GetErrors(U32 DevID, PVOID Error, PU32 ErrorCount)
+```
 <a name="Acm2_ResetErrorRecord"></a>
 
 #### Acm2_ResetErrorRecord
 Reset error.
 
+```cpp
+U32 Acm2_ResetErrorRecord(U32 DevID)
+```
 <a name="Acm2_DevPreviewMotion"></a>
 
 #### Acm2_DevPreviewMotion
 Preview motion.
 
+```cpp
+U32 Acm2_DevPreviewMotion(U32 DevID, PI8 InputFile, PI8 OutputFile, U16 NumberOfAxes)
+```
 <a name="Acm2_ChSetDOBit"></a>
 
 #### Acm2_ChSetDOBit
 Set DO bit by channel.
 
+```cpp
+U32 Acm2_ChSetDOBit(U32 DoChannel, U32 BitData)
+```
 ```python
+# Example code
 # Using the example code after LoadENI & Connect
 import time
 import os
@@ -520,7 +603,11 @@ errCde = AdvMot.Acm2_ChGetDOBit(do_channel8, byref(get_data14))
 #### Acm2_ChGetDOBit
 Get DO bit by channel.
 
+```cpp
+U32 Acm2_ChGetDOBit(U32 DoChannel, PU32 BitData)
+```
 ```python
+# Example code
 from ctypes import *
 from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI_CM2 as AdvMot
 from AcmP.AdvMotApi_CM2 import DEVLIST
@@ -554,42 +641,67 @@ errCde = AdvMot.Acm2_ChGetDOBit(do_ch, byref(get_data))
 #### Acm2_GetLastError
 Get last error of system.
 
+```cpp
+U32 Acm2_GetLastError(ADV_OBJ_TYPE ObjType, U32 ObjLogicalID)
+```
 <a name="Acm2_AxReturnPausePosition"></a>
 
 #### Acm2_AxReturnPausePosition
 Get axis pause position.
 
+```cpp
+U32 Acm2_AxReturnPausePosition(U32 AxID)
+```
 <a name="Acm2_AxSetSvOn"></a>
 
 #### Acm2_AxSetSvOn
 Set axis servo on/off.
 
+```cpp
+U32 Acm2_AxSetSvOn(U32 AxID, DO_ONOFF OnOff)
+```
 <a name="Acm2_DevSetAllSvOn"></a>
 
 #### Acm2_DevSetAllSvOn
 Set all axes servo on.off.
 
+```cpp
+U32 Acm2_DevSetAllSvOn(DO_ONOFF OnOff)
+```
 <a name="Acm2_AxSetErcOn"></a>
 
 #### Acm2_AxSetErcOn
 Set axis erc on/off.
 
+```cpp
+U32 Acm2_AxSetErcOn(U32 AxID, DO_ONOFF OnOff)
+```
 <a name="Acm2_AxResetAlm"></a>
 
 #### Acm2_AxResetAlm
 Reset axis alarm logic.
 
+```cpp
+U32 Acm2_AxResetAlm(U32 AxID, DO_ONOFF OnOff)
+```
 <a name="Acm2_AxMoveContinue"></a>
 
 #### Acm2_AxMoveContinue
 Set aixs continue move.
 
+```cpp
+U32 Acm2_AxMoveContinue(U32 AxID, MOTION_DIRECTION Direction)
+```
 <a name="Acm2_AxMotionStop"></a>
 
 #### Acm2_AxMotionStop
 Force axis stop motion.
 
+```cpp
+U32 Acm2_AxMotionStop(PU32 AxisArray, U32 ArrayElements, MOTION_STOP_MODE StopMode, F64 NewDec)
+```
 ```python
+# Example code
 import time
 import os
 from ctypes import *
@@ -633,47 +745,75 @@ errCde = AdvMot.Acm2_AxGetPosition(ax_id, pos_type, byref(pos))
 #### Acm2_AxHome
 Set axis moving home with direction and home mode.
 
+```cpp
+U32 Acm2_AxHomeEx(U32 AxID, U32 DirMode)
+```
 <a name="Acm2_AxMoveGantryHome"></a>
 
 #### Acm2_AxMoveGantryHome
 Set axis moving home with gantry.
 
+```cpp
+U32 Acm2_AxMoveGantryHome(U32 AxID, HOME_MODE HomeMode, MOTION_DIRECTION Direction)
+```
 <a name="Acm2_AxSetHomeSpeedProfile"></a>
 
 #### Acm2_AxSetHomeSpeedProfile
 Set axis home speed config.
 
+```cpp
+U32 Acm2_AxSetHomeSpeedProfile(U32 AxID, SPEED_PROFILE_PRM ProfileVel)
+```
 <a name="Acm2_AxChangePos"></a>
 
 #### Acm2_AxChangePos
 Set axis position.
 
+```cpp
+U32 Acm2_AxChangePos(U32 AxID, F64 NewPosition)
+```
 <a name="Acm2_AxChangeVel"></a>
 
 #### Acm2_AxChangeVel
 Set axis velocity.
 
+```cpp
+U32 Acm2_AxChangeVel(U32 AxID, F64 NewVelocity, F64 NewAcc, F64 NewDec)
+```
 <a name="Acm2_AxChangeVelByRate"></a>
 
 #### Acm2_AxChangeVelByRate
 Set axis velocity by rate.
 
+```cpp
+U32 Acm2_AxChangeVelByRate(U32 AxID, U32 Rate, F64 NewAcc, F64 NewDec)
+```
 <a name="Acm2_AxMoveImpose"></a>
 
 #### Acm2_AxMoveImpose
 Set axis impose.
 
+```cpp
+U32 Acm2_AxMoveImpose(U32 AxID, F64 Position, F64 NewVelocity)
+```
 <a name="Acm2_AxResetError"></a>
 
 #### Acm2_AxResetError
 Reset error of axis.
 
+```cpp
+U32 Acm2_AxResetError(U32 AxID)
+```
 <a name="Acm2_DevResetAllError"></a>
 
 #### Acm2_DevResetAllError
 Reset all device error.
 
+```cpp
+U32 Acm2_DevResetAllError()
+```
 ```python
+# Example code
 from ctypes import *
 from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI_CM2 as AdvMot
 from AcmP.AdvMotApi_CM2 import DEVLIST
@@ -700,17 +840,27 @@ errCde = AdvMot.Acm2_AxSetPosition(ax_id, pos_type, pos)
 #### Acm2_AxGetMotionIO
 Get axis motion IO status.
 
+```cpp
+U32 Acm2_AxGetMotionIO(U32 AxID, MOTION_IO *Status)
+```
 <a name="Acm2_AxSetPosition"></a>
 
 #### Acm2_AxSetPosition
 Set axis position.
 
+```cpp
+U32 Acm2_AxSetPosition(U32 AxID, POSITION_TYPE PosType, F64 Position)
+```
 <a name="Acm2_AxSetSpeedProfile"></a>
 
 #### Acm2_AxSetSpeedProfile
 Set axis speed information.
 
+```cpp
+U32 Acm2_AxSetSpeedProfile(U32 AxID, SPEED_PROFILE_PRM ProfileVel)
+```
 ```python
+# Example code
 from ctypes import *
 from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI_CM2 as AdvMot
 from AcmP.AdvMotApi_CM2 import *
@@ -739,7 +889,11 @@ errCde = AdvMot.Acm2_AxSetSpeedProfile(ax_id, speed_info)
 #### Acm2_AxGetVel
 Get axis current velocity.
 
+```cpp
+U32 Acm2_AxGetVel(U32 AxID, VELOCITY_TYPE VelType, PF64 Velocity)
+```
 ```python
+# Example code
 from ctypes import *
 from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI_CM2 as AdvMot
 from AcmP.AdvMotApi_CM2 import *
@@ -765,17 +919,27 @@ errCde = AdvMot.Acm2_AxGetVel(ax_id, vel_Type, byref(get_vel))
 #### Acm2_AxEnableExternalMode
 Enable axis external mode.
 
+```cpp
+U32 Acm2_AxEnableExternalMode(U32 AxID, EXT_DRIVE_MODE ExtDrvMode)
+```
 <a name="Acm2_AxSoftJog"></a>
 
 #### Acm2_AxSoftJog
 Set axis jog.
 
+```cpp
+U32 Acm2_AxSoftJog(U32 AxID, MOTION_DIRECTION Direction)
+```
 <a name="Acm2_AxSetJogSpeedProfile"></a>
 
 #### Acm2_AxSetJogSpeedProfile
 Set axis jog speed information.
 
+```cpp
+U32 Acm2_AxSetJogSpeedProfile(U32 AxID, JOG_SPEED_PROFILE_PRM ProfileVel)
+```
 ```python
+# Example code
 from ctypes import *
 from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI_CM2 as AdvMot
 from AcmP.AdvMotApi_CM2 import *
@@ -804,37 +968,59 @@ errCde = AdvMot.Acm2_AxSetJogSpeedProfile(ax_id, jog_speed_info)
 #### Acm2_AxMotionStart
 Start motion.
 
+```cpp
+U32 Acm2_AxMotionStart(PU32 AxisArray, U32 ArrayElements)
+```
 <a name="Acm2_AxPause"></a>
 
 #### Acm2_AxPause
 Pause motion.
 
+```cpp
+U32 Acm2_AxPause(U32 AxID)
+```
 <a name="Acm2_AxResume"></a>
 
 #### Acm2_AxResume
 Resume motion.
 
+```cpp
+U32 Acm2_AxResume(U32 AxID)
+```
 <a name="Acm2_AxResetPVTTable"></a>
 
 #### Acm2_AxResetPVTTable
 Reset axis PVT table.
 
+```cpp
+U32 Acm2_AxResetPVTTable(U32 AxID)
+```
 <a name="Acm2_AxLoadPVTTable"></a>
 
 #### Acm2_AxLoadPVTTable
 Load axis PVT table.
 
+```cpp
+U32 Acm2_AxLoadPVTTable(U32 AxID, PF64 Position, PF64 Velocity, PF64 Time, U32 ArrayElements)
+```
 <a name="Acm2_AxLoadPVTTableContinuous"></a>
 
 #### Acm2_AxLoadPVTTableContinuous
 Continuous loading PVT table.
 
+```cpp
+U32 Acm2_AxLoadPVTTableContinuous(U32 AxID, PF64 Position, PF64 Velocity, PF64 JerkFactor, PF64 MaxVel, PF64 Acc, PF64 Dec, F64 TimeDelay, U32 ArrayElements)
+```
 <a name="Acm2_AxMovePVT"></a>
 
 #### Acm2_AxMovePVT
 Move PVT motion.
 
+```cpp
+U32 Acm2_AxMovePVT(U32 AxID)
+```
 ```python
+# Example code
 import time
 import os
 from ctypes import *
@@ -890,22 +1076,35 @@ errCde = AdvMot.Acm2_AxGetPosition(ax_id, pos_type, byref(get_pos))
 #### Acm2_AxCheckPTBuffer
 Check axis PT buffer.
 
+```cpp
+U32 Acm2_AxCheckPTBuffer(U32 AxID, PU32 Freespace)
+```
 <a name="Acm2_AxAddPTData"></a>
 
 #### Acm2_AxAddPTData
 Add axis PT data.
 
+```cpp
+U32 Acm2_AxAddPTData(U32 AxID, F64 Position, F64 Time)
+```
 <a name="Acm2_AxMovePT"></a>
 
 #### Acm2_AxMovePT
 Move PT motion.
 
+```cpp
+U32 Acm2_AxMovePT(U32 AxID)
+```
 <a name="Acm2_AxResetPTData"></a>
 
 #### Acm2_AxResetPTData
 Reset axis PT data.
 
+```cpp
+U32 Acm2_AxResetPTData(U32 AxID)
+```
 ```python
+# Example code
 import time
 import os
 from ctypes import *
@@ -958,12 +1157,19 @@ errCde = AdvMot.Acm2_AxGetPosition(ax_id, pos_type, byref(get_pos))
 #### Acm2_AxGearIn
 Set axis gear.
 
+```cpp
+U32 Acm2_AxGearIn(U32 PrimaryAxisID, U32 FollowingAxisID, GEAR_IN_PRM GearInParameter)
+```
 <a name="Acm2_AxGantryIn"></a>
 
 #### Acm2_AxGantryIn
 Set axis gantry.
 
+```cpp
+U32	Acm2_AxGantryIn(U32	PrimaryAxisID, U32 FollowingAxisID, GANTRY_IN_PRM GantryInParameter)
+```
 ```python
+# Example code
 import time
 import os
 from ctypes import *
@@ -1018,12 +1224,19 @@ errCde = AdvMot.Acm2_AxSyncOut(follow_ax)
 #### Acm2_AxPhaseAx
 Set axis phase.
 
+```cpp
+U32 Acm2_AxPhaseAx(U32 AxID, PHASE_AXIS_PRM PhaseAxParameter)
+```
 <a name="Acm2_AxSyncOut"></a>
 
 #### Acm2_AxSyncOut
 Lift the gantry.
 
+```cpp
+U32 Acm2_AxSyncOut(U32 FollowingAxisID)
+```
 ```python
+# Example code
 import time
 import os
 from ctypes import *
@@ -1081,27 +1294,43 @@ errCde = AdvMot.Acm2_AxSyncOut(follow_ax)
 #### Acm2_GpGetPausePosition
 Get group pause position.
 
+```cpp
+U32 Acm2_GpGetPausePosition(U32 GpID, PF64 PosArray)
+```
 <a name="Acm2_GpCreate"></a>
 
 #### Acm2_GpCreate
 Create group.
 
+```cpp
+U32 Acm2_GpCreate(U32 GpID, PU32 AxisArray, U32 ArrayElements)
+```
 <a name="Acm2_GpGetAxesInGroup"></a>
 
 #### Acm2_GpGetAxesInGroup
 Check axes in group.
 
+```cpp
+U32 Acm2_GpGetAxesInGroup(U32 GpID, PU32 AxisArray, PU32 ArrayElements)
+```
 <a name="Acm2_GpResetError"></a>
 
 #### Acm2_GpResetError
 Reset error of group.
 
+```cpp
+U32 Acm2_GpResetError(U32 GpID)
+```
 <a name="Acm2_GpLine"></a>
 
 #### Acm2_GpLine
 Move group in line.
 
+```cpp
+U32 Acm2_GpLine(U32 GpID, GP_LINE_MODE LineMode, PF64 EndArray, PU32 ArrayElements)
+```
 ```python
+# Example code
 import time
 import os
 from ctypes import *
@@ -1161,6 +1390,9 @@ errCde = AdvMot.Acm2_GpCreate(gp_id, gp_arr, 0)
 #### Acm2_GpArc_Center
 Set group arc center.
 
+```cpp
+U32 Acm2_GpArc_Center(U32  GpID, ABS_MODE ArcMode, PF64 CenterArray, PF64 EndArray, PU32 pArrayElements, ARC_DIRECTION  Direction)
+```
 ```python
 import time
 import os
@@ -1229,6 +1461,9 @@ errCde = AdvMot.Acm2_GpCreate(gp_id, gp_arr, 0)
 #### Acm2_GpArc_3P
 Set group arc point.
 
+```cpp
+U32 Acm2_GpArc_3P(U32 GpID, ABS_MODE ArcMode, PF64 RefArray, PF64 EndArray, PU32 pArrayElements, ARC_DIRECTION Direction)
+```
 ```python
 import time
 import os
@@ -1298,6 +1533,9 @@ errCde = AdvMot.Acm2_GpCreate(gp_id, gp_arr, 0)
 #### Acm2_GpArc_Angle
 Set group arc angle.
 
+```cpp
+U32 Acm2_GpArc_Angle(U32 GpID, ABS_MODE ArcMode, PF64 CenterArray, PU32 pArrayElements, F64 Degree, ARC_DIRECTION Direction)
+```
 ```python
 import time
 import os
@@ -1361,6 +1599,9 @@ errCde = AdvMot.Acm2_GpCreate(gp_id, gp_arr, 0)
 #### Acm2_Gp3DArc_Center
 Set 3D group arc center.
 
+```cpp
+U32 Acm2_Gp3DArc_Center(U32 GpID, ABS_MODE ArcMode, PF64 CenterArray, PF64 EndArray, PU32 pArrayElements, ARC_DIRECTION  Direction)
+```
 ```python
 import time
 import os
@@ -1433,6 +1674,9 @@ errCde = AdvMot.Acm2_GpCreate(gp_id, gp_arr, 0)
 #### Acm2_Gp3DArc_NormVec
 Set 3D group arc norm vector.
 
+```cpp
+U32 Acm2_Gp3DArc_NormVec(U32 GpID, ABS_MODE ArcMode, PF64 CenterArray, PF64 NormalVec, PU32 pArrayElements, F64  Angle, ARC_DIRECTION Direction)
+```
 ```python
 import time
 import os
@@ -1512,7 +1756,11 @@ errCde = AdvMot.Acm2_GpCreate(gp_id, gp_arr, 0)
 #### Acm2_Gp3DArc_3P
 Set arc movement with 3 points of circular.
 
+```cpp
+U32 Acm2_Gp3DArc_3P(U32 GpID, ABS_MODE ArcMode, PF64 RefArray, PF64 EndArray, PU32 pArrayElements, ARC_DIRECTION  Direction, U32 cycCount)
+```
 ```python
+# Example code
 import time
 import os
 from ctypes import *
@@ -1587,6 +1835,9 @@ errCde = AdvMot.Acm2_GpCreate(gp_id, gp_arr, 0)
 #### Acm2_Gp3DArc_3PAngle
 Set 3D group arc points, angle.
 
+```cpp
+U32 Acm2_Gp3DArc_3PAngle(U32 GpID, ABS_MODE ArcMode, PF64 RefPoint_1, PF64 RefPoint_2, PU32 pArrayElements, F64 Degree, ARC_DIRECTION Direction)
+```
 ```python
 import time
 import os
@@ -1663,7 +1914,11 @@ errCde = AdvMot.Acm2_GpCreate(gp_id, gp_arr, 0)
 #### Acm2_GpHelix_Center
 Set group helix center.
 
+```cpp
+U32 Acm2_GpHelix_Center(U32 GpID, ABS_MODE HelixMode, PF64 CenterArray, PF64 EndArray, PU32	pArrayElements, ARC_DIRECTION Direction)
+```
 ```python
+# Example code
 import time
 import os
 from ctypes import *
@@ -1732,6 +1987,9 @@ errCde = AdvMot.Acm2_GpCreate(gp_id, gp_arr, 0)
 #### Acm2_GpHelix_3P
 Set group helix points.
 
+```cpp
+U32 Acm2_GpHelix_3P(U32 GpID, ABS_MODE HelixMode, PF64 RefArray, PF64 EndArray, PU32 pArrayElements, ARC_DIRECTION Direction)
+```
 ```python
 import time
 import os
@@ -1801,7 +2059,11 @@ errCde = AdvMot.Acm2_GpCreate(gp_id, gp_arr, 0)
 #### Acm2_GpHelix_Angle
 Set group helix angle.
 
+```cpp
+U32 Acm2_GpHelix_Angle(U32 GpID, ABS_MODE HelixMode, PF64 CenterArray, PF64 EndArray, PU32 pArrayElements, ARC_DIRECTION Direction)
+```
 ```python
+# Example code
 import time
 import os
 from ctypes import *
@@ -1869,12 +2131,19 @@ errCde = AdvMot.Acm2_GpCreate(gp_id, gp_arr, 0)
 
 #### Acm2_GpResume
 
+```cpp
+U32 Acm2_GpResume(U32 GpID)
+```
 <a name="Acm2_GpPause"></a>
 
 #### Acm2_GpPause
 Set group pause motion.
 
+```cpp
+U32 Acm2_GpPause(U32 GpID)
+```
 ```python
+# Example code
 import time
 import os
 from ctypes import *
@@ -1957,22 +2226,33 @@ errCde = AdvMot.Acm2_GpCreate(gp_id, gp_arr, 0)
 #### Acm2_GpMotionStop
 Stop group motion.
 
+```cpp
+U32 Acm2_GpMotionStop(U32 GpID, MOTION_STOP_MODE StopMode, F64 NewDec)
+```
 <a name="Acm2_GpChangeVel"></a>
 
 #### Acm2_GpChangeVel
 Change velocity of group.
 
+```cpp
+U32 Acm2_GpChangeVel(U32 GpID, F64 NewVelocity, F64 NewAcc, F64 NewDec)
+```
 <a name="Acm2_GpChangeVelByRate"></a>
 
 #### Acm2_GpChangeVelByRate
 Change group velocity by rate.
 
+```cpp
+U32 Acm2_GpChangeVelByRate(U32 GpID, U32 Rate, F64 NewAcc, F64 NewDec)
+```
 <a name="Acm2_GpGetVel"></a>
 
 #### Acm2_GpGetVel
 Get group velocity.
 
-
+```cpp
+U32 Acm2_GpGetVel(U32 GpID, VELOCITY_TYPE VelType, PF64 Velocity)
+```
 ```python
 import time
 import os
@@ -2054,32 +2334,51 @@ errCde = AdvMot.Acm2_GpCreate(gp_id, gp_arr, 0)
 #### Acm2_GpSetSpeedProfile
 Get group speed information.
 
+```cpp
+U32 Acm2_GpSetSpeedProfile(U32 GpID, SPEED_PROFILE_PRM ProfileVel)
+```
 <a name="Acm2_GpGetState"></a>
 
 #### Acm2_GpGetState
 Get group status.
 
+```cpp
+U32 Acm2_GpGetState(U32 GpID, PU32 State)
+```
 <a name="Acm2_GpLoadPath"></a>
 
 #### Acm2_GpLoadPath
 Load path table in group.
 
+```cpp
+U32 Acm2_GpLoadPath(U32 GpID, PI8 FilePath, PU32 TotalCount)
+```
 <a name="Acm2_GpAddPath"></a>
 
 #### Acm2_GpAddPath
 Add path into group.
 
+```cpp
+U32 Acm2_GpAddPath(U32 GpID, U32 MoveCmd, PATH_MOVE_MODE_CM2 MoveMode, F64 FH, F64 FL, F64 Acc, F64 Dec, PF64 EndPoint_DataArray, PF64 CenPoint_DataArray, PU32 ArrayElements)
+```
 <a name="Acm2_GpMovePath"></a>
 
 #### Acm2_GpMovePath
 Start move group after add path.
 
+```cpp
+U32 Acm2_GpMovePath(U32 GpID)
+```
 <a name="Acm2_GpResetPath"></a>
 
 #### Acm2_GpResetPath
 Reset group path table.
 
+```cpp
+U32 Acm2_GpResetPath(U32 GpID)
+```
 ```python
+# Example code
 import time
 import os
 from ctypes import *
@@ -2172,7 +2471,11 @@ errCde = AdvMot.Acm2_GpCreate(gp_id, gp_arr, 0)
 #### Acm2_GpGetPathStatus
 Get group path status.
 
+```cpp
+U32 Acm2_GpGetPathStatus(U32 GpID, PATH_STATUS *pathStatus)
+```
 ```python
+# Example code
 import time
 import os
 from ctypes import *
@@ -2244,39 +2547,63 @@ errCde = AdvMot.Acm2_GpCreate(gp_id, gp_arr, 0)
 
 #### Acm2_GpMoveSelPath
 
+```cpp
+U32 Acm2_GpMoveSelPath(U32 GpID, U32 StartIndex, U32 EndIndex, U32 Repeat)
+```
 <a name="Acm2_GpGetPathIndexStatus"></a>
 
 #### Acm2_GpGetPathIndexStatus
 Get group information by the index of path table.
 
+```cpp
+U32 Acm2_GpGetPathIndexStatus(U32 GpID, U32 Index, PU32 CmdFunc, PU32 MoveMode, PF64 FH, PF64 FL, PF64 Acc, PF64 Dec, PF64 EndPoint_DataArray, PF64 CenPoint_DataArray, PU32 ArrayElements)
+```
 <a name="Acm2_GpDelay"></a>
 
 #### Acm2_GpDelay
 Delay group.
 
+```cpp
+U32 Acm2_GpDelay(U32 GpID, U32 DelayTime)
+```
 <a name="Acm2_GpPathDO"></a>
 
 #### Acm2_GpPathDO
 Set device do on/off between path.
 
+```cpp
+U32 Acm2_GpPathDO(U32 GpID, PATH_DO_PRM  PathDOPrm)
+```
 <a name="Acm2_GpPathWaitDI"></a>
 
 #### Acm2_GpPathWaitDI
 Wait DI status between path.
 
+```cpp
+U32 Acm2_GpPathWaitDI(U32 GpID, PATH_DI_WAIT_PRM DIWaitPrm)
+```
 <a name="Acm2_GpPathWaitForAxis"></a>
 
 #### Acm2_GpPathWaitForAxis
 Wait axis between path.
 
+```cpp
+U32 Acm2_GpPathWaitForAxis(U32 GpID, PATH_AX_WAIT_PRM AxWaitPrm)
+```
 <a name="Acm2_GpLookAheadPath"></a>
 
 #### Acm2_GpLookAheadPath
 
+```cpp
+U32 Acm2_GpLookAheadPath(U32 GpID, U16 BufferSize, PI8 OutputFile)
+```
 <a name="Acm2_GpLookAheadPathFile"></a>
 
 #### Acm2_GpLookAheadPathFile
 
+```cpp
+U32 Acm2_GpLookAheadPathFile(U32 GpID, U16 BufferSize, PI8 InputPathFile, PI8 OutputFile, PU32 PathCount)
+```
 <!-- <a name="Acm2_GpLoadAndMovePath"></a>
 
 #### Acm2_GpLoadAndMovePath -->
@@ -2286,32 +2613,51 @@ Wait axis between path.
 #### Acm2_ChGetDIBit
 Get DI bit by channel.
 
+```cpp
+U32 Acm2_ChGetDIBit(U32 DiChannel, PU32 BitData)
+```
 <a name="Acm2_ChSetDOBitByRingNo"></a>
 
 #### Acm2_ChSetDOBitByRingNo
 Set DO bit by channel, and ring number.
 
+```cpp
+U32 Acm2_ChSetDOBitByRingNo(U32 RingNo, U32 SlaveID, U32 DoChannel, U32 BitData)
+```
 <a name="Acm2_ChGetDOBitByRingNo"></a>
 
 #### Acm2_ChGetDOBitByRingNo
 Get DO bit by ring number, and channel.
 
+```cpp
+U32 Acm2_ChGetDOBitByRingNo(U32 RingNo, U32 SlaveID, U32 DoChannel, PU32 BitData)
+```
 <a name="Acm2_ChGetDIBitByRingNo"></a>
 
 #### Acm2_ChGetDIBitByRingNo
 Get DI bit by ring number, and channel.
 
+```cpp
+U32 Acm2_ChGetDIBitByRingNo(U32 RingNo, U32 SlaveID, U32 DiChannel, PU32 BitData)
+```
 <a name="Acm2_ChSetDOByte"></a>
 
 #### Acm2_ChSetDOByte
 Set DO channel byte.
 
+```cpp
+U32 Acm2_ChSetDOByte(U32 StartPort, U32 NumPort, PU32 ByteDataArray)
+```
 <a name="Acm2_ChGetDOByte"></a>
 
 #### Acm2_ChGetDOByte
 Get DO channel byte.
 
+```cpp
+U32 Acm2_ChGetDOByte(U32 StartPort, U32 NumPort, PU32 ByteDataArray)
+```
 ```python
+# Example code
 import time
 import os
 from ctypes import *
@@ -2357,286 +2703,454 @@ errCde = AdvMot.Acm2_ChSetDOByte(start_ch, port_num, set_value_arr_off)
 #### Acm2_ChGetDIByte
 Get DI channel byte.
 
+```cpp
+U32 Acm2_ChGetDIByte(U32 StartPort, U32 NumPort, PU32 ByteDataArray)
+```
 <a name="Acm2_ChSetDOByteByRingNo"></a>
 
 #### Acm2_ChSetDOByteByRingNo
 Set DO byte by ring number.
 
+```cpp
+U32 Acm2_ChSetDOByteByRingNo(U32 RingNo, U32 SlaveID, U32 StartPort, U32 NumPort, PU32 ByteDataArray)
+```
 <a name="Acm2_ChGetDOByteByRingNo"></a>
 
 #### Acm2_ChGetDOByteByRingNo
 Get DO byte by ring number.
 
+```cpp
+U32 Acm2_ChGetDOByteByRingNo(U32 RingNo, U32 SlaveID, U32 StartPort, U32 NumPort, PU32 ByteDataArray)
+```
 <a name="Acm2_ChGetDIByteByRingNo"></a>
 
 #### Acm2_ChGetDIByteByRingNo
 Get DI byte by ring number.
 
+```cpp
+U32 Acm2_ChGetDIByteByRingNo(U32 RingNo, U32 SlaveID, U32 StartPort, U32 NumPort, PU32 ByteDataArray)
+```
 <a name="Acm2_ChSetAOData"></a>
 
 #### Acm2_ChSetAOData
 Set AO data.
 
+```cpp
+U32 Acm2_ChSetAOData(U32 AoChannel, DAQ_DATA_TYPE Type, F64 AoData)
+```
 <a name="Acm2_ChGetAOData"></a>
 
 #### Acm2_ChGetAOData
 Get AO data.
 
+```cpp
+U32 Acm2_ChGetAOData(U32 AoChannel, DAQ_DATA_TYPE Type, PF64 AoData)
+```
 <a name="Acm2_ChSetAODataByRingNo"></a>
 
 #### Acm2_ChSetAODataByRingNo
 Set AO data by ring number.
 
+```cpp
+U32 Acm2_ChSetAODataByRingNo(U32 RingNo, U32 SlaveID, U32 AoChannel, DAQ_DATA_TYPE Type, F64 AoData)
+```
 <a name="Acm2_ChGetAODataByRingNo"></a>
 
 #### Acm2_ChGetAODataByRingNo
 Get AO data by ring number.
 
+```cpp
+U32 Acm2_ChGetAODataByRingNo(U32 RingNo, U32 SlaveID, U32 AoChannel, DAQ_DATA_TYPE Type, PF64 AoData)
+```
 <a name="Acm2_ChGetAIData"></a>
 
 #### Acm2_ChGetAIData
 Get AI data.
 
+```cpp
+U32 Acm2_ChGetAIData(U32 AiChannel, DAQ_DATA_TYPE Type, PF64 AiData)
+```
 <a name="Acm2_ChGetAIDataByRingNo"></a>
 
 #### Acm2_ChGetAIDataByRingNo
 Get AI data by ring number.
 
+```cpp
+U32 Acm2_ChGetAIDataByRingNo(U32 RingNo, U32 SlaveID, U32 AiChannel, DAQ_DATA_TYPE Type, PF64 AiData)
+```
 <a name="Acm2_ChGetCntData"></a>
 
 #### Acm2_ChGetCntData
 Get counter data.
 
+```cpp
+U32 Acm2_ChGetCntData(U32 CntChannel, PF64 CounterData)
+```
 <a name="Acm2_ChSetCntData"></a>
 
 #### Acm2_ChSetCntData
 Set counter data.
 
+```cpp
+U32 Acm2_ChSetCntData(U32 CntChannel, F64 CounterData)
+```
 <a name="Acm2_ChLinkCmpFIFO"></a>
 
 #### Acm2_ChLinkCmpFIFO
 Set compare position.
 
+```cpp
+U32 Acm2_ChLinkCmpFIFO(U32 ChID, PU32 AxisArray, U32 ArrayElement)
+```
 <a name="Acm2_ChLinkCmpObject"></a>
 
 #### Acm2_ChLinkCmpObject
 Link compare do with axis/counter.
 
+```cpp
+U32 Acm2_ChLinkCmpObject(U32 ChID, ADV_OBJ_TYPE ObjType, PU32 ObjArray, U32 ArrayElement)
+```
 <a name="Acm2_ChGetLinkedCmpObject"></a>
 
 #### Acm2_ChGetLinkedCmpObject
 Get compare do linked object.
 
+```cpp
+U32 Acm2_ChGetLinkedCmpObject(U32 ChID, ADV_OBJ_TYPE *ObjType, PU32 ObjArray, PU32 ArrayElement)
+```
 <a name="Acm2_ChEnableCmp"></a>
 
 #### Acm2_ChEnableCmp
 Enable compare channel.
 
+```cpp
+U32 Acm2_ChEnableCmp(U32 ChID, U32 Enable)
+```
 <a name="Acm2_ChSetCmpOut"></a>
 
 #### Acm2_ChSetCmpOut
 Set compare channel on/off.
 
+```cpp
+U32 Acm2_ChSetCmpOut(U32 ChID, DO_ONOFF OnOff)
+```
 <a name="Acm2_ChSetCmpDoOut"></a>
 
 #### Acm2_ChSetCmpDoOut
 Set compare on/off.
 
+```cpp
+U32 Acm2_ChSetCmpDoOut(U32 ChID, DO_ONOFF OnOff)
+```
 <a name="Acm2_AxGetCmpData"></a>
 
 #### Acm2_AxGetCmpData
 Get compared data by axis.
 
+```cpp
+U32 Acm2_AxGetCmpData(U32 AxID, PF64 CmpData)
+```
 <a name="Acm2_ChGetCmpData"></a>
 
 #### Acm2_ChGetCmpData
 Get compared data by channel.
 
+```cpp
+U32 Acm2_ChGetCmpData(U32 CmpChannel, PF64 CmpData, U32 ObjectArrayCount)
+```
 <a name="Acm2_AxSetCmpTable"></a>
 
 #### Acm2_AxSetCmpTable
 Set compare table by axis.
 
+```cpp
+U32 Acm2_AxSetCmpTable(U32 AxID, PF64 TableArray, U32 ArrayElement)
+```
 <a name="Acm2_AxSetCmpAuto"></a>
 
 #### Acm2_AxSetCmpAuto
 Set auto compare by axis.
 
+```cpp
+U32 Acm2_AxSetCmpAuto(U32 AxID, F64 StartPosition, F64 EndPosition, F64 Interval)
+```
 <a name="Acm2_ChSetCmpAuto"></a>
 
 #### Acm2_ChSetCmpAuto
 Set auto compare by channel.
 
+```cpp
+U32 Acm2_ChSetCmpAuto(U32 CmpChannel, F64 StartPosition, F64 EndPosition, F64 Interval)
+```
 <a name="Acm2_ChSetCmpBufferData"></a>
 
 #### Acm2_ChSetCmpBufferData
 Set compare buffer.
 
+```cpp
+U32 Acm2_ChSetCmpBufferData(U32 CmpChannel, PF64 TableArray, U32 ArrayElement)
+```
 <a name="Acm2_ChSetMultiCmpTable"></a>
 
 #### Acm2_ChSetMultiCmpTable
 Set compare table.
 
+```cpp
+U32 Acm2_ChSetMultiCmpTable(U32 ChID, PF64 TableArray, U32 ObjectArrayCount, U32 DataArrayCount)
+```
 <a name="Acm2_ChSetMultiCmpBufferData"></a>
 
 #### Acm2_ChSetMultiCmpBufferData
 Set multi compare buffer.
 
+```cpp
+U32 Acm2_ChSetMultiCmpBufferData(U32 ChID, PF64 MultiCmpTable, U32 ObjectArrayCount, U32 DataArrayCount)
+```
 <a name="Acm2_ChResetCmpData"></a>
 
 #### Acm2_ChResetCmpData
 Reset compare data.
 
+```cpp
+U32 Acm2_ChResetCmpData(U32 CmpChannel)
+```
 <a name="Acm2_ChGetCmpBufferStatus"></a>
 
 #### Acm2_ChGetCmpBufferStatus
 Get compared buffer status.
 
+```cpp
+U32	Acm2_ChGetCmpBufferStatus(U32 CmpChannel, PBUFFER_STATUS bufferstatus)
+```
 <a name="Acm2_ChLinkLatchAxis"></a>
 
 #### Acm2_ChLinkLatchAxis
 Link latch to axis.
-
+```cpp
+U32 Acm2_ChLinkLatchAxis(U32 ChID, PU32 AxisArray, U32 AxisCount)
+```
 <a name="Acm2_ChLinkLatchObject"></a>
 
 #### Acm2_ChLinkLatchObject
 Lift latch to object.
+```cpp
 
+```
 <a name="Acm2_ChGetLinkedLatchObject"></a>
 
 #### Acm2_ChGetLinkedLatchObject
 Get linked latch object.
-
+```cpp
+U32 Acm2_ChLinkLatchObject(U32 ChID, ADV_OBJ_TYPE ObjType, PU32 ObjArray, U32 ArrayElement)
+```
 <a name="Acm2_ChTriggerLatch"></a>
 
 #### Acm2_ChTriggerLatch
 Trigger latch by channel.
 
+```cpp
+U32 Acm2_ChTriggerLatch(U32 ChID)
+```
 <a name="Acm2_AxReadLatchBuffer"></a>
 
 #### Acm2_AxReadLatchBuffer
 Read latch buffer.
 
+```cpp
+U32	Acm2_AxReadLatchBuffer(U32 AxID, PF64 LatchDataArray, PU32 DataCnt)
+```
 <a name="Acm2_ChReadLatchBuffer"></a>
 
 #### Acm2_ChReadLatchBuffer
 Read latch buffer by channel.
 
+```cpp
+U32	Acm2_ChReadLatchBuffer(U32 LtcChannel, PF64 LatchDataArray, U32 ObjectArrayCount, PU32 DataArrayCount)
+```
 <a name="Acm2_AxGetLatchBufferStatus"></a>
 
 #### Acm2_AxGetLatchBufferStatus
 Get latch buffer status.
 
+```cpp
+U32	Acm2_AxGetLatchBufferStatus(U32 AxID, PU32 RemainCnt, PU32 SpaceCnt)
+```
 <a name="Acm2_ChGetLatchBufferStatus"></a>
 
 #### Acm2_ChGetLatchBufferStatus
 Get latch buffer status by channel.
 
+```cpp
+U32	Acm2_ChGetLatchBufferStatus(U32 LtcChannel, BUFFER_STATUS *bufferstatus)
+```
 <a name="Acm2_AxResetLatchBuffer"></a>
 
 #### Acm2_AxResetLatchBuffer
 Reset latch buffer.
 
+```cpp
+U32	Acm2_AxResetLatchBuffer(U32 AxID)
+```
 <a name="Acm2_ChResetLatchBuffer"></a>
 
 #### Acm2_ChResetLatchBuffer
 Reset latch buffer by channel.
 
+```cpp
+U32	Acm2_ChResetLatchBuffer(U32 LtcChannel)
+```
 <a name="Acm2_ChLinkPWMTable"></a>
 
 #### Acm2_ChLinkPWMTable
 Link PWM with object.
 
+```cpp
+U32 Acm2_ChLinkPWMTable(U32 ChID, ADV_OBJ_TYPE ObjType, U32 ObjectID)
+```
 <a name="Acm2_ChGetLinkedPWMTable"></a>
 
 #### Acm2_ChGetLinkedPWMTable
 Get linked PWM Acm2_ChSetPWMTabletable by channel.
 
+```cpp
+U32 Acm2_ChGetLinkedPWMTable(U32 ChID, ADV_OBJ_TYPE *ObjType, PU32 ObjArray, PU32 ArrayElement)
+```
 <a name="Acm2_ChSetPWMTable"></a>
 
 #### Acm2_ChSetPWMTable
 Set PWM table by channel.
 
+```cpp
+U32 Acm2_ChSetPWMTable(U32 ChID, PF64 VelocityArray, PF64 PWMArray, U32 ArrayElements)
+```
 <a name="Acm2_ChLoadPWMTableFile"></a>
 
 #### Acm2_ChLoadPWMTableFile
 Loal PWM table file.
 
+```cpp
+U32 Acm2_ChLoadPWMTableFile(U32 ChID, PI8 FilePath, PU32 PointsCount)
+```
 <a name="Acm2_ChGetPWMTableStatus"></a>
 
 #### Acm2_ChGetPWMTableStatus
 Get PWM table status.
 
+```cpp
+U32	Acm2_ChGetPWMTableStatus(U32 ChID, PWM_TABLE_STATUS *PWMStatus)
+```
 <a name="Acm2_ChGetExtDriveData"></a>
 
 #### Acm2_ChGetExtDriveData
 Get external drive data by channel.
 
+```cpp
+U32 Acm2_ChGetExtDriveData(U32 ExtChannel, PF64 CounterData)
+```
 <a name="Acm2_ChSetExtDriveData"></a>
 
 #### Acm2_ChSetExtDriveData
 Set external drive data by channel.
 
+```cpp
+U32 Acm2_ChSetExtDriveData(U32 ExtChannel, F64 CounterData)
+```
 <a name="Acm2_ChLinkExtDriveObject"></a>
 
 #### Acm2_ChLinkExtDriveObject
 Link external drive object.
 
+```cpp
+U32 Acm2_ChLinkExtDriveObject(U32 ChID, ADV_OBJ_TYPE ObjType, U32 ObjectID)
+```
 <a name="Acm2_ChGetLinkedExtDriveObject"></a>
 
 #### Acm2_ChGetLinkedExtDriveObject
 Get linked external drive object.
 
+```cpp
+U32 Acm2_ChGetLinkedExtDriveObject(U32 ChID, ADV_OBJ_TYPE *ObjType, PU32 ObjArray, PU32 ArrayElement)
+```
 <a name="Acm2_DevMDaqConfig"></a>
 
 #### Acm2_DevMDaqConfig
 Set MDAQ config.
 
+```cpp
+U32 Acm2_DevMDaqConfig(U32 ChannelID, U32 Period, U32 AxisNo, U32 Method, U32 ChanType, U32 Count)
+```
 <a name="Acm2_DevMDaqGetConfig"></a>
 
 #### Acm2_DevMDaqGetConfig
 Get MDAQ config.
 
+```cpp
+U32 Acm2_DevMDaqGetConfig(U32 ChannelID, PU32 Period, PU32 AxisNo, PU32 Method, PU32 ChanType, PU32 Count)
+```
 <a name="Acm2_DevMDaqStart"></a>
 
 #### Acm2_DevMDaqStart
 Start MDAQ.
 
+```cpp
+U32 Acm2_DevMDaqStart(U32 DevID)
+```
 <a name="Acm2_DevMDaqStop"></a>
 
 #### Acm2_DevMDaqStop
 Stop MDAQ.
 
+```cpp
+U32 Acm2_DevMDaqStop(U32 DevID)
+```
 <a name="Acm2_DevMDaqReset"></a>
 
 #### Acm2_DevMDaqReset
 Reset MDAQ.
 
+```cpp
+U32 Acm2_DevMDaqReset(U32 ChannelID)
+```
 <a name="Acm2_DevMDaqGetStatus"></a>
 
 #### Acm2_DevMDaqGetStatus
 Get MDAQ status.
 
+```cpp
+U32 Acm2_DevMDaqGetStatus(U32 ChannelID, PU32 CurrentCnt, PU32 Status)
+```
 <a name="Acm2_DevMDaqGetData"></a>
 
 #### Acm2_DevMDaqGetData
 Get MDAQ data.
 
+```cpp
+U32 Acm2_DevMDaqGetData(U32 ChannelID, U32 StartIndex, U32 MaxCount, PF64 DataBuffer)
+```
 <a name="Acm2_GetDSPFrmWareDwnLoadRate"></a>
 
 #### Acm2_GetDSPFrmWareDwnLoadRate
 Get FW download rate.
 
+```cpp
+U32 Acm2_GetDSPFrmWareDwnLoadRate(U32 DevID, PF64 Percentage)
+```
 <a name="Acm2_DevLoadENI"></a>
 
 #### Acm2_DevLoadENI
 Download ENI file.
 
+```cpp
+U32 Acm2_DevLoadENI(U32 RingNo, PI8 ENIFile)
+```
 <a name="Acm2_DevConnect"></a>
 
 #### Acm2_DevConnect
 Connect subdevices.
 
+```cpp
+U32 Acm2_DevConnect(U32 RingNo)
+```
 ```python
 import time
 import os
@@ -2681,6 +3195,9 @@ while (get_sub_dev_state0.value != SUB_DEV_STATE.EC_SLAVE_STATE_OP.value) or (ge
 #### Acm2_DevDisConnect
 Disconnect subdevices
 
+```cpp
+U32 Acm2_DevDisConnect(U32 RingNo)
+```
 ```python
 import time
 import os
@@ -2710,11 +3227,17 @@ errCde = AdvMot.Acm2_DevDisConnect(ring_no1)
 #### Acm2_DevGetSubDevicesID
 Get subdevices id.
 
+```cpp
+U32 Acm2_DevGetSubDevicesID(U32 RingNo, ECAT_ID_TYPE IDType, PU32 SubDeviceIDArray, PU32 SubDeviceCnt)
+```
 <a name="Acm2_DevGetMDeviceInfo"></a>
 
 #### Acm2_DevGetMDeviceInfo
 Get main device information.
 
+```cpp
+U32 Acm2_DevGetMDeviceInfo(U32 RingNo, PADVAPI_MDEVICE_INFO pMDeviceInfo)
+```
 ```python
 import os
 import time
@@ -2743,6 +3266,9 @@ print('slave_count:{0}'.format(main_dev_info.slave_count))
 #### Acm2_DevGetSubDeviceInfo
 Get subdevice information.
 
+```cpp
+U32 Acm2_DevGetSubDeviceInfo(U32 RingNo, ECAT_ID_TYPE IDType, U32 SubDeviceID, PADVAPI_SUBDEVICE_INFO_CM2 pInfo)
+```
 ```python
 import os
 import time
@@ -2788,21 +3314,33 @@ for i in range(id_cnt.value):
 #### Acm2_DevGetSubDeviceFwVersion
 Get subdevice fw information.
 
+```cpp
+U32 Acm2_DevGetSubDeviceFwVersion(U32 RingNo, ECAT_ID_TYPE IDType, U32 SubDeviceID, OUT char *VersionInfo)
+```
 <a name="Acm2_DevSetSubDeviceID"></a>
 
 #### Acm2_DevSetSubDeviceID
 Set subdevice id.
 
+```cpp
+U32 Acm2_DevSetSubDeviceID(U32 RingNo, ECAT_ID_TYPE IDType, U32 SubDeviceID, U32 SubDeviceNewID)
+```
 <a name="Acm2_DevSetSubDeviceStates"></a>
 
 #### Acm2_DevSetSubDeviceStates
 Set subdevice status.
 
+```cpp
+U32 Acm2_DevSetSubDeviceStates(U32 RingNo, ECAT_ID_TYPE IDType, U32 SubDeviceID, U32 SubDeviceState)
+```
 <a name="Acm2_DevGetSubDeviceStates"></a>
 
 #### Acm2_DevGetSubDeviceStates
 Get subdevice states.
 
+```cpp
+U32 Acm2_DevGetSubDeviceStates(U32 RingNo, ECAT_ID_TYPE IDType, U32 SubDeviceID, PU32 SubDeviceState)
+```
 ```python
 import os
 import time
@@ -2851,21 +3389,33 @@ while (get_sub_dev_state0.value != SUB_DEV_STATE.EC_SLAVE_STATE_OP.value) or (ge
 #### Acm2_DevWriteSDO
 Write data by SDO.
 
+```cpp
+U32 Acm2_DevWriteSDO(IN U32 RingNo, ECAT_ID_TYPE IDType, IN U32 SubDeviceID, IN U32 Index, IN U32 SubIndex, IN U32 Type, IN U32 DataSize, IN VOID *pValue)
+```
 <a name="Acm2_DevReadSDO"></a>
 
 #### Acm2_DevReadSDO
 Read data by SDO.
 
+```cpp
+U32 Acm2_DevReadSDO(IN U32 RingNo, ECAT_ID_TYPE IDType, IN U32 SubDeviceID, IN U32 Index, IN U32 SubIndex, IN U32 Type, IN U32 DataSize, OUT VOID *pValue)
+```
 <a name="Acm2_DevWritePDO"></a>
 
 #### Acm2_DevWritePDO
 Write data by PDO.
 
+```cpp
+U32 Acm2_DevWritePDO(IN U32 RingNo, ECAT_ID_TYPE IDType, IN U32 SubDeviceID, IN U32 Index, IN U32 SubIndex, IN U32 Type, IN U32 DataSize, IN VOID *pValue)
+```
 <a name="Acm2_DevReadPDO"></a>
 
 #### Acm2_DevReadPDO
 Read data by PDO.
 
+```cpp
+U32 Acm2_DevReadPDO(IN U32 RingNo, ECAT_ID_TYPE IDType, IN U32 SubDeviceID, IN U32 Index, IN U32 SubIndex, IN U32 Type, IN U32 DataSize, OUT VOID *pValue)
+```
 ```python
 import os
 import time
@@ -2912,62 +3462,102 @@ errCde = AdvMot.Acm2_DevReadPDO(ring_no, id_type, sub_dev_pos, pdo_idx, pdo_sub_
 #### Acm2_DevWriteReg
 Write data by reg.
 
+```cpp
+U32 Acm2_DevWriteReg(IN U32 RingNo, ECAT_ID_TYPE IDType, IN U32 SubDeviceID, IN U32 Address, IN U32 Type, IN U32 DataSize, IN VOID *pValue)
+```
 <a name="Acm2_DevReadReg"></a>
 
 #### Acm2_DevReadReg
 Read data by reg.
 
+```cpp
+U32 Acm2_DevReadReg(IN U32 RingNo, ECAT_ID_TYPE IDType, IN U32 SubDeviceID, IN U32 Address, IN U32 Type, IN U32 DataSize, OUT VOID *pValue)
+```
 <a name="Acm2_DevReadSubDeviceCommErrCnt"></a>
 
 #### Acm2_DevReadSubDeviceCommErrCnt
 Read subdevice communication error counter.
 
+```cpp
+U32 Acm2_DevReadSubDeviceCommErrCnt(IN U32 RingNo, IN PU32 ErrCntArray, IN PU32 ArrayElements)
+```
 <a name="Acm2_Ax1DCompensateTable"></a>
 
 #### Acm2_Ax1DCompensateTable
 Set compensate table with one axis.
 
+```cpp
+U32 Acm2_Ax1DCompensateTable(U32 AxID, F64 OriginPos, F64 Pitch, PF64 OffsetData, U32 OffsetElements, U32 Direction)
+```
 <a name="Acm2_Ax2DCompensateTable"></a>
 
 #### Acm2_Ax2DCompensateTable
 Set compensate table in 2D.
 
+```cpp
+U32 Acm2_Ax2DCompensateTable(U32 AxID, U32 RelAxID, F64 OriginPosX, F64 OriginPosY, F64 PitchX, F64 PitchY, PF64 OffsetDataX, PF64 OffsetDataY, U32 OffsetElementsX, U32 OffsetElementsY)
+```
 <a name="Acm2_AxZAxisCompensateTable"></a>
 
 #### Acm2_AxZAxisCompensateTable
 Set compensate table in Z axis.
 
+```cpp
+U32 Acm2_AxZAxisCompensateTable(U32 AxID, U32 RelAxID, U32 ZAxID, F64 OriginPosX, F64 OriginPosY, F64 PitchX, F64 PitchY, PF64 OffsetDataZ, U32 OffsetElementsX, U32 OffsetElementsY)
+```
 <a name="Acm2_AxGetCompensatePosition"></a>
 
 #### Acm2_AxGetCompensatePosition
 Get compensate position by axis.
 
+```cpp
+U32 Acm2_AxGetCompensatePosition(U32 AxID, PF64 Position)
+```
 <a name="Acm2_DevOscChannelDataStart"></a>
 
 #### Acm2_DevOscChannelDataStart
 Start Osc. channel data.
 
+```cpp
+U32 Acm2_DevOscChannelDataStart(U32 DevID)
+```
 <a name="Acm2_DevOscChannelDataStop"></a>
 
 #### Acm2_DevOscChannelDataStop
 Stop Osc. channel data.
 
+```cpp
+U32 Acm2_DevOscChannelDataStop(U32 DevID)
+```
 <a name="Acm2_DevGetOscChannelDataConfig"></a>
 
 #### Acm2_DevGetOscChannelDataConfig
 Get config of Osc. channel.
 
+```cpp
+U32 Acm2_DevGetOscChannelDataConfig(U32 DevID, U16 ChannelID, POSC_PROFILE_PRM oscflg)
+```
 <a name="Acm2_DevSetOscChannelDataConfig"></a>
 
 #### Acm2_DevSetOscChannelDataConfig
 Set config of Osc. channel.
 
+```cpp
+U32 Acm2_DevSetOscChannelDataConfig(U32 DevID, U16 ChannelID, OSC_PROFILE_PRM oscflg)
+```
 <a name="Acm2_DevGetOscChannelData"></a>
 
 #### Acm2_DevGetOscChannelData
 Get Osc. channel data.
 
+```cpp
+U32 Acm2_DevGetOscChannelData(U32 DevID, U16 ChannelID, U32 DataIndex, PU32 MaxCount, PF64 DataBuffer)
+```
 <a name="Acm2_DevGetOscChannelStatus"></a>
 
 #### Acm2_DevGetOscChannelStatus
 Get Osc. channel status.
+
+```cpp
+U32  Acm2_DevGetOscChannelStatus(U32 DevID, PU32 Status)
+```

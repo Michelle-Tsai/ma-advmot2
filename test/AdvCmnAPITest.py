@@ -8,6 +8,7 @@ from AcmP.AdvMotApi_CM2 import *
 from AcmP.AdvMotDrv import *
 from AcmP.MotionInfo import *
 from AcmP.AdvMotPropID_CM2 import PropertyID2
+from AcmP.AdvMotErr_CM2 import ErrorCode2
 
 # if os.name == 'nt':
 #     from colorama import init as colorama_init, Fore
@@ -36,7 +37,7 @@ class AdvCmnAPI_Test(unittest.TestCase):
         excepted_dev = int(excepted_dev_hex, 16)
         self.AdvMot.Acm2_GetAvailableDevs(self.devlist, self.maxEnt, byref(self.outEnt))
         result_dev = self.devlist[0].dwDeviceNum
-        self.assertEqual(excepted_dev, result_dev)
+        self.assertEqual(excepted_dev, result_dev, '{0} failed.'.format(self._testMethodName))
     
     def test_DevOpen(self):
         excepted_dev_hex = '0x63003000'
@@ -45,17 +46,17 @@ class AdvCmnAPI_Test(unittest.TestCase):
         self.device_info = DEVICEINFO()
         excepted_err = 0
         self.errCde = self.AdvMot.Acm2_DevOpen(device_number, byref(self.device_info))
-        self.assertEqual(excepted_err, self.errCde)
+        self.assertEqual(excepted_err, self.errCde, '{0} failed.'.format(self._testMethodName))
 
     def test_Initialize(self):
         self.errCde = self.AdvMot.Acm2_DevInitialize()
         excepted_err = 0
-        self.assertEqual(excepted_err, self.errCde)
+        self.assertEqual(excepted_err, self.errCde, '{0} failed.'.format(self._testMethodName))
 
     def test_DevClose(self):
         excepted_err = 0
         self.errCde = self.AdvMot.Acm2_DevAllClose()
-        self.assertEqual(excepted_err, self.errCde)
+        self.assertEqual(excepted_err, self.errCde, '{0} failed.'.format(self._testMethodName))
 
     def test_LoadENI(self):
         ring_no = c_uint32(0)
@@ -66,14 +67,14 @@ class AdvCmnAPI_Test(unittest.TestCase):
             eni_path = b'test/eni0.xml'
         self.errCde = self.AdvMot.Acm2_DevLoadENI(ring_no, eni_path)
         excepted_err = 0
-        self.assertEqual(excepted_err, self.errCde)
+        self.assertEqual(excepted_err, self.errCde, '{0} failed.'.format(self._testMethodName))
     
     def test_GetMDevice(self):
         ring_no = c_uint32(0)
         MDeviceInfo = ADVAPI_MDEVICE_INFO()
         self.errCde = self.AdvMot.Acm2_DevGetMDeviceInfo(ring_no, byref(MDeviceInfo))
         excepted_err = 0
-        self.assertEqual(excepted_err, self.errCde)
+        self.assertEqual(excepted_err, self.errCde, '{0} failed.'.format(self._testMethodName))
     
     def test_DevExportMappingTable(self):
         # test0.xml will saved under current folder
@@ -83,7 +84,7 @@ class AdvCmnAPI_Test(unittest.TestCase):
             file_path = b'test/test0.xml'
         self.errCde = self.AdvMot.Acm2_DevExportMappingTable(file_path)
         excepted_err = 0
-        self.assertEqual(excepted_err, self.errCde)
+        self.assertEqual(excepted_err, self.errCde, '{0} failed.'.format(self._testMethodName))
     
     def test_DevImportMappingTable(self):
         if os.name == 'nt':
@@ -92,7 +93,7 @@ class AdvCmnAPI_Test(unittest.TestCase):
             file_path = b'test/test0.xml'        
         self.errCde = self.AdvMot.Acm2_DevImportMappingTable(file_path)
         excepted_err = 0
-        self.assertEqual(excepted_err, self.errCde)
+        self.assertEqual(excepted_err, self.errCde, '{0} failed.'.format(self._testMethodName))
 
     def test_AxPTP(self):
         ax_id = c_uint32(0)
@@ -100,7 +101,7 @@ class AdvCmnAPI_Test(unittest.TestCase):
         distance = c_double(1000)
         self.errCde = self.AdvMot.Acm2_AxPTP(ax_id, abs_mode, distance)
         excepted_err = 0
-        self.assertEqual(excepted_err, self.errCde)
+        self.assertEqual(excepted_err, self.errCde, '{0} failed.'.format(self._testMethodName))
 
     def test_GetAxState(self):
         ax_id = c_uint32(0)
@@ -128,7 +129,7 @@ class AdvCmnAPI_Test(unittest.TestCase):
         # Set axis command position as 0
         for j in range(len(ax_id_arr)):
             self.errCde = self.AdvMot.Acm2_AxSetPosition(ax_id_arr[j], pos_type, pos)
-            self.assertEqual(excepted_err, self.errCde)
+            self.assertEqual(excepted_err, self.errCde, '{0} failed.'.format(self._testMethodName))
     
     def test_AxGetPosition(self):
         ax_id = c_uint32(0)
@@ -142,7 +143,7 @@ class AdvCmnAPI_Test(unittest.TestCase):
         excepted_pos = c_double(1000)
         excepted_err = 0
         self.assertEqual(excepted_err, self.errCde)
-        self.assertEqual(excepted_pos.value, pos.value)
+        self.assertEqual(excepted_pos.value, pos.value, '{0} failed.'.format(self._testMethodName))
 
     def test_MoveContinue(self):
         excepted_err = 0
@@ -167,42 +168,51 @@ class AdvCmnAPI_Test(unittest.TestCase):
         pos_type = c_uint(POSITION_TYPE.POSITION_CMD.value)
         self.errCde = self.AdvMot.Acm2_AxGetPosition(ax_id, pos_type, byref(pos))
         self.assertEqual(excepted_err, self.errCde)
-        self.assertNotEqual(starting_pos.value, pos.value)        
+        self.assertNotEqual(starting_pos.value, pos.value, '{0} failed.'.format(self._testMethodName))        
 
     def test_SetDeviceDIOProperty(self):
-        do_ch = c_uint32(0)
+        do_ch = [c_uint32(0), c_uint32(1)]
         property_id = c_uint(PropertyID2.CFG_CH_DaqDoFuncSelect.value)
         val = c_double(1)
         excepted_err = 0
-        self.errCde = self.AdvMot.Acm2_SetProperty(do_ch, property_id, val)
-        self.assertEqual(excepted_err, self.errCde)
+        for i in range(len(do_ch)):
+            self.errCde = self.AdvMot.Acm2_SetProperty(do_ch[i], property_id, val)
+            self.assertEqual(excepted_err, self.errCde, '{0} failed.'.format(self._testMethodName))
     
     def test_GetDeviceDIOProperty(self):
-        do_ch = c_uint32(0)
+        do_ch = [c_uint32(0), c_uint32(1)]
         property_id = c_uint(PropertyID2.CFG_CH_DaqDoFuncSelect.value)
         val = c_double(1)
         get_val = c_double(0)
         excepted_err = 0
-        self.errCde = self.AdvMot.Acm2_GetProperty(do_ch, property_id, byref(get_val))
-        self.assertEqual(excepted_err, self.errCde)
-        self.assertEqual(val.value, get_val.value)
+        for i in range(len(do_ch)):
+            self.errCde = self.AdvMot.Acm2_GetProperty(do_ch[i], property_id, byref(get_val))
+            self.assertEqual(excepted_err, self.errCde)
+            self.assertEqual(val.value, get_val.value)
     
     def test_SetDeviceDO_ON(self):
-        do_ch = c_uint32(0)
-        data = c_uint32(1)
+        do_ch = [c_uint32(0), c_uint32(1)]
+        data_on = c_uint32(DO_ONOFF.DO_ON.value)
+        data_off = c_uint32(DO_ONOFF.DO_OFF.value)
         get_data = c_uint32(0)
         excepted_err = 0
-        self.errCde = self.AdvMot.Acm2_ChSetDOBit(do_ch, data)
-        self.assertEqual(excepted_err, self.errCde)
-        self.errCde = self.AdvMot.Acm2_ChGetDOBit(do_ch, byref(get_data))
-        self.assertEqual(excepted_err, self.errCde)      
-        self.assertEqual(data.value, get_data.value)
+        for i in range(len(do_ch)):
+            self.errCde = self.AdvMot.Acm2_ChSetDOBit(do_ch[i], data_on)
+            self.assertEqual(excepted_err, self.errCde)
+            self.errCde = self.AdvMot.Acm2_ChGetDOBit(do_ch[i], byref(get_data))
+            self.assertEqual(excepted_err, self.errCde)      
+            self.assertEqual(data_on.value, get_data.value)
+            self.errCde = self.AdvMot.Acm2_ChSetDOBit(do_ch[i], data_off)
+            self.assertEqual(excepted_err, self.errCde)
+            self.errCde = self.AdvMot.Acm2_ChGetDOBit(do_ch[i], byref(get_data))
+            self.assertEqual(excepted_err, self.errCde) 
+        self.assertEqual(data_off.value, get_data.value, '{0} failed.'.format(self._testMethodName))
 
     def test_CreatGroup(self):
         # Set axis0, axis1 as group, 0 as group id.
         excepted_err = 0
         self.errCde = self.AdvMot.Acm2_GpCreate(self.gpid, self.axis_array, len(self.axis_array))
-        self.assertEqual(excepted_err, self.errCde)
+        self.assertEqual(excepted_err, self.errCde, '{0} failed.'.format(self._testMethodName))
     
     def test_CheckGroupAxes(self):
         # get_axes size must be same as len_get
@@ -212,20 +222,20 @@ class AdvCmnAPI_Test(unittest.TestCase):
         self.errCde = self.AdvMot.Acm2_GpGetAxesInGroup(self.gpid, get_axes, len_get)
         self.assertEqual(excepted_err, self.errCde)
         for idx in range(len_get.value):
-            self.assertEqual(self.axis_array[idx], get_axes[idx])
+            self.assertEqual(self.axis_array[idx], get_axes[idx], '{0} failed.'.format(self._testMethodName))
     
     def test_RemoveGroup(self):
         remove_all_axes = c_uint32(0)
         excepted_err = 0
         self.errCde = self.AdvMot.Acm2_GpCreate(self.gpid, self.axis_array, remove_all_axes)
-        self.assertEqual(excepted_err, self.errCde)
+        self.assertEqual(excepted_err, self.errCde, '{0} failed.'.format(self._testMethodName))
 
     def test_GetLastError_Device(self):
         excepted_err = 0
         obj_logicID = c_uint32(0)
         obj_type = c_uint(ADV_OBJ_TYPE.ADV_DEVICE.value)
         self.errCde = self.AdvMot.Acm2_GetLastError(obj_type, obj_logicID)
-        self.assertEqual(excepted_err, self.errCde)
+        self.assertEqual(excepted_err, self.errCde, '{0} failed.'.format(self._testMethodName))
 
     def test_GetLastError_AXIS(self):
         excepted_err = 0
@@ -233,7 +243,7 @@ class AdvCmnAPI_Test(unittest.TestCase):
             obj_logicID = c_uint32(i)
             obj_type = c_uint(ADV_OBJ_TYPE.ADV_AXIS.value)
             self.errCde = self.AdvMot.Acm2_GetLastError(obj_type, obj_logicID)
-            self.assertEqual(excepted_err, self.errCde)
+            self.assertEqual(excepted_err, self.errCde, '{0} failed.'.format(self._testMethodName))
 
     def test_GetLastError_Group(self):
         excepted_err = 0
@@ -241,7 +251,7 @@ class AdvCmnAPI_Test(unittest.TestCase):
             obj_logicID = c_uint32(i)
             obj_type = c_uint(ADV_OBJ_TYPE.ADV_GROUP.value)
             self.errCde = self.AdvMot.Acm2_GetLastError(obj_type, obj_logicID)
-            self.assertEqual(excepted_err, self.errCde)
+            self.assertEqual(excepted_err, self.errCde, '{0} failed.'.format(self._testMethodName))
 
     def test_SetMultiPropertyAndCheck_AxisSpeed(self):
         excepted_err = 0
@@ -263,7 +273,7 @@ class AdvCmnAPI_Test(unittest.TestCase):
         self.assertEqual(excepted_err, self.errCde)
         for i in range(data_cnt.value):
             # print('set[{0}]:{1}, get:{2}'.format(i, value_arr[i].value, get_val[i]))
-            self.assertEqual(value_arr[i].value, get_val[i])
+            self.assertEqual(value_arr[i].value, get_val[i], '{0} failed.'.format(self._testMethodName))
     
     def test_SetAxSpeedInfoAndCheck(self):
         excepted_err = 0
@@ -276,7 +286,7 @@ class AdvCmnAPI_Test(unittest.TestCase):
         speed_info.JerkFac = c_double(0)
         # Set speed information
         self.errCde = self.AdvMot.Acm2_AxSetSpeedProfile(ax_id, speed_info)
-        self.assertEqual(excepted_err, self.errCde)
+        self.assertEqual(excepted_err, self.errCde, '{0} failed.'.format(self._testMethodName))
 
     def test_SetAxJogInfo(self):
         excepted_err = 0
@@ -289,7 +299,7 @@ class AdvCmnAPI_Test(unittest.TestCase):
         jog_speed_info.VLTime = c_double(2000)
         # Set axis 0 jog speed information
         self.errCde = self.AdvMot.Acm2_AxSetJogSpeedProfile(ax_id, jog_speed_info)
-        self.assertEqual(excepted_err, self.errCde)
+        self.assertEqual(excepted_err, self.errCde, '{0} failed.'.format(self._testMethodName))
     
     def test_GetCurrentVelocity(self):
         excepted_err = 0
@@ -298,7 +308,7 @@ class AdvCmnAPI_Test(unittest.TestCase):
         vel_Type = c_uint(VELOCITY_TYPE.VELOCITY_CMD.value)
         # Get axis 0 current velocity
         self.errCde = self.AdvMot.Acm2_AxGetVel(ax_id, vel_Type, byref(get_vel))
-        self.assertEqual(excepted_err, self.errCde)
+        self.assertEqual(excepted_err, self.errCde, '{0} failed.'.format(self._testMethodName))
     
     def test_PVTTable(self):
         excepted_err = 0
@@ -333,7 +343,7 @@ class AdvCmnAPI_Test(unittest.TestCase):
             self.test_GetAxState()
         self.errCde = self.AdvMot.Acm2_AxGetPosition(ax_id, pos_type, byref(get_pos))
         self.assertEqual(excepted_err, self.errCde)
-        self.assertEqual(c_double(30000).value, get_pos.value)
+        self.assertEqual(c_double(30000).value, get_pos.value, '{0} failed.'.format(self._testMethodName))
 
     def test_PTTable(self):
         excepted_err = 0
@@ -368,7 +378,7 @@ class AdvCmnAPI_Test(unittest.TestCase):
         # Get axis 0 position
         self.errCde = self.AdvMot.Acm2_AxGetPosition(ax_id, pos_type, byref(get_pos))
         self.assertEqual(excepted_err, self.errCde)
-        self.assertEqual(c_double(30000).value, get_pos.value)
+        self.assertEqual(c_double(30000).value, get_pos.value, '{0} failed.'.format(self._testMethodName))
 
     def test_Gear(self):
         excepted_err = 0
@@ -379,7 +389,7 @@ class AdvCmnAPI_Test(unittest.TestCase):
         self.assertEqual(excepted_err, self.errCde)
         gear_param = GEAR_IN_PRM()
         # Position type as command position
-        gear_param.RefSrc = c_uint(POSITION_TYPE.POSITION_CMD.value)
+        gear_param.RefSrc = c_uint32(POSITION_TYPE.POSITION_CMD.value)
         # Mode as relative mode
         gear_param.Mode = c_uint32(0)
         # Set gear ratio
@@ -412,7 +422,7 @@ class AdvCmnAPI_Test(unittest.TestCase):
         self.assertEqual(distance.value, get_pos_1.value)
         # Reset following axis
         self.errCde = self.AdvMot.Acm2_AxSyncOut(follow_ax)
-        self.assertEqual(excepted_err, self.errCde)
+        self.assertEqual(excepted_err, self.errCde, '{0} failed.'.format(self._testMethodName))
 
     def test_Gantry(self):
         excepted_err = 0
@@ -424,9 +434,9 @@ class AdvCmnAPI_Test(unittest.TestCase):
         # Set gantry parameter
         gantry_param = GANTRY_IN_PRM()
         # Set gantry reference source as command position
-        gantry_param.RefSrc = c_uint(POSITION_TYPE.POSITION_CMD.value)
+        gantry_param.RefSrc = c_int16(POSITION_TYPE.POSITION_CMD.value)
         # Set gantry direction as positive
-        gantry_param.Direction = c_uint(MOTION_DIRECTION.DIRECTION_POS.value)
+        gantry_param.Direction = c_int16(MOTION_DIRECTION.DIRECTION_POS.value)
         # Set gantry
         self.errCde = self.AdvMot.Acm2_AxGantryIn(primary_ax, follow_ax, gantry_param)
         self.assertEqual(excepted_err, self.errCde)
@@ -453,7 +463,7 @@ class AdvCmnAPI_Test(unittest.TestCase):
         self.assertEqual(distance.value, get_pos_1.value)
         # Reset following axis
         self.errCde = self.AdvMot.Acm2_AxSyncOut(follow_ax)
-        self.assertEqual(excepted_err, self.errCde)
+        self.assertEqual(excepted_err, self.errCde, '{0} failed.'.format(self._testMethodName))
 
     def test_GpLine(self):
         excepted_err = 0
@@ -500,7 +510,7 @@ class AdvCmnAPI_Test(unittest.TestCase):
         self.assertEqual(end_pos_arr[1].value, get_pos_1.value)
         # Reset all axes from group 0
         self.errCde = self.AdvMot.Acm2_GpCreate(gp_id, gp_arr, 0)
-        self.assertEqual(excepted_err, self.errCde)
+        self.assertEqual(excepted_err, self.errCde, '{0} failed.'.format(self._testMethodName))
 
     def test_2DArc(self):
         excepted_err = 0
@@ -556,7 +566,7 @@ class AdvCmnAPI_Test(unittest.TestCase):
         self.assertEqual(end_ax_arr[1].value, get_pos_1.value)
         # Reset all axes from group 0
         self.errCde = self.AdvMot.Acm2_GpCreate(gp_id, gp_arr, 0)
-        self.assertEqual(excepted_err, self.errCde)
+        self.assertEqual(excepted_err, self.errCde, '{0} failed.'.format(self._testMethodName))
 
     def test_2DArc3P(self):
         excepted_err = 0
@@ -613,7 +623,7 @@ class AdvCmnAPI_Test(unittest.TestCase):
         self.assertEqual(end_arr[1].value, get_pos_1.value)
         # Reset all axes from group 0
         self.errCde = self.AdvMot.Acm2_GpCreate(gp_id, gp_arr, 0)
-        self.assertEqual(excepted_err, self.errCde)
+        self.assertEqual(excepted_err, self.errCde, '{0} failed.'.format(self._testMethodName))
 
     def test_2DArcAngle(self):
         excepted_err = 0
@@ -664,7 +674,7 @@ class AdvCmnAPI_Test(unittest.TestCase):
         self.assertEqual(center_arr[1].value, get_pos_1.value)
         # Reset all axes from group 0
         self.errCde = self.AdvMot.Acm2_GpCreate(gp_id, gp_arr, 0)
-        self.assertEqual(excepted_err, self.errCde)
+        self.assertEqual(excepted_err, self.errCde, '{0} failed.'.format(self._testMethodName))
 
     def test_3DArcCenter(self):
         excepted_err = 0
@@ -727,7 +737,7 @@ class AdvCmnAPI_Test(unittest.TestCase):
         self.assertEqual(end_ax_arr[2].value, get_pos_2.value)
         # Reset all axes from group 0
         self.errCde = self.AdvMot.Acm2_GpCreate(gp_id, gp_arr, 0)
-        self.assertEqual(excepted_err, self.errCde)
+        self.assertEqual(excepted_err, self.errCde, '{0} failed.'.format(self._testMethodName))
 
     def test_3DArcNormVec(self):
         excepted_err = 0
@@ -796,7 +806,7 @@ class AdvCmnAPI_Test(unittest.TestCase):
         self.assertEqual(arc_end_arr[2].value, get_pos_2.value)
         # Reset all axes from group 0
         self.errCde = self.AdvMot.Acm2_GpCreate(gp_id, gp_arr, 0)
-        self.assertEqual(excepted_err, self.errCde)
+        self.assertEqual(excepted_err, self.errCde, '{0} failed.'.format(self._testMethodName))
 
     def test_Gp3DArc3P(self):
         excepted_err = 0
@@ -861,7 +871,7 @@ class AdvCmnAPI_Test(unittest.TestCase):
         self.assertEqual(end_arr[2].value, get_pos_2.value)
         # Reset all axes from group 0
         self.errCde = self.AdvMot.Acm2_GpCreate(gp_id, gp_arr, 0)
-        self.assertEqual(excepted_err, self.errCde)
+        self.assertEqual(excepted_err, self.errCde, '{0} failed.'.format(self._testMethodName))
     
     def test_3DArcAngle(self):
         excepted_err = 0
@@ -927,7 +937,7 @@ class AdvCmnAPI_Test(unittest.TestCase):
         self.assertEqual(end_arr[2].value, get_pos_2.value)
         # Reset all axes from group 0
         self.errCde = self.AdvMot.Acm2_GpCreate(gp_id, gp_arr, 0)
-        self.assertEqual(excepted_err, self.errCde)
+        self.assertEqual(excepted_err, self.errCde, '{0} failed.'.format(self._testMethodName))
 
     def GpHelixCenter(self):
         excepted_err = 0
@@ -951,10 +961,10 @@ class AdvCmnAPI_Test(unittest.TestCase):
         # Set mode as relative
         helix_mode = c_uint(ABS_MODE.MOVE_REL.value)
         # Set center as (10000, 0, 0)
-        center_arr = [c_double(2000), c_double(2000), c_double(0)]
+        center_arr = [c_double(8000), c_double(0), c_double(0)]
         centerArr = (c_double * len(center_arr))(*center_arr)
         # Set end position as (20000, 0, 20000)
-        end_arr = [c_double(2000), c_double(4000), c_double(2000)]
+        end_arr = [c_double(16000), c_double(0), c_double(10000)]
         endArr = (c_double * len(end_arr))(*end_arr)
         arr_element = c_uint32(len(end_arr))
         # Set direction as CW
@@ -986,7 +996,7 @@ class AdvCmnAPI_Test(unittest.TestCase):
         self.assertEqual(end_arr[2].value, get_pos_2.value)
         # Reset all axes from group 0
         self.errCde = self.AdvMot.Acm2_GpCreate(gp_id, gp_arr, 0)
-        self.assertEqual(excepted_err, self.errCde)
+        self.assertEqual(excepted_err, self.errCde, '{0} failed.'.format(self._testMethodName))
 
     def test_Helix3P(self):
         excepted_err = 0
@@ -1045,7 +1055,7 @@ class AdvCmnAPI_Test(unittest.TestCase):
         self.assertEqual(end_arr[2].value, get_pos_2.value)
         # Reset all axes from group 0
         self.errCde = self.AdvMot.Acm2_GpCreate(gp_id, gp_arr, 0)
-        self.assertEqual(excepted_err, self.errCde)
+        self.assertEqual(excepted_err, self.errCde, '{0} failed.'.format(self._testMethodName))
 
     def test_HelixAngle(self):
         excepted_err = 0
@@ -1102,7 +1112,7 @@ class AdvCmnAPI_Test(unittest.TestCase):
         self.assertEqual(end_arr[2].value, get_pos_2.value)
         # Reset all axes from group 0
         self.errCde = self.AdvMot.Acm2_GpCreate(gp_id, gp_arr, 0)
-        self.assertEqual(excepted_err, self.errCde)
+        self.assertEqual(excepted_err, self.errCde, '{0} failed.'.format(self._testMethodName))
 
     def test_GpLinePauseAndResume(self):
         excepted_err = 0
@@ -1178,7 +1188,7 @@ class AdvCmnAPI_Test(unittest.TestCase):
         self.assertEqual(end_arr[2].value, get_pos_2.value)
         # Reset all axes from group 0
         self.errCde = self.AdvMot.Acm2_GpCreate(gp_id, gp_arr, 0)
-        self.assertEqual(excepted_err, self.errCde)
+        self.assertEqual(excepted_err, self.errCde, '{0} failed.'.format(self._testMethodName))
 
     def test_GpStop(self):
         excepted_err = 0
@@ -1252,7 +1262,7 @@ class AdvCmnAPI_Test(unittest.TestCase):
         self.assertNotEqual(end_arr[2].value, get_pos_2.value)
         # Reset all axes from group 0
         self.errCde = self.AdvMot.Acm2_GpCreate(gp_id, gp_arr, 0)
-        self.assertEqual(excepted_err, self.errCde)
+        self.assertEqual(excepted_err, self.errCde, '{0} failed.'.format(self._testMethodName))
 
     def test_GpAddPath(self):
         excepted_err = 0
@@ -1334,7 +1344,7 @@ class AdvCmnAPI_Test(unittest.TestCase):
         self.assertEqual(excepted_err, self.errCde)
         # Reset all axes from group 0
         self.errCde = self.AdvMot.Acm2_GpCreate(gp_id, gp_arr, 0)
-        self.assertEqual(excepted_err, self.errCde)
+        self.assertEqual(excepted_err, self.errCde, '{0} failed.'.format(self._testMethodName))
 
     def test_GpLoadPath(self):
         excepted_err = 0
@@ -1399,7 +1409,7 @@ class AdvCmnAPI_Test(unittest.TestCase):
         self.assertEqual(excepted_err, self.errCde)
         # Reset all axes from group 0
         self.errCde = self.AdvMot.Acm2_GpCreate(gp_id, gp_arr, 0)
-        self.assertEqual(excepted_err, self.errCde)
+        self.assertEqual(excepted_err, self.errCde, '{0} failed.'.format(self._testMethodName))
 
     def test_LoadConnect5074And5057SO(self):
         excepted_err = 0
@@ -1453,7 +1463,7 @@ class AdvCmnAPI_Test(unittest.TestCase):
         self.errCde = self.AdvMot.Acm2_DevDisConnect(ring_no0)
         self.assertEqual(excepted_err, self.errCde)
         self.errCde = self.AdvMot.Acm2_DevDisConnect(ring_no1)
-        self.assertEqual(excepted_err, self.errCde)
+        self.assertEqual(excepted_err, self.errCde, '{0} failed.'.format(self._testMethodName))
 
     def test_Set5057SODO(self):
         # Set DO channel, local DO on PCIE-1203 is 0~1, rest of device will set from channel 8~
@@ -1485,22 +1495,27 @@ class AdvCmnAPI_Test(unittest.TestCase):
         self.assertEqual(excepted_err, self.errCde)
         # Set DO(14) off
         self.errCde = self.AdvMot.Acm2_ChSetDOBit(do_channel14, bit_data_off)
-        self.assertEqual(excepted_err, self.errCde)
+        self.assertEqual(excepted_err, self.errCde, '{0} failed.'.format(self._testMethodName))
 
     def Set5057DOByByte(self):
         excepted_err = 0
-        # Local DO of PCIE1203 is port 0
-        port_num = c_uint32(1)
-        start_ch = c_uint32(0)
-        get_byte_value = [c_uint32(0)] * 8
-        time.sleep(0.5)
+        port_num = c_uint32(2)
+        start_ch = c_uint32(1)
+        get_byte_value = (c_uint32 * 2)()
+        time.sleep(1)
         # Get DO byte of 5057SO (0~7)
-        self.errCde = self.AdvMot.Acm2_ChGetDOByte(start_ch, port_num, byref(get_byte_value[0]))
+        self.errCde = self.AdvMot.Acm2_ChGetDOByte(start_ch, port_num, get_byte_value)
         self.assertEqual(excepted_err, self.errCde)
         for i in range(len(get_byte_value)):
-            self.assertEqual(c_uint32(DO_ONOFF.DO_OFF.value).value, get_byte_value[i].value)
-        set_byte_value_on = [c_uint32(DO_ONOFF.DO_ON.value)] * 8
-        set_byte_value_off = [c_uint32(DO_ONOFF.DO_OFF.value)] * 8
+            self.assertEqual(c_uint32(DO_ONOFF.DO_OFF.value).value, get_byte_value[i])
+        # Port 1(AMAX-5057SO) bit 15~8
+        set_byte_str_1 = '10101010'
+        # Port 2(AMAX-5057SO) bit 23~16
+        set_byte_str_2 = '11100011'
+        set_byte_int_1 = int(set_byte_str_1, 2)
+        set_byte_int_2 = int(set_byte_str_2, 2)
+        set_byte_value_on = [c_uint32(set_byte_int_1), c_uint32(set_byte_int_2)]
+        set_byte_value_off = [c_uint32(DO_ONOFF.DO_OFF.value)] * 2
         set_value_arr_on = (c_uint32 * len(set_byte_value_on))(*set_byte_value_on)
         set_value_arr_off = (c_uint32 * len(set_byte_value_off))(*set_byte_value_off)
         time.sleep(0.5)
@@ -1509,21 +1524,26 @@ class AdvCmnAPI_Test(unittest.TestCase):
         self.assertEqual(excepted_err, self.errCde)
         time.sleep(1)
         # Get DO byte of 5057SO (0~7)
-        self.errCde = self.AdvMot.Acm2_ChGetDOByte(start_ch, port_num, byref(get_byte_value[0]))
+        self.errCde = self.AdvMot.Acm2_ChGetDOByte(start_ch, port_num, get_byte_value)
         self.assertEqual(excepted_err, self.errCde)
         for i in range(len(get_byte_value)):
-            self.assertEqual(c_uint32(DO_ONOFF.DO_ON.value).value, get_byte_value[i].value)
+            self.assertEqual(set_byte_value_on[i].value, get_byte_value[i])
         time.sleep(0.5)
         # Set DO byte of 5057SO (0~7)
         self.errCde = self.AdvMot.Acm2_ChSetDOByte(start_ch, port_num, set_value_arr_off)
         self.assertEqual(excepted_err, self.errCde)
+        # Get DO byte of 5057SO (0~7)
+        self.errCde = self.AdvMot.Acm2_ChGetDOByte(start_ch, port_num, get_byte_value)
+        self.assertEqual(excepted_err, self.errCde)
+        for i in range(len(get_byte_value)):
+            self.assertEqual(c_uint32(DO_ONOFF.DO_OFF.value).value, get_byte_value[i])
     
     def test_GetSubdeviceInfo(self):
         excepted_err = 0
         ring_no = c_uint32(1)
         # Get subdevice ID
         id_type = c_uint(ECAT_ID_TYPE.SUBDEVICE_ID.value)
-        id_cnt = c_uint32(3)
+        id_cnt = c_uint32(4)
         phys_addr_arr = [0] * id_cnt.value
         id_arr = (c_uint32 * id_cnt.value)()
         self.errCde = self.AdvMot.Acm2_DevGetSubDevicesID(ring_no, id_type, id_arr, byref(id_cnt))
@@ -1548,14 +1568,14 @@ class AdvCmnAPI_Test(unittest.TestCase):
             # Get subdevice info by subdevice position
             self.errCde = self.AdvMot.Acm2_DevGetSubDeviceInfo(ring_no, c_uint(ECAT_ID_TYPE.SUBDEVICE_POS.value), i, byref(sub_dev_info))
             self.assertEqual(id_arr[i], sub_dev_info.SubDeviceID)
-            self.assertEqual(excepted_err, self.errCde)
+            self.assertEqual(excepted_err, self.errCde, '{0} failed.'.format(self._testMethodName))
 
     def test_GetMainDeviceInfo(self):
         excepted_err = 0
         ring_no = c_uint32(1)
         main_dev_info = ADVAPI_MDEVICE_INFO()
         self.errCde = self.AdvMot.Acm2_DevGetMDeviceInfo(ring_no, byref(main_dev_info))
-        self.assertEqual(excepted_err, self.errCde)
+        self.assertEqual(excepted_err, self.errCde, '{0} failed.'.format(self._testMethodName))
         print('slave_count:{0}'.format(main_dev_info.slave_count))
 
     def test_WriteAndReadByPDO(self):
@@ -1587,7 +1607,7 @@ class AdvCmnAPI_Test(unittest.TestCase):
         # Get DO(0) value by PDO
         self.errCde = self.AdvMot.Acm2_DevReadPDO(ring_no, id_type, sub_dev_pos, pdo_idx, pdo_sub_idx, pdo_type, pdo_data_size, byref(get_value))
         self.assertEqual(excepted_err, self.errCde)
-        self.assertEqual(val_off.value, get_value.value)
+        self.assertEqual(val_off.value, get_value.value, '{0} failed.'.format(self._testMethodName))
 
     def test_Set4820AOData(self):
         excepted_err = 0
@@ -1622,11 +1642,22 @@ class AdvCmnAPI_Test(unittest.TestCase):
         self.errCde = self.AdvMot.Acm2_ChGetAOData(ao_ch, data_type, byref(get_data_ao))
         self.assertEqual(excepted_err, self.errCde)
         self.assertAlmostEqual(ao_data.value, get_data_ao.value, delta=1.0)
+        # Sleep for AI ready
+        time.sleep(2)
         # Get AI(0) data
         get_data_ai = c_double(0)
         self.errCde = self.AdvMot.Acm2_ChGetAIData(ao_ch, data_type, byref(get_data_ai))
         self.assertEqual(excepted_err, self.errCde)
-        self.assertAlmostEqual(ao_data.value, get_data_ai.value, delta=1.0)
+        self.assertAlmostEqual(ao_data.value, get_data_ai.value, delta=1.0, msg='{0} failed.'.format(self._testMethodName))
+
+    def test_ReadCommErrCnt(self):
+        excepted_err = c_uint32(ErrorCode2.FunctionNotSupport.value)
+        # Ring as IO Ring
+        ring_no = c_uint32(1)
+        get_err_cnt = c_uint32(128)
+        err_arr = (c_uint32 * get_err_cnt.value)()
+        self.errCde = self.AdvMot.Acm2_DevReadSubDeviceCommErrCnt(ring_no, err_arr, byref(get_err_cnt))
+        self.assertEqual(excepted_err.value, self.errCde, '{0} failed.'.format(self._testMethodName))
 
 def DownloadENISuite():
     tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_LoadENI']
@@ -1664,7 +1695,7 @@ def ImportMappingTable():
     return suite
 
 def AxPTP_Check():
-    tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_ResetAll', 'test_AxPTP', 'test_AxGetPosition']
+    tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_ResetAll', 'test_AxPTP', 'test_AxGetPosition', 'test_ResetAll']
     suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
     return suite
 
@@ -1694,12 +1725,12 @@ def SetAxis0SpeedWithProfile():
     return suite
 
 def PVTTable():
-    tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_PVTTable']
+    tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_ResetAll', 'test_PVTTable', 'test_ResetAll']
     suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
     return suite
 
 def PTTable():
-    tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_PTTable']
+    tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_ResetAll', 'test_PTTable', 'test_ResetAll']
     suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
     return suite
 
@@ -1823,46 +1854,62 @@ def SetAOGetAI():
     suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
     return suite
 
+def GetCommuError():
+    tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_ResetAll', 'test_LoadConnect5074And5057SO', 'test_ReadCommErrCnt', 'test_DisConnectAll', 'test_ResetAll']
+    suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
+    return suite
+
 if __name__ == '__main__':
     # Test all case without order
     # unittest.main()
     # Test case with self-defined order
     runner = unittest.TextTestRunner()
-    # runner.run(DownloadENISuite())
-    # runner.run(GetMDevice())
-    # runner.run(ExportMappingTable())
-    # runner.run(ImportMappingTable())
-    # runner.run(AxPTP_Check())
-    # runner.run(DeviceDO())
-    # runner.run(GroupCreateCheck())
-    # runner.run(GetAllError())
-    # runner.run(AxMoveContinue())
-    # runner.run(SetAxis0SpeedLimit())
-    # runner.run(SetAxis0SpeedWithProfile())
-    # runner.run(PVTTable())
-    # runner.run(PTTable())
-    # runner.run(Gear0And1())
-    # runner.run(Gantry0And1())
-    # runner.run(GpMoveLineRel())
-    # runner.run(GpMove2DArcCW())
-    # runner.run(GpMove2DArcCW3P())
-    # runner.run(GpMove2DArcCWAngle())
-    # runner.run(GpMove3DArcCW())
-    # runner.run(GpMove3DArcCWNormVec())
-    # runner.run(GpMove3DArcCW3P())
-    # runner.run(GpMove3DArcCW3P())
-    # runner.run(GpMoveHelixCenter())
-    # runner.run(GpMoveHelix3P())
-    # runner.run(GpMoveHelixAngle())
-    # runner.run(GpMoveLinePauseAndResume())
-    # runner.run(GpChangeVelWhenMove())
-    # runner.run(GpAddLoadPath())
-    # runner.run(GpLoadPath())
-    # runner.run(ECATLoadConnect5074_5057SO())
-    # runner.run(SetAndCheck5057SO())
-    # runner.run(SetAndCheck5057SOByte())
-    # runner.run(GetSubdeviceInfo())
-    # runner.run(GetMaindeviceInfo())
-    # runner.run(SetValueByPDO())
-    runner.run(SetAOGetAI())
-    
+    get_device = runner.run(GetMDevice())
+    export_mapping_table = runner.run(ExportMappingTable())
+    import_mapping_table = runner.run(ImportMappingTable())
+    ax_ptp = runner.run(AxPTP_Check())
+    device_do = runner.run(DeviceDO())
+    gp_create = runner.run(GroupCreateCheck())
+    get_all_error = runner.run(GetAllError())
+    ax_move_continue = runner.run(AxMoveContinue())
+    set_ax_speed_limit = runner.run(SetAxis0SpeedLimit())
+    set_ax_profile = runner.run(SetAxis0SpeedWithProfile())
+    pvt_table = runner.run(PVTTable())
+    pt_table = runner.run(PTTable())
+    gear_0_1 = runner.run(Gear0And1())
+    gantry_0_1 = runner.run(Gantry0And1())
+    gp_move_line = runner.run(GpMoveLineRel())
+    gp_move_2D_arc = runner.run(GpMove2DArcCW())
+    gp_move_2D_3P = runner.run(GpMove2DArcCW3P())
+    gp_2D_angle = runner.run(GpMove2DArcCWAngle())
+    gp_3D_arc = runner.run(GpMove3DArcCW())
+    gp_3D_norm_vec = runner.run(GpMove3DArcCWNormVec())
+    gp_3D_3P = runner.run(GpMove3DArcCW3P())
+    gp_helix_center = runner.run(GpMoveHelixCenter())
+    gp_helix_3P = runner.run(GpMoveHelix3P())
+    gp_helix_angle = runner.run(GpMoveHelixAngle())
+    gp_line_pause_resume = runner.run(GpMoveLinePauseAndResume())
+    set_byte_5057SO = runner.run(SetAndCheck5057SOByte())
+    change_vel_when_move = runner.run(GpChangeVelWhenMove())
+    gp_add_load_path = runner.run(GpAddLoadPath())
+    gp_load_path = runner.run(GpLoadPath())
+    load_connect = runner.run(ECATLoadConnect5074_5057SO())
+    set_5057SO = runner.run(SetAndCheck5057SO())
+    get_subdevice_info = runner.run(GetSubdeviceInfo())
+    get_main_device_info = runner.run(GetMaindeviceInfo())
+    set_pdo_val = runner.run(SetValueByPDO())
+    set_ao_get_ai = runner.run(SetAOGetAI())
+    get_commu_error = runner.run(GetCommuError())
+    total_run_arr = [get_device, get_device, export_mapping_table, import_mapping_table, ax_ptp, device_do, gp_create, get_all_error,
+                     ax_move_continue, set_ax_speed_limit, set_ax_profile, pvt_table, pt_table, gear_0_1, gantry_0_1, gp_move_line,
+                     gp_move_2D_arc, gp_move_2D_3P, gp_2D_angle, gp_3D_arc, gp_3D_norm_vec, gp_3D_3P, gp_helix_center, gp_helix_3P,
+                     gp_helix_angle, gp_line_pause_resume, set_byte_5057SO, change_vel_when_move, gp_add_load_path, gp_load_path,
+                     load_connect, set_5057SO, get_subdevice_info, get_main_device_info, set_pdo_val, set_ao_get_ai, get_commu_error]
+    failed_cnt = 0
+    total_cnt = 0
+    for i in range(len(total_run_arr)):
+        failed_cnt += len(total_run_arr[i].failures)
+        total_cnt += total_run_arr[i].testsRun
+    print('=========== Test result ===========')
+    print('Total test:{0}, failures:{1}'.format(total_cnt, failed_cnt))
+    print('=========== End of unit test ===========')

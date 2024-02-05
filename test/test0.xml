@@ -11,25 +11,25 @@
         <Obj_Size>64</Obj_Size>
         <Obj_Info>
             <LogicalID>0</LogicalID>
-            <PhysicalID>2</PhysicalID>
+            <PhysicalID>0</PhysicalID>
             <Device_Number>1660956672</Device_Number>
             <Device_Name>PCIE-1203-64AE (M3)</Device_Name>
         </Obj_Info>
         <Obj_Info>
             <LogicalID>1</LogicalID>
-            <PhysicalID>3</PhysicalID>
-            <Device_Number>1660956672</Device_Number>
-            <Device_Name>PCIE-1203-64AE (M3)</Device_Name>
-        </Obj_Info>
-        <Obj_Info>
-            <LogicalID>2</LogicalID>
             <PhysicalID>1</PhysicalID>
             <Device_Number>1660956672</Device_Number>
             <Device_Name>PCIE-1203-64AE (M3)</Device_Name>
         </Obj_Info>
         <Obj_Info>
+            <LogicalID>2</LogicalID>
+            <PhysicalID>2</PhysicalID>
+            <Device_Number>1660956672</Device_Number>
+            <Device_Name>PCIE-1203-64AE (M3)</Device_Name>
+        </Obj_Info>
+        <Obj_Info>
             <LogicalID>3</LogicalID>
-            <PhysicalID>0</PhysicalID>
+            <PhysicalID>3</PhysicalID>
             <Device_Number>1660956672</Device_Number>
             <Device_Name>PCIE-1203-64AE (M3)</Device_Name>
         </Obj_Info>
@@ -6915,19 +6915,19 @@
         </Obj_Info>
         <Obj_Info>
             <LogicalID>1</LogicalID>
-            <PhysicalID>0</PhysicalID>
+            <PhysicalID>1</PhysicalID>
             <Device_Number>1660956672</Device_Number>
             <Device_Name>PCIE-1203-64AE (M3)</Device_Name>
         </Obj_Info>
         <Obj_Info>
             <LogicalID>2</LogicalID>
-            <PhysicalID>0</PhysicalID>
+            <PhysicalID>2</PhysicalID>
             <Device_Number>1660956672</Device_Number>
             <Device_Name>PCIE-1203-64AE (M3)</Device_Name>
         </Obj_Info>
         <Obj_Info>
             <LogicalID>3</LogicalID>
-            <PhysicalID>0</PhysicalID>
+            <PhysicalID>3</PhysicalID>
             <Device_Number>1660956672</Device_Number>
             <Device_Name>PCIE-1203-64AE (M3)</Device_Name>
         </Obj_Info>

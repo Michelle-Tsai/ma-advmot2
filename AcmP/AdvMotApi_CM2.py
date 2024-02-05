@@ -148,7 +148,7 @@ class CAM_IN_PRM(Structure):
     ]
 
 class GEAR_RATIO_RATE(Structure):
-    # _pack_ = 1
+    _pack_ = 1
     _fields_ = [
         ('Num', c_double),
         ('Den', c_double)
@@ -157,7 +157,7 @@ class GEAR_RATIO_RATE(Structure):
 class GEAR_IN_PRM(Structure):
     # _pack_ = 1
     _fields_ = [
-        ('RefSrc', c_uint),
+        ('RefSrc', c_uint32),
         ('GearRatioRate', GEAR_RATIO_RATE),
         ('Mode', c_uint32),
         ('GearPosition', c_double)
@@ -174,8 +174,8 @@ class TANGENT_IN_PRM(Structure):
 class GANTRY_IN_PRM(Structure):
     # _pack_ = 1
     _fields_ = [
-        ('RefSrc', c_uint),
-        ('Direction', c_uint),
+        ('RefSrc', c_int16),
+        ('Direction', c_int16),
     ]
 
 class BUFFER_STATUS(Structure):

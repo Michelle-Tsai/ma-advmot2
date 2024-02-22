@@ -15,6 +15,17 @@ from AcmP.AdvMotErr_CM2 import ErrorCode2
 #     colorama_init(autoreset=True, wrap=True, convert=True)
 # else:
 #     from AcmP.utils import Color
+ax_motion_cnt = c_uint32(0)
+
+@CFUNCTYPE(c_uint32, c_uint32, c_void_p)
+def EvtAxMotionDone(axid, reservedParam):
+    ax_motion_cnt.value = ax_motion_cnt.value + 1;
+    print('[EvtAxMotionDone] AX:{0}, counter:{1}'.format(axid, ax_motion_cnt.value))
+    return 0;
+
+@CFUNCTYPE(c_uint32, c_uint32, c_void_p)
+def EmptyFunction(val, res):
+    return 0;
 
 class AdvCmnAPI_Test(unittest.TestCase):
     def setUp(self):
@@ -1658,6 +1669,342 @@ class AdvCmnAPI_Test(unittest.TestCase):
         err_arr = (c_uint32 * get_err_cnt.value)()
         self.errCde = self.AdvMot.Acm2_DevReadSubDeviceCommErrCnt(ring_no, err_arr, byref(get_err_cnt))
         self.assertEqual(excepted_err.value, self.errCde, '{0} failed.'.format(self._testMethodName))
+    
+    def test_SetCNTProperty(self):
+        excepted_err = c_uint32(ErrorCode2.SUCCESS.value)
+        excepted_done = c_uint32(UPDATE_STATE.UPGRADE_DONE.value)
+        # Set encoder 0 property
+        cnt_ch = c_uint32(0)
+        # Set encoder(0) pulse in mode as CW/CCW.
+        ppt_arr = c_uint32(PropertyID2.CFG_CH_DaqCntPulseInMode.value)
+        val_arr = c_double(PULSE_IN_MODE.I_CW_CCW.value)
+        get_val = c_double(0)
+        self.errCde = self.AdvMot.Acm2_SetProperty(cnt_ch, ppt_arr, val_arr)
+        self.assertEqual(excepted_err.value, self.errCde)
+        self.errCde = self.AdvMot.Acm2_GetProperty(cnt_ch, ppt_arr, byref(get_val))
+        self.assertEqual(excepted_err.value, self.errCde)
+        self.assertEqual(val_arr.value, get_val.value)
+        reset_cnt_data = c_double(0)
+        # Reset encoder data as 0
+        self.errCde = self.AdvMot.Acm2_ChSetCntData(cnt_ch, reset_cnt_data)
+        self.assertEqual(excepted_done.value, self.errCde)
+        # Get encoder data
+        get_cnt_data = c_double(0)
+        self.errCde = self.AdvMot.Acm2_ChGetCntData(cnt_ch, byref(get_cnt_data))
+        self.assertEqual(excepted_err.value, self.errCde)
+        self.assertEqual(reset_cnt_data.value, get_cnt_data.value)
+    
+    def test_SetCMPProperty(self):
+        excepted_err = c_uint32(ErrorCode2.SUCCESS.value)
+        cmp_ch = c_uint32(0)
+        # Set compare property, disable compare before setting.
+        cmp_set_arr = [c_uint32(PropertyID2.CFG_CH_DaqCmpDoEnable.value),
+                       c_uint32(PropertyID2.CFG_CH_DaqCmpDoLogic.value)]
+        trans_arr = (c_uint32 * len(cmp_set_arr))(*cmp_set_arr)
+        val_arr = [c_double(COMPARE_ENABLE.CMP_DISABLE.value), c_double(COMPARE_LOGIC.CP_ACT_LOW.value)]
+        trans_val = (c_double * len(val_arr))(*val_arr)
+        err_buffer = (c_uint32 * len(val_arr))()
+        self.errCde = self.AdvMot.Acm2_SetMultiProperty(cmp_ch, trans_arr, trans_val, len(val_arr), err_buffer)
+        self.assertEqual(excepted_err.value, self.errCde)
+        # Get value
+        get_val_arr = (c_double * len(val_arr))()
+        self.errCde = self.AdvMot.Acm2_GetMultiProperty(cmp_ch, trans_arr, get_val_arr, len(val_arr), err_buffer)
+        for i in range(len(val_arr)):
+            self.assertEqual(val_arr[i].value, get_val_arr[i])
+    
+    def test_RunCMP_Pulse(self):
+        excepted_err = c_uint32(ErrorCode2.SUCCESS.value)
+        excepted_done = c_uint32(UPDATE_STATE.UPGRADE_DONE.value)
+        cnt_ch = c_uint32(0)
+        cmp_ch = c_uint32(0)
+        # Set encoder(0) pulse in mode as CW/CCW.
+        ppt_arr = c_uint32(PropertyID2.CFG_CH_DaqCntPulseInMode.value)
+        val_arr = c_double(PULSE_IN_MODE.I_CW_CCW.value)
+        get_val = c_double(0)
+        self.errCde = self.AdvMot.Acm2_SetProperty(cnt_ch, ppt_arr, val_arr)
+        self.assertEqual(excepted_err.value, self.errCde)
+        self.errCde = self.AdvMot.Acm2_GetProperty(cnt_ch, ppt_arr, byref(get_val))
+        self.assertEqual(excepted_err.value, self.errCde)
+        self.assertEqual(val_arr.value, get_val.value)
+        # Set compare property, disable compare before setting.
+        cmp_set_arr = [c_uint32(PropertyID2.CFG_CH_DaqCmpDoEnable.value),
+                       c_uint32(PropertyID2.CFG_CH_DaqCmpDoOutputMode.value),
+                       c_uint32(PropertyID2.CFG_CH_DaqCmpDoLogic.value),
+                       c_uint32(PropertyID2.CFG_CH_DaqCmpDoPulseWidth.value)]
+        val_arr = [c_double(COMPARE_ENABLE.CMP_DISABLE.value),
+                   c_double(COMPARE_OUTPUT_MODE.CMP_PULSE.value),
+                   c_double(COMPARE_LOGIC.CP_ACT_LOW.value),
+                   c_double(500000)]
+        for i in range(len(cmp_set_arr)):
+            self.errCde = self.AdvMot.Acm2_SetProperty(cmp_ch, cmp_set_arr[i].value, val_arr[i])
+            self.assertEqual(excepted_err.value, self.errCde)
+        # Get value
+        get_val = c_double(0)
+        for i in range(len(val_arr)):
+            self.errCde = self.AdvMot.Acm2_GetProperty(cmp_ch, cmp_set_arr[i], byref(get_val))
+            self.assertEqual(excepted_err.value, self.errCde)
+            self.assertEqual(val_arr[i].value, get_val.value)
+        # Link local encoder/counter to compare
+        cnt_arr = [cnt_ch]
+        trans_cnt_arr = (c_uint32 * len(cnt_arr))(*cnt_arr)
+        axis_type = c_uint(ADV_OBJ_TYPE.ADV_COUNTER_CHANNEL.value)
+        self.errCde = self.AdvMot.Acm2_ChLinkCmpObject(cmp_ch, axis_type, trans_cnt_arr, len(cnt_arr))
+        self.assertEqual(excepted_err.value, self.errCde)
+        end_pos = c_double(2500)
+        # Set compare data table
+        # Compare DO behavior: ---ON---        ---OFF---        ---ON---       ---OFF---
+        set_cmp_data_arr = [c_double(500), c_double(1000), c_double(1500), c_double(2000)]
+        trans_cmp_data_arr = (c_double * len(set_cmp_data_arr))(*set_cmp_data_arr)
+        self.errCde = self.AdvMot.Acm2_ChSetCmpBufferData(cmp_ch, trans_cmp_data_arr, len(set_cmp_data_arr))
+        self.assertEqual(excepted_err.value, self.errCde)
+        # Reset encoder data as 0
+        reset_cnt_data = c_double(0)
+        self.errCde = self.AdvMot.Acm2_ChSetCntData(cnt_ch, reset_cnt_data)
+        self.assertEqual(excepted_done.value, self.errCde)
+        # Enable compare
+        self.errCde = self.AdvMot.Acm2_SetProperty(cmp_ch, c_uint32(PropertyID2.CFG_CH_DaqCmpDoEnable.value).value, c_double(COMPARE_ENABLE.CMP_ENABLE.value).value)
+        self.assertEqual(excepted_err.value, self.errCde)
+        # Get encoder data
+        get_cnt_data = c_double(0)
+        while get_cnt_data.value < end_pos.value:
+            time.sleep(0.1)
+            self.errCde = self.AdvMot.Acm2_ChGetCntData(cnt_ch, byref(get_cnt_data))
+            self.assertEqual(excepted_err.value, self.errCde)
+        # Disable compare
+        self.errCde = self.AdvMot.Acm2_SetProperty(cmp_ch, c_uint32(PropertyID2.CFG_CH_DaqCmpDoEnable.value).value, c_double(COMPARE_ENABLE.CMP_DISABLE.value).value)
+        self.assertEqual(excepted_err.value, self.errCde)
+
+    def test_RunCMP_Toggle(self):
+        excepted_err = c_uint32(ErrorCode2.SUCCESS.value)
+        excepted_done = c_uint32(UPDATE_STATE.UPGRADE_DONE.value)
+        cnt_ch = c_uint32(0)
+        cmp_ch = c_uint32(0)
+        # Set encoder(0) pulse in mode as CW/CCW.
+        ppt_arr = c_uint32(PropertyID2.CFG_CH_DaqCntPulseInMode.value)
+        val_arr = c_double(PULSE_IN_MODE.I_CW_CCW.value)
+        get_val = c_double(0)
+        self.errCde = self.AdvMot.Acm2_SetProperty(cnt_ch, ppt_arr, val_arr)
+        self.assertEqual(excepted_err.value, self.errCde)
+        self.errCde = self.AdvMot.Acm2_GetProperty(cnt_ch, ppt_arr, byref(get_val))
+        self.assertEqual(excepted_err.value, self.errCde)
+        self.assertEqual(val_arr.value, get_val.value)
+        # Set compare property, disable compare before setting.
+        cmp_set_arr = [c_uint32(PropertyID2.CFG_CH_DaqCmpDoEnable.value),
+                       c_uint32(PropertyID2.CFG_CH_DaqCmpDoOutputMode.value),
+                       c_uint32(PropertyID2.CFG_CH_DaqCmpDoLogic.value)]
+        val_arr = [c_double(COMPARE_ENABLE.CMP_DISABLE.value),
+                   c_double(COMPARE_OUTPUT_MODE.CMP_TOGGLE.value),
+                   c_double(COMPARE_LOGIC.CP_ACT_LOW.value)]
+        for i in range(len(cmp_set_arr)):
+            self.errCde = self.AdvMot.Acm2_SetProperty(cmp_ch, cmp_set_arr[i].value, val_arr[i])
+            self.assertEqual(excepted_err.value, self.errCde)
+        # Get value
+        get_val = c_double(0)
+        for i in range(len(val_arr)):
+            self.errCde = self.AdvMot.Acm2_GetProperty(cmp_ch, cmp_set_arr[i], byref(get_val))
+            self.assertEqual(excepted_err.value, self.errCde)
+            self.assertEqual(val_arr[i].value, get_val.value)
+        # Link local encoder/counter to compare
+        cnt_arr = [cnt_ch]
+        trans_cnt_arr = (c_uint32 * len(cnt_arr))(*cnt_arr)
+        axis_type = c_uint(ADV_OBJ_TYPE.ADV_COUNTER_CHANNEL.value)
+        self.errCde = self.AdvMot.Acm2_ChLinkCmpObject(cmp_ch, axis_type, trans_cnt_arr, len(cnt_arr))
+        self.assertEqual(excepted_err.value, self.errCde)
+        end_pos = c_double(2500)
+        # Set compare data table
+        # Compare DO behavior: ---ON---        ---OFF---        ---ON---       ---OFF---
+        set_cmp_data_arr = [c_double(500), c_double(1000), c_double(1500), c_double(2000)]
+        trans_cmp_data_arr = (c_double * len(set_cmp_data_arr))(*set_cmp_data_arr)
+        self.errCde = self.AdvMot.Acm2_ChSetCmpBufferData(cmp_ch, trans_cmp_data_arr, len(set_cmp_data_arr))
+        self.assertEqual(excepted_err.value, self.errCde)
+        # Reset encoder data as 0
+        reset_cnt_data = c_double(0)
+        self.errCde = self.AdvMot.Acm2_ChSetCntData(cnt_ch, reset_cnt_data)
+        self.assertEqual(excepted_done.value, self.errCde)
+        # Enable compare
+        self.errCde = self.AdvMot.Acm2_SetProperty(cmp_ch, c_uint32(PropertyID2.CFG_CH_DaqCmpDoEnable.value).value, c_double(COMPARE_ENABLE.CMP_ENABLE.value).value)
+        self.assertEqual(excepted_err.value, self.errCde)
+        # Get encoder data
+        get_cnt_data = c_double(0)
+        while get_cnt_data.value < end_pos.value:
+            time.sleep(0.1)
+            self.errCde = self.AdvMot.Acm2_ChGetCntData(cnt_ch, byref(get_cnt_data))
+            self.assertEqual(excepted_err.value, self.errCde)
+        # Disable compare
+        self.errCde = self.AdvMot.Acm2_SetProperty(cmp_ch, c_uint32(PropertyID2.CFG_CH_DaqCmpDoEnable.value).value, c_double(COMPARE_ENABLE.CMP_DISABLE.value).value)
+        self.assertEqual(excepted_err.value, self.errCde)
+
+    def test_RunCMPAutoPulseWidth(self):
+        excepted_err = c_uint32(ErrorCode2.SUCCESS.value)
+        excepted_done = c_uint32(UPDATE_STATE.UPGRADE_DONE.value)
+        cnt_ch = c_uint32(0)
+        cmp_ch = c_uint32(0)
+        # Set encoder(0) pulse in mode as CW/CCW.
+        ppt_arr = c_uint32(PropertyID2.CFG_CH_DaqCntPulseInMode.value)
+        val_arr = c_double(PULSE_IN_MODE.I_CW_CCW.value)
+        get_val = c_double(0)
+        self.errCde = self.AdvMot.Acm2_SetProperty(cnt_ch, ppt_arr, val_arr)
+        self.assertEqual(excepted_err.value, self.errCde)
+        self.errCde = self.AdvMot.Acm2_GetProperty(cnt_ch, ppt_arr, byref(get_val))
+        self.assertEqual(excepted_err.value, self.errCde)
+        self.assertEqual(val_arr.value, get_val.value)
+        # Set compare property, disable compare before setting.
+        cmp_set_arr = [c_uint32(PropertyID2.CFG_CH_DaqCmpDoEnable.value),
+                       c_uint32(PropertyID2.CFG_CH_DaqCmpDoOutputMode.value),
+                       c_uint32(PropertyID2.CFG_CH_DaqCmpDoLogic.value),
+                       c_uint32(PropertyID2.CFG_CH_DaqCmpDoPulseWidth.value)]
+        val_arr = [c_double(COMPARE_ENABLE.CMP_DISABLE.value),
+                   c_double(COMPARE_OUTPUT_MODE.CMP_PULSE.value),
+                   c_double(COMPARE_LOGIC.CP_ACT_LOW.value),
+                   c_double(500000)]
+        for i in range(len(cmp_set_arr)):
+            self.errCde = self.AdvMot.Acm2_SetProperty(cmp_ch, cmp_set_arr[i].value, val_arr[i])
+            self.assertEqual(excepted_err.value, self.errCde)
+        # Get value
+        get_val = c_double(0)
+        for i in range(len(val_arr)):
+            self.errCde = self.AdvMot.Acm2_GetProperty(cmp_ch, cmp_set_arr[i], byref(get_val))
+            self.assertEqual(excepted_err.value, self.errCde)
+            self.assertEqual(val_arr[i].value, get_val.value)
+        # Link local encoder/counter to compare
+        cnt_arr = [cnt_ch]
+        trans_cnt_arr = (c_uint32 * len(cnt_arr))(*cnt_arr)
+        axis_type = c_uint(ADV_OBJ_TYPE.ADV_COUNTER_CHANNEL.value)
+        self.errCde = self.AdvMot.Acm2_ChLinkCmpObject(cmp_ch, axis_type, trans_cnt_arr, len(cnt_arr))
+        self.assertEqual(excepted_err.value, self.errCde)
+        end_check_pos = c_double(2500)
+        # Set compare data
+        start_pos = c_double(500)
+        end_pos = c_double(2000)
+        interval_pulse = c_double(500)
+        self.errCde = self.AdvMot.Acm2_ChSetCmpAuto(cmp_ch, start_pos, end_pos, interval_pulse)
+        self.assertEqual(excepted_err.value, self.errCde)
+        # Reset encoder data as 0
+        reset_cnt_data = c_double(0)
+        self.errCde = self.AdvMot.Acm2_ChSetCntData(cnt_ch, reset_cnt_data)
+        self.assertEqual(excepted_done.value, self.errCde)
+        # Enable compare
+        self.errCde = self.AdvMot.Acm2_SetProperty(cmp_ch, c_uint32(PropertyID2.CFG_CH_DaqCmpDoEnable.value).value, c_double(COMPARE_ENABLE.CMP_ENABLE.value).value)
+        self.assertEqual(excepted_err.value, self.errCde)
+        # Get encoder data
+        get_cnt_data = c_double(0)
+        while get_cnt_data.value < end_check_pos.value:
+            time.sleep(0.1)
+            self.errCde = self.AdvMot.Acm2_ChGetCntData(cnt_ch, byref(get_cnt_data))
+            self.assertEqual(excepted_err.value, self.errCde)
+        # Disable compare
+        self.errCde = self.AdvMot.Acm2_SetProperty(cmp_ch, c_uint32(PropertyID2.CFG_CH_DaqCmpDoEnable.value).value, c_double(COMPARE_ENABLE.CMP_DISABLE.value).value)
+        self.assertEqual(excepted_err.value, self.errCde)
+    
+    def test_RunCMPLTC(self):
+        excepted_err = c_uint32(ErrorCode2.SUCCESS.value)
+        excepted_done = c_uint32(UPDATE_STATE.UPGRADE_DONE.value)
+        cnt_ch = c_uint32(0)
+        cmp_ch = c_uint32(0)
+        ltc_ch = c_uint32(0)
+        # Set encoder(0) pulse in mode as CW/CCW.
+        ppt_arr = c_uint32(PropertyID2.CFG_CH_DaqCntPulseInMode.value)
+        val_arr = c_double(PULSE_IN_MODE.I_CW_CCW.value)
+        get_val = c_double(0)
+        self.errCde = self.AdvMot.Acm2_SetProperty(cnt_ch, ppt_arr, val_arr)
+        self.assertEqual(excepted_err.value, self.errCde)
+        self.errCde = self.AdvMot.Acm2_GetProperty(cnt_ch, ppt_arr, byref(get_val))
+        self.assertEqual(excepted_err.value, self.errCde)
+        self.assertEqual(val_arr.value, get_val.value)
+        # Set compare property, disable compare before setting.
+        cmp_set_arr = [c_uint32(PropertyID2.CFG_CH_DaqCmpDoEnable.value),
+                       c_uint32(PropertyID2.CFG_CH_DaqCmpDoOutputMode.value),
+                       c_uint32(PropertyID2.CFG_CH_DaqCmpDoLogic.value),
+                       c_uint32(PropertyID2.CFG_CH_DaqCmpDoPulseWidth.value)]
+        val_arr = [c_double(COMPARE_ENABLE.CMP_DISABLE.value),
+                   c_double(COMPARE_OUTPUT_MODE.CMP_PULSE.value),
+                   c_double(COMPARE_LOGIC.CP_ACT_LOW.value),
+                   c_double(500000)]
+        for i in range(len(cmp_set_arr)):
+            self.errCde = self.AdvMot.Acm2_SetProperty(cmp_ch, cmp_set_arr[i].value, val_arr[i])
+            self.assertEqual(excepted_err.value, self.errCde)
+        # Get value
+        get_val = c_double(0)
+        for i in range(len(val_arr)):
+            self.errCde = self.AdvMot.Acm2_GetProperty(cmp_ch, cmp_set_arr[i], byref(get_val))
+            self.assertEqual(excepted_err.value, self.errCde)
+            self.assertEqual(val_arr[i].value, get_val.value)
+        # Link local encoder/counter to compare
+        cnt_arr = [cnt_ch]
+        trans_cnt_arr = (c_uint32 * len(cnt_arr))(*cnt_arr)
+        axis_type = c_uint(ADV_OBJ_TYPE.ADV_COUNTER_CHANNEL.value)
+        self.errCde = self.AdvMot.Acm2_ChLinkCmpObject(cmp_ch, axis_type, trans_cnt_arr, len(cnt_arr))
+        self.assertEqual(excepted_err.value, self.errCde)
+        # Set compare data
+        start_pos = c_double(500)
+        end_pos = c_double(2000)
+        interval_pulse = c_double(500)
+        self.errCde = self.AdvMot.Acm2_ChSetCmpAuto(cmp_ch, start_pos, end_pos, interval_pulse)
+        self.assertEqual(excepted_err.value, self.errCde)
+        # Set LTC property
+        ltc_set_ppt_arr = [c_uint32(PropertyID2.CFG_CH_DaqLtcMinDist.value),
+                           c_uint32(PropertyID2.CFG_CH_DaqLtcLogic.value),
+                           c_uint32(PropertyID2.CFG_CH_DaqLtcEnable.value)]
+        trans_ltc_set_arr = (c_uint32 * len(ltc_set_ppt_arr))(*ltc_set_ppt_arr)
+        ltc_val_arr = [c_double(10), c_double(COMPARE_LOGIC.CP_ACT_LOW.value), c_double(COMPARE_ENABLE.CMP_ENABLE.value)]
+        for i in range(len(ltc_set_ppt_arr)):
+            self.errCde = self.AdvMot.Acm2_SetProperty(ltc_ch, trans_ltc_set_arr[i].value, ltc_val_arr[i])
+            self.assertEqual(excepted_err.value, self.errCde)
+        # Get value
+        get_val_ltc = c_double(0)
+        for i in range(len(ltc_val_arr)):
+            self.errCde = self.AdvMot.Acm2_GetProperty(ltc_ch, ltc_set_ppt_arr[i], byref(get_val_ltc))
+            self.assertEqual(excepted_err.value, self.errCde)
+            self.assertEqual(ltc_val_arr[i].value, get_val_ltc.value)
+        # Link local encoder/counter to latch
+        self.errCde = self.AdvMot.Acm2_ChLinkLatchObject(ltc_ch, axis_type, trans_cnt_arr, len(cnt_arr))
+        self.assertEqual(excepted_err.value, self.errCde)
+        # Reset encoder data as 0
+        reset_cnt_data = c_double(0)
+        self.errCde = self.AdvMot.Acm2_ChSetCntData(cnt_ch, reset_cnt_data)
+        self.assertEqual(excepted_done.value, self.errCde)
+        # Enable compare
+        self.errCde = self.AdvMot.Acm2_SetProperty(cmp_ch, c_uint32(PropertyID2.CFG_CH_DaqCmpDoEnable.value).value, c_double(COMPARE_ENABLE.CMP_ENABLE.value).value)
+        self.assertEqual(excepted_err.value, self.errCde)
+        # Get encoder data
+        end_check_pos = c_double(2500)
+        get_cnt_data = c_double(0)
+        while get_cnt_data.value < end_check_pos.value:
+            time.sleep(0.1)
+            self.errCde = self.AdvMot.Acm2_ChGetCntData(cnt_ch, byref(get_cnt_data))
+            self.assertEqual(excepted_err.value, self.errCde)
+        # Disable compare and latch
+        self.errCde = self.AdvMot.Acm2_SetProperty(cmp_ch, c_uint32(PropertyID2.CFG_CH_DaqLtcEnable.value).value,
+                                                   c_double(COMPARE_ENABLE.CMP_DISABLE.value).value)
+        self.assertEqual(excepted_err.value, self.errCde)
+        self.errCde = self.AdvMot.Acm2_SetProperty(ltc_ch, c_uint32(PropertyID2.CFG_CH_DaqCmpDoEnable.value).value,
+                                                   c_double(COMPARE_ENABLE.CMP_DISABLE.value).value)
+        self.assertEqual(excepted_err.value, self.errCde)
+        # TODO:LTC
+        # Get LTC data
+    
+    def test_MotionDoneEvent(self):
+        excepted_err = c_uint32(ErrorCode2.SUCCESS.value)
+        ax_id = c_uint32(0)
+        abs_mode = c_uint(ABS_MODE.MOVE_REL.value)
+        distance = c_double(1000)
+        ax_motion_cnt.value = 0
+        # Set callback function, enable event
+        self.errCde = self.AdvMot.Acm2_EnableCallBackFuncForOneEvent(ax_id, c_int(ADV_EVENT_SUBSCRIBE.AXIS_VH_END.value), EvtAxMotionDone)
+        self.assertEqual(excepted_err.value, self.errCde)
+        # Move
+        for i in range(2):
+            self.errCde = self.AdvMot.Acm2_AxPTP(ax_id, abs_mode, distance)
+            self.assertEqual(excepted_err.value, self.errCde)
+            # Check status
+            while self.state.value != AXIS_STATE.STA_AX_READY.value:
+                time.sleep(1)
+                self.test_GetAxState()
+        print('AX:{0} is done, event cnt is:{1}'.format(ax_id.value, ax_motion_cnt.value))
+        # Remove callback function, disable event
+        self.errCde = self.AdvMot.Acm2_EnableCallBackFuncForOneEvent(ax_id, c_int(ADV_EVENT_SUBSCRIBE.EVENT_DISABLE.value), EmptyFunction)
+        # Reset motion done event
+        self.assertEqual(excepted_err.value, self.errCde)
 
 def DownloadENISuite():
     tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_LoadENI']
@@ -1859,57 +2206,95 @@ def GetCommuError():
     suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
     return suite
 
+def SetCntProperty():
+    tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_ResetAll', 'test_SetCNTProperty', 'test_ResetAll']
+    suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
+    return suite 
+
+def SetCMPProperty():
+    tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_ResetAll', 'test_SetCMPProperty', 'test_ResetAll']
+    suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
+    return suite
+
+def RunCMPCNTPulse():
+    tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_ResetAll', 'test_RunCMP_Pulse', 'test_ResetAll']
+    suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
+    return suite
+
+def RunCMPCNTToggle():
+    tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_ResetAll', 'test_RunCMP_Toggle', 'test_ResetAll']
+    suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
+    return suite
+
+def RunCMPAutoPulse():
+    tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_ResetAll', 'test_RunCMPAutoPulseWidth', 'test_ResetAll']
+    suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
+    return suite
+
+def EventMotionDone():
+    tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_ResetAll', 'test_MotionDoneEvent', 'test_ResetAll']
+    suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
+    return suite
+
+
 if __name__ == '__main__':
     # Test all case without order
     # unittest.main()
     # Test case with self-defined order
     runner = unittest.TextTestRunner()
-    get_device = runner.run(GetMDevice())
-    export_mapping_table = runner.run(ExportMappingTable())
-    import_mapping_table = runner.run(ImportMappingTable())
-    ax_ptp = runner.run(AxPTP_Check())
-    device_do = runner.run(DeviceDO())
-    gp_create = runner.run(GroupCreateCheck())
-    get_all_error = runner.run(GetAllError())
-    ax_move_continue = runner.run(AxMoveContinue())
-    set_ax_speed_limit = runner.run(SetAxis0SpeedLimit())
-    set_ax_profile = runner.run(SetAxis0SpeedWithProfile())
-    pvt_table = runner.run(PVTTable())
-    pt_table = runner.run(PTTable())
-    gear_0_1 = runner.run(Gear0And1())
-    gantry_0_1 = runner.run(Gantry0And1())
-    gp_move_line = runner.run(GpMoveLineRel())
-    gp_move_2D_arc = runner.run(GpMove2DArcCW())
-    gp_move_2D_3P = runner.run(GpMove2DArcCW3P())
-    gp_2D_angle = runner.run(GpMove2DArcCWAngle())
-    gp_3D_arc = runner.run(GpMove3DArcCW())
-    gp_3D_norm_vec = runner.run(GpMove3DArcCWNormVec())
-    gp_3D_3P = runner.run(GpMove3DArcCW3P())
-    gp_helix_center = runner.run(GpMoveHelixCenter())
-    gp_helix_3P = runner.run(GpMoveHelix3P())
-    gp_helix_angle = runner.run(GpMoveHelixAngle())
-    gp_line_pause_resume = runner.run(GpMoveLinePauseAndResume())
-    set_byte_5057SO = runner.run(SetAndCheck5057SOByte())
-    change_vel_when_move = runner.run(GpChangeVelWhenMove())
-    gp_add_load_path = runner.run(GpAddLoadPath())
-    gp_load_path = runner.run(GpLoadPath())
-    load_connect = runner.run(ECATLoadConnect5074_5057SO())
-    set_5057SO = runner.run(SetAndCheck5057SO())
-    get_subdevice_info = runner.run(GetSubdeviceInfo())
-    get_main_device_info = runner.run(GetMaindeviceInfo())
-    set_pdo_val = runner.run(SetValueByPDO())
-    set_ao_get_ai = runner.run(SetAOGetAI())
-    get_commu_error = runner.run(GetCommuError())
-    total_run_arr = [get_device, get_device, export_mapping_table, import_mapping_table, ax_ptp, device_do, gp_create, get_all_error,
-                     ax_move_continue, set_ax_speed_limit, set_ax_profile, pvt_table, pt_table, gear_0_1, gantry_0_1, gp_move_line,
-                     gp_move_2D_arc, gp_move_2D_3P, gp_2D_angle, gp_3D_arc, gp_3D_norm_vec, gp_3D_3P, gp_helix_center, gp_helix_3P,
-                     gp_helix_angle, gp_line_pause_resume, set_byte_5057SO, change_vel_when_move, gp_add_load_path, gp_load_path,
-                     load_connect, set_5057SO, get_subdevice_info, get_main_device_info, set_pdo_val, set_ao_get_ai, get_commu_error]
-    failed_cnt = 0
-    total_cnt = 0
-    for i in range(len(total_run_arr)):
-        failed_cnt += len(total_run_arr[i].failures)
-        total_cnt += total_run_arr[i].testsRun
-    print('=========== Test result ===========')
-    print('Total test:{0}, failures:{1}'.format(total_cnt, failed_cnt))
-    print('=========== End of unit test ===========')
+    # get_device = runner.run(GetMDevice())
+    # export_mapping_table = runner.run(ExportMappingTable())
+    # import_mapping_table = runner.run(ImportMappingTable())
+    # ax_ptp = runner.run(AxPTP_Check())
+    # device_do = runner.run(DeviceDO())
+    # gp_create = runner.run(GroupCreateCheck())
+    # get_all_error = runner.run(GetAllError())
+    # ax_move_continue = runner.run(AxMoveContinue())
+    # set_ax_speed_limit = runner.run(SetAxis0SpeedLimit())
+    # set_ax_profile = runner.run(SetAxis0SpeedWithProfile())
+    # pvt_table = runner.run(PVTTable())
+    # pt_table = runner.run(PTTable())
+    # gear_0_1 = runner.run(Gear0And1())
+    # gantry_0_1 = runner.run(Gantry0And1())
+    # gp_move_line = runner.run(GpMoveLineRel())
+    # gp_move_2D_arc = runner.run(GpMove2DArcCW())
+    # gp_move_2D_3P = runner.run(GpMove2DArcCW3P())
+    # gp_2D_angle = runner.run(GpMove2DArcCWAngle())
+    # gp_3D_arc = runner.run(GpMove3DArcCW())
+    # gp_3D_norm_vec = runner.run(GpMove3DArcCWNormVec())
+    # gp_3D_3P = runner.run(GpMove3DArcCW3P())
+    # gp_helix_center = runner.run(GpMoveHelixCenter())
+    # gp_helix_3P = runner.run(GpMoveHelix3P())
+    # gp_helix_angle = runner.run(GpMoveHelixAngle())
+    # gp_line_pause_resume = runner.run(GpMoveLinePauseAndResume())
+    # set_byte_5057SO = runner.run(SetAndCheck5057SOByte())
+    # change_vel_when_move = runner.run(GpChangeVelWhenMove())
+    # gp_add_load_path = runner.run(GpAddLoadPath())
+    # gp_load_path = runner.run(GpLoadPath())
+    # load_connect = runner.run(ECATLoadConnect5074_5057SO())
+    # set_5057SO = runner.run(SetAndCheck5057SO())
+    # get_subdevice_info = runner.run(GetSubdeviceInfo())
+    # get_main_device_info = runner.run(GetMaindeviceInfo())
+    # set_pdo_val = runner.run(SetValueByPDO())
+    # set_ao_get_ai = runner.run(SetAOGetAI())
+    # get_commu_error = runner.run(GetCommuError())
+    # set_cnt_property = runner.run(SetCntProperty())
+    # set_cmp_property = runner.run(SetCMPProperty())
+    # run_cmp_cnt_toggle = runner.run(RunCMPCNTToggle())
+    # run_cmp_cnt_pulse = runner.run(RunCMPCNTPulse())
+    # run_cmp_auto_pulse = runner.run(RunCMPAutoPulse())
+    evt_motion_done = runner.run(EventMotionDone())
+    # total_run_arr = [get_device, get_device, export_mapping_table, import_mapping_table, ax_ptp, device_do, gp_create, get_all_error,
+    #                  ax_move_continue, set_ax_speed_limit, set_ax_profile, pvt_table, pt_table, gear_0_1, gantry_0_1, gp_move_line,
+    #                  gp_move_2D_arc, gp_move_2D_3P, gp_2D_angle, gp_3D_arc, gp_3D_norm_vec, gp_3D_3P, gp_helix_center, gp_helix_3P,
+    #                  gp_helix_angle, gp_line_pause_resume, set_byte_5057SO, change_vel_when_move, gp_add_load_path, gp_load_path,
+    #                  load_connect, set_5057SO, get_subdevice_info, get_main_device_info, set_pdo_val, set_ao_get_ai, get_commu_error,
+    #                  set_cnt_property]
+    # failed_cnt = 0
+    # total_cnt = 0
+    # for i in range(len(total_run_arr)):
+    #     failed_cnt += len(total_run_arr[i].failures)
+    #     total_cnt += total_run_arr[i].testsRun
+    # print('=========== Test result ===========')
+    # print('Total test:{0}, failures:{1}'.format(total_cnt, failed_cnt))
+    # print('=========== End of unit test ===========')

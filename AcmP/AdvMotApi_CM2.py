@@ -1,5 +1,7 @@
 from ctypes import *
 
+CALLBACK_FUNC = CFUNCTYPE(c_uint32, c_uint32, c_void_p)
+
 class DEVLIST(Structure):
     # _pack_ = 1
     _fields_ = [

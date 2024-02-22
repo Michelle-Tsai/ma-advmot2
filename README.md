@@ -2918,6 +2918,72 @@ Set compare table by axis.
 ```cpp
 U32 Acm2_AxSetCmpTable(U32 AxID, PF64 TableArray, U32 ArrayElement)
 ```
+```python
+import time
+import os
+from ctypes import *
+from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI_CM2 as AdvMot
+from AcmP.AdvMotApi_CM2 import *
+from AcmP.AdvMotDrv import *
+from AcmP.AdvMotPropID_CM2 import PropertyID2
+
+dev_list = (DEVLIST*10)()
+out_ent = c_uint32(0)
+errCde = c_uint32(0)
+# Get Available
+errCde = AdvMot.Acm2_GetAvailableDevs(dev_list, 10, byref(out_ent))
+# Initial device
+errCde = AdvMot.Acm2_DevInitialize()
+
+# Pulse mode
+cnt_ch = c_uint32(0)
+cmp_ch = c_uint32(0)
+# Set encoder(0) pulse in mode as CW/CCW.
+ppt_arr = c_uint32(PropertyID2.CFG_CH_DaqCntPulseInMode.value)
+val_arr = c_double(PULSE_IN_MODE.I_CW_CCW.value)
+get_val = c_double(0)
+errCde = AdvMot.Acm2_SetProperty(cnt_ch, ppt_arr, val_arr)
+errCde = AdvMot.Acm2_GetProperty(cnt_ch, ppt_arr, byref(get_val))
+# Set compare property, disable compare before setting.
+cmp_set_arr = [c_uint32(PropertyID2.CFG_CH_DaqCmpDoEnable.value),
+                c_uint32(PropertyID2.CFG_CH_DaqCmpDoOutputMode.value),
+                c_uint32(PropertyID2.CFG_CH_DaqCmpDoLogic.value),
+                c_uint32(PropertyID2.CFG_CH_DaqCmpDoPulseWidth.value)]
+val_arr = [c_double(COMPARE_ENABLE.CMP_DISABLE.value),
+            c_double(COMPARE_OUTPUT_MODE.CMP_PULSE.value),
+            c_double(COMPARE_LOGIC.CP_ACT_LOW.value),
+            c_double(500000)]
+for i in range(len(cmp_set_arr)):
+    errCde = AdvMot.Acm2_SetProperty(cmp_ch, cmp_set_arr[i].value, val_arr[i])
+# Get value
+get_val = c_double(0)
+for i in range(len(val_arr)):
+    errCde = AdvMot.Acm2_GetProperty(cmp_ch, cmp_set_arr[i], byref(get_val))
+# Link local encoder/counter to compare
+cnt_arr = [cnt_ch]
+trans_cnt_arr = (c_uint32 * len(cnt_arr))(*cnt_arr)
+axis_type = c_uint(ADV_OBJ_TYPE.ADV_COUNTER_CHANNEL.value)
+errCde = AdvMot.Acm2_ChLinkCmpObject(cmp_ch, axis_type, trans_cnt_arr, len(cnt_arr))
+end_pos = c_double(2500)
+# Set compare data table
+# Compare DO behavior: ---ON---        ---OFF---        ---ON---       ---OFF---
+set_cmp_data_arr = [c_double(500), c_double(1000), c_double(1500), c_double(2000)]
+trans_cmp_data_arr = (c_double * len(set_cmp_data_arr))(*set_cmp_data_arr)
+errCde = AdvMot.Acm2_ChSetCmpBufferData(cmp_ch, trans_cmp_data_arr, len(set_cmp_data_arr))
+# Reset encoder data as 0
+reset_cnt_data = c_double(0)
+errCde = AdvMot.Acm2_ChSetCntData(cnt_ch, reset_cnt_data)
+# Enable compare
+errCde = AdvMot.Acm2_SetProperty(cmp_ch, c_uint32(PropertyID2.CFG_CH_DaqCmpDoEnable.value).value, c_double(COMPARE_ENABLE.CMP_ENABLE.value).value)
+# Get encoder data
+get_cnt_data = c_double(0)
+while get_cnt_data.value < end_pos.value:
+    time.sleep(0.1)
+    errCde = AdvMot.Acm2_ChGetCntData(cnt_ch, byref(get_cnt_data))
+# Disable compare
+errCde = AdvMot.Acm2_SetProperty(cmp_ch, c_uint32(PropertyID2.CFG_CH_DaqCmpDoEnable.value).value, c_double(COMPARE_ENABLE.CMP_DISABLE.value).value)
+```
+
 <a name="Acm2_AxSetCmpAuto"></a>
 
 #### Acm2_AxSetCmpAuto
@@ -2942,6 +3008,70 @@ Set compare buffer.
 ```cpp
 U32 Acm2_ChSetCmpBufferData(U32 CmpChannel, PF64 TableArray, U32 ArrayElement)
 ```
+```python
+import time
+import os
+from ctypes import *
+from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI_CM2 as AdvMot
+from AcmP.AdvMotApi_CM2 import *
+from AcmP.AdvMotDrv import *
+from AcmP.AdvMotPropID_CM2 import PropertyID2
+
+dev_list = (DEVLIST*10)()
+out_ent = c_uint32(0)
+errCde = c_uint32(0)
+# Get Available
+errCde = AdvMot.Acm2_GetAvailableDevs(dev_list, 10, byref(out_ent))
+# Initial device
+errCde = AdvMot.Acm2_DevInitialize()
+
+# Toggle Mode
+cnt_ch = c_uint32(0)
+cmp_ch = c_uint32(0)
+# Set encoder(0) pulse in mode as CW/CCW.
+ppt_arr = c_uint32(PropertyID2.CFG_CH_DaqCntPulseInMode.value)
+val_arr = c_double(PULSE_IN_MODE.I_CW_CCW.value)
+get_val = c_double(0)
+errCde = AdvMot.Acm2_SetProperty(cnt_ch, ppt_arr, val_arr)
+errCde = AdvMot.Acm2_GetProperty(cnt_ch, ppt_arr, byref(get_val))
+# Set compare property, disable compare before setting.
+cmp_set_arr = [c_uint32(PropertyID2.CFG_CH_DaqCmpDoEnable.value),
+                c_uint32(PropertyID2.CFG_CH_DaqCmpDoOutputMode.value),
+                c_uint32(PropertyID2.CFG_CH_DaqCmpDoLogic.value)]
+val_arr = [c_double(COMPARE_ENABLE.CMP_DISABLE.value),
+            c_double(COMPARE_OUTPUT_MODE.CMP_TOGGLE.value),
+            c_double(COMPARE_LOGIC.CP_ACT_LOW.value)]
+for i in range(len(cmp_set_arr)):
+    errCde = AdvMot.Acm2_SetProperty(cmp_ch, cmp_set_arr[i].value, val_arr[i])
+# Get value
+get_val = c_double(0)
+for i in range(len(val_arr)):
+    errCde = AdvMot.Acm2_GetProperty(cmp_ch, cmp_set_arr[i], byref(get_val))
+# Link local encoder/counter to compare
+cnt_arr = [cnt_ch]
+trans_cnt_arr = (c_uint32 * len(cnt_arr))(*cnt_arr)
+axis_type = c_uint(ADV_OBJ_TYPE.ADV_COUNTER_CHANNEL.value)
+errCde = AdvMot.Acm2_ChLinkCmpObject(cmp_ch, axis_type, trans_cnt_arr, len(cnt_arr))
+end_pos = c_double(2500)
+# Set compare data table
+# Compare DO behavior: ---ON---        ---OFF---        ---ON---       ---OFF---
+set_cmp_data_arr = [c_double(500), c_double(1000), c_double(1500), c_double(2000)]
+trans_cmp_data_arr = (c_double * len(set_cmp_data_arr))(*set_cmp_data_arr)
+errCde = AdvMot.Acm2_ChSetCmpBufferData(cmp_ch, trans_cmp_data_arr, len(set_cmp_data_arr))
+# Reset encoder data as 0
+reset_cnt_data = c_double(0)
+errCde = AdvMot.Acm2_ChSetCntData(cnt_ch, reset_cnt_data)
+# Enable compare
+errCde = AdvMot.Acm2_SetProperty(cmp_ch, c_uint32(PropertyID2.CFG_CH_DaqCmpDoEnable.value).value, c_double(COMPARE_ENABLE.CMP_ENABLE.value).value)
+# Get encoder data
+get_cnt_data = c_double(0)
+while get_cnt_data.value < end_pos.value:
+    time.sleep(0.1)
+    errCde = AdvMot.Acm2_ChGetCntData(cnt_ch, byref(get_cnt_data))
+# Disable compare
+errCde = AdvMot.Acm2_SetProperty(cmp_ch, c_uint32(PropertyID2.CFG_CH_DaqCmpDoEnable.value).value, c_double(COMPARE_ENABLE.CMP_DISABLE.value).value)
+```
+
 <a name="Acm2_ChSetMultiCmpTable"></a>
 
 #### Acm2_ChSetMultiCmpTable
@@ -2986,14 +3116,14 @@ U32 Acm2_ChLinkLatchAxis(U32 ChID, PU32 AxisArray, U32 AxisCount)
 #### Acm2_ChLinkLatchObject
 Lift latch to object.
 ```cpp
-
+U32 Acm2_ChLinkLatchObject(U32 ChID, ADV_OBJ_TYPE ObjType, PU32 ObjArray, U32 ArrayElement)
 ```
 <a name="Acm2_ChGetLinkedLatchObject"></a>
 
 #### Acm2_ChGetLinkedLatchObject
 Get linked latch object.
 ```cpp
-U32 Acm2_ChLinkLatchObject(U32 ChID, ADV_OBJ_TYPE ObjType, PU32 ObjArray, U32 ArrayElement)
+U32 Acm2_ChGetLinkedLatchObject(U32 ChID, ADV_OBJ_TYPE *ObjType, PU32 ObjArray, PU32 ArrayElement)
 ```
 <a name="Acm2_ChTriggerLatch"></a>
 

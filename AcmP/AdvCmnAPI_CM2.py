@@ -115,7 +115,7 @@ class AdvCmnAPI_CM2:
 
     try:
         Acm2_EnableCallBackFuncForOneEvent = lib.Acm2_EnableCallBackFuncForOneEvent
-        Acm2_EnableCallBackFuncForOneEvent.argtypes = [c_uint32, c_int, CFUNCTYPE(c_uint32, c_uint32, c_void_p)]
+        Acm2_EnableCallBackFuncForOneEvent.argtypes = [c_uint32, c_int, CALLBACK_FUNC]
         Acm2_EnableCallBackFuncForOneEvent.restype = c_uint32
     except:
         pass

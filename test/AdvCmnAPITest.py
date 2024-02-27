@@ -3,6 +3,7 @@ import time
 import os
 import numpy as np
 import xml.etree.ElementTree as xml
+import threading
 from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI_CM2
 from AcmP.AdvMotApi_CM2 import *
 from AcmP.AdvMotDrv import *
@@ -16,11 +17,18 @@ from AcmP.AdvMotErr_CM2 import ErrorCode2
 # else:
 #     from AcmP.utils import Color
 ax_motion_cnt = c_uint32(0)
+ax_evt_cnt = [c_uint32(0), c_uint32(0), c_uint32(0), c_uint32(0), c_uint32(0)]
 
 @CFUNCTYPE(c_uint32, c_uint32, c_void_p)
 def EvtAxMotionDone(axid, reservedParam):
     ax_motion_cnt.value = ax_motion_cnt.value + 1;
     print('[EvtAxMotionDone] AX:{0}, counter:{1}'.format(axid, ax_motion_cnt.value))
+    return 0;
+
+@CFUNCTYPE(c_uint32, c_uint32, c_void_p)
+def EvtAxMotionDone_multi(axid, reservedParam):
+    ax_evt_cnt[axid].value = ax_evt_cnt[axid].value + 1;
+    print('[EvtAxMotionDone] AX:{0}, counter:{1}'.format(axid, ax_evt_cnt[axid].value))
     return 0;
 
 @CFUNCTYPE(c_uint32, c_uint32, c_void_p)
@@ -122,7 +130,7 @@ class AdvCmnAPI_Test(unittest.TestCase):
             print('Not Ready')
     
     def test_ResetAll(self):
-        ax_id_arr = [c_uint32(0), c_uint32(1), c_uint32(2)]
+        ax_id_arr = [c_uint32(0), c_uint32(1), c_uint32(2), c_uint32(3), c_uint32(4), c_uint32(5)]
         excepted_err = 0
         pos_type = c_uint(POSITION_TYPE.POSITION_CMD.value)
         pos = c_double(0)
@@ -1990,7 +1998,7 @@ class AdvCmnAPI_Test(unittest.TestCase):
         distance = c_double(1000)
         ax_motion_cnt.value = 0
         # Set callback function, enable event
-        self.errCde = self.AdvMot.Acm2_EnableCallBackFuncForOneEvent(ax_id, c_int(ADV_EVENT_SUBSCRIBE.AXIS_VH_END.value), EvtAxMotionDone)
+        self.errCde = self.AdvMot.Acm2_EnableCallBackFuncForOneEvent(ax_id, c_int(ADV_EVENT_SUBSCRIBE.AXIS_MOTION_DONE.value), EvtAxMotionDone)
         self.assertEqual(excepted_err.value, self.errCde)
         # Move
         for i in range(2):
@@ -2000,10 +2008,66 @@ class AdvCmnAPI_Test(unittest.TestCase):
             while self.state.value != AXIS_STATE.STA_AX_READY.value:
                 time.sleep(1)
                 self.test_GetAxState()
+        time.sleep(1)
         print('AX:{0} is done, event cnt is:{1}'.format(ax_id.value, ax_motion_cnt.value))
+        # self.assertEqual(2, ax_motion_cnt.value)
         # Remove callback function, disable event
-        self.errCde = self.AdvMot.Acm2_EnableCallBackFuncForOneEvent(ax_id, c_int(ADV_EVENT_SUBSCRIBE.EVENT_DISABLE.value), EmptyFunction)
-        # Reset motion done event
+        # self.errCde = self.AdvMot.Acm2_EnableCallBackFuncForOneEvent(ax_id, c_int(ADV_EVENT_SUBSCRIBE.EVENT_DISABLE.value), EmptyFunction)
+        self.assertEqual(excepted_err.value, self.errCde)
+
+    def test_MotionDoneEvent_MultiThreads(self):
+        def unitAxPTP(axis):
+            print('axis:{0}'.format(axis))
+            ax_id = c_uint32(axis)
+            abs_mode = c_uint(ABS_MODE.MOVE_REL.value)
+            distance = c_double(1000)
+            AdvCmnAPI_CM2.Acm2_AxPTP(ax_id, abs_mode, distance)
+        excepted_err = c_uint32(ErrorCode2.SUCCESS.value)
+        # Set callback function, enable event
+        for i in range(5):
+            ax_id = c_uint32(i)
+            ax_evt_cnt[i].value = 0
+            self.errCde = self.AdvMot.Acm2_EnableCallBackFuncForOneEvent(ax_id, c_int(ADV_EVENT_SUBSCRIBE.AXIS_MOTION_DONE.value), EvtAxMotionDone_multi)
+            self.assertEqual(excepted_err.value, self.errCde)
+        # Move
+        threads = []
+        for j in range(5):
+            thread = threading.Thread(target=unitAxPTP, args=(j,))
+            threads.append(thread)
+            thread.start()
+        for thread in threads:
+            thread.join()
+        time.sleep(3)
+
+    def SQATest(self):
+        excepted_err = c_uint32(ErrorCode2.SUCCESS.value)
+        gp_ax_arr = [c_uint32(0)]
+        trans_gp_ax_arr = (c_uint32 * len(gp_ax_arr))(*gp_ax_arr)
+        gp_id = c_uint32(0)
+        # Remove all axes
+        self.errCde = self.AdvMot.Acm2_GpCreate(gp_id, trans_gp_ax_arr, 0)
+        self.assertEqual(excepted_err.value, self.errCde)
+        # Add axis 0 into group 0
+        self.errCde = self.AdvMot.Acm2_GpCreate(gp_id, trans_gp_ax_arr, len(gp_ax_arr))
+        self.assertEqual(excepted_err.value, self.errCde)
+        # get_axes size must be same as len_get
+        len_get = c_uint32(64)
+        get_axes = (c_uint32 * len_get.value)()
+        # Get axes in group 0 and check
+        self.errCde = self.AdvMot.Acm2_GpGetAxesInGroup(gp_id, get_axes, len_get)
+        self.assertEqual(excepted_err.value, self.errCde)
+        for idx in range(len_get.value):
+            self.assertEqual(gp_ax_arr[idx].value, get_axes[idx])
+        state_type = c_uint(AXIS_STATUS_TYPE.AXIS_STATE.value)
+        get_state = c_uint32(0)
+        for idx in range(len_get.value):
+            self.errCde = self.AdvMot.Acm2_AxGetState(gp_ax_arr[idx], state_type, byref(get_state))
+            self.assertEqual(excepted_err.value, self.errCde)
+            if get_state == AXIS_STATE.STA_AX_ERROR_STOP:
+                self.errCde = self.AdvMot.Acm2_AxResetError(gp_ax_arr[idx])
+                self.assertEqual(excepted_err.value, self.errCde)
+        # Close device
+        self.errCde = self.AdvMot.Acm2_DevAllClose()
         self.assertEqual(excepted_err.value, self.errCde)
 
 def DownloadENISuite():
@@ -2236,6 +2300,15 @@ def EventMotionDone():
     suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
     return suite
 
+def test_SQATest():
+    tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_ResetAll', 'SQATest', 'test_GetAvailableDevs', 'test_Initialize', 'SQATest']
+    suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
+    return suite
+
+def test_MotionDoneEventMultiThreads():
+    tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_ResetAll', 'test_MotionDoneEvent_MultiThreads', 'test_ResetAll']
+    suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
+    return suite
 
 if __name__ == '__main__':
     # Test all case without order
@@ -2283,7 +2356,9 @@ if __name__ == '__main__':
     # run_cmp_cnt_toggle = runner.run(RunCMPCNTToggle())
     # run_cmp_cnt_pulse = runner.run(RunCMPCNTPulse())
     # run_cmp_auto_pulse = runner.run(RunCMPAutoPulse())
-    evt_motion_done = runner.run(EventMotionDone())
+    # evt_motion_done = runner.run(EventMotionDone())
+    # sqa_test = runner.run(test_SQATest())
+    evt_motion_multi = runner.run(test_MotionDoneEventMultiThreads())    
     # total_run_arr = [get_device, get_device, export_mapping_table, import_mapping_table, ax_ptp, device_do, gp_create, get_all_error,
     #                  ax_move_continue, set_ax_speed_limit, set_ax_profile, pvt_table, pt_table, gear_0_1, gantry_0_1, gp_move_line,
     #                  gp_move_2D_arc, gp_move_2D_3P, gp_2D_angle, gp_3D_arc, gp_3D_norm_vec, gp_3D_3P, gp_helix_center, gp_helix_3P,

@@ -500,6 +500,53 @@ Set callback function for event.
 ```cpp
 U32 Acm2_EnableCallBackFuncForOneEvent(U32 ObjID, ADV_EVENT_SUBSCRIBE EventID, ADV_USER_CALLBACK_FUNC CallBackFun)
 ```
+```python
+import time
+from ctypes import *
+from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI_CM2 as AdvMot
+from AcmP.AdvMotApi_CM2 import DEVLIST
+from AcmP.AdvMotPropID_CM2 import PropertyID2
+
+@CFUNCTYPE(c_uint32, c_uint32, c_void_p)
+def EvtAxMotionDone(axid, reservedParam):
+    ax_motion_cnt.value = ax_motion_cnt.value + 1;
+    print('[EvtAxMotionDone] AX:{0}, counter:{1}'.format(axid, ax_motion_cnt.value))
+    return 0;
+
+@CFUNCTYPE(c_uint32, c_uint32, c_void_p)
+def EmptyFunction(val, res):
+    return 0;
+
+dev_list = (DEVLIST*10)()
+out_ent = c_uint32(0)
+errCde = c_uint32(0)
+# Get Available
+errCde = AdvMot.Acm2_GetAvailableDevs(dev_list, 10, byref(out_ent))
+# Initial device
+errCde = AdvMot.Acm2_DevInitialize()
+
+ax_id = c_uint32(0)
+abs_mode = c_uint(ABS_MODE.MOVE_REL.value)
+distance = c_double(1000)
+ax_motion_cnt.value = 0
+# Set callback function, enable event
+errCde = AdvMot.Acm2_EnableCallBackFuncForOneEvent(ax_id, c_int(ADV_EVENT_SUBSCRIBE.AXIS_MOTION_DONE.value), EvtAxMotionDone)
+# Move
+for i in range(2):
+    errCde = AdvMot.Acm2_AxPTP(ax_id, abs_mode, distance)
+    # Check status
+    state = c_uint32(0)
+    state_type = c_uint(AXIS_STATUS_TYPE.AXIS_STATE.value)
+    AdvMot.Acm2_AxGetState(ax_id, state_type, byref(state))
+    while (state.value != AXIS_STATE.STA_AX_READY.value):
+        time.sleep(1)
+        AdvMot.Acm2_AxGetState(ax_id, state_type, byref(state))
+time.sleep(1)
+print('AX:{0} is done, event cnt is:{1}'.format(ax_id.value, ax_motion_cnt.value))
+# Remove callback function, disable event
+errCde = AdvMot.Acm2_EnableCallBackFuncForOneEvent(ax_id, c_int(ADV_EVENT_SUBSCRIBE.EVENT_DISABLE.value), EmptyFunction)
+```
+
 <a name="Acm2_DevLoadAllConfig"></a>
 
 #### Acm2_DevLoadAllConfig

@@ -26,9 +26,33 @@ def EvtAxMotionDone(axid, reservedParam):
     return 0;
 
 @CFUNCTYPE(c_uint32, c_uint32, c_void_p)
-def EvtAxMotionDone_multi(axid, reservedParam):
+def EvtAxMotionDone_multi_0(axid, reservedParam):
     ax_evt_cnt[axid].value = ax_evt_cnt[axid].value + 1;
-    print('[EvtAxMotionDone] AX:{0}, counter:{1}'.format(axid, ax_evt_cnt[axid].value))
+    print('[EvtAxMotionDone_multi 0] AX:{0}, counter:{1}'.format(axid, ax_evt_cnt[axid].value))
+    return 0;
+
+@CFUNCTYPE(c_uint32, c_uint32, c_void_p)
+def EvtAxMotionDone_multi_1(axid, reservedParam):
+    ax_evt_cnt[axid].value = ax_evt_cnt[axid].value + 1;
+    print('[EvtAxMotionDone_multi 1] AX:{0}, counter:{1}'.format(axid, ax_evt_cnt[axid].value))
+    return 0;
+
+@CFUNCTYPE(c_uint32, c_uint32, c_void_p)
+def EvtAxMotionDone_multi_2(axid, reservedParam):
+    ax_evt_cnt[axid].value = ax_evt_cnt[axid].value + 1;
+    print('[EvtAxMotionDone_multi 2] AX:{0}, counter:{1}'.format(axid, ax_evt_cnt[axid].value))
+    return 0;
+
+@CFUNCTYPE(c_uint32, c_uint32, c_void_p)
+def EvtAxMotionDone_multi_3(axid, reservedParam):
+    ax_evt_cnt[axid].value = ax_evt_cnt[axid].value + 1;
+    print('[EvtAxMotionDone_multi 3] AX:{0}, counter:{1}'.format(axid, ax_evt_cnt[axid].value))
+    return 0;
+
+@CFUNCTYPE(c_uint32, c_uint32, c_void_p)
+def EvtAxMotionDone_multi_4(axid, reservedParam):
+    ax_evt_cnt[axid].value = ax_evt_cnt[axid].value + 1;
+    print('[EvtAxMotionDone_multi 4] AX:{0}, counter:{1}'.format(axid, ax_evt_cnt[axid].value))
     return 0;
 
 @CFUNCTYPE(c_uint32, c_uint32, c_void_p)
@@ -2019,16 +2043,37 @@ class AdvCmnAPI_Test(unittest.TestCase):
         def unitAxPTP(axis):
             print('axis:{0}'.format(axis))
             ax_id = c_uint32(axis)
+            state_type = c_uint(AXIS_STATUS_TYPE.AXIS_STATE.value)
             abs_mode = c_uint(ABS_MODE.MOVE_REL.value)
             distance = c_double(1000)
+            get_state = c_uint32(0)
             AdvCmnAPI_CM2.Acm2_AxPTP(ax_id, abs_mode, distance)
+            AdvCmnAPI_CM2.Acm2_AxGetState(ax_id, state_type, byref(get_state))
+            while get_state.value != AXIS_STATE.STA_AX_READY.value:
+                time.sleep(1)
+                AdvCmnAPI_CM2.Acm2_AxGetState(ax_id, state_type, byref(get_state))
+
         excepted_err = c_uint32(ErrorCode2.SUCCESS.value)
         # Set callback function, enable event
         for i in range(5):
             ax_id = c_uint32(i)
             ax_evt_cnt[i].value = 0
-            self.errCde = self.AdvMot.Acm2_EnableCallBackFuncForOneEvent(ax_id, c_int(ADV_EVENT_SUBSCRIBE.AXIS_MOTION_DONE.value), EvtAxMotionDone_multi)
-            self.assertEqual(excepted_err.value, self.errCde)
+            if i == 0:
+                self.errCde = self.AdvMot.Acm2_EnableCallBackFuncForOneEvent(ax_id, c_int(ADV_EVENT_SUBSCRIBE.AXIS_MOTION_DONE.value), EvtAxMotionDone_multi_0)
+                self.assertEqual(excepted_err.value, self.errCde)
+            elif i == 1:
+                self.errCde = self.AdvMot.Acm2_EnableCallBackFuncForOneEvent(ax_id, c_int(ADV_EVENT_SUBSCRIBE.AXIS_MOTION_DONE.value), EvtAxMotionDone_multi_1)
+                self.assertEqual(excepted_err.value, self.errCde)
+            elif i == 2:
+                self.errCde = self.AdvMot.Acm2_EnableCallBackFuncForOneEvent(ax_id, c_int(ADV_EVENT_SUBSCRIBE.AXIS_MOTION_DONE.value), EvtAxMotionDone_multi_2)
+                self.assertEqual(excepted_err.value, self.errCde)
+            elif i == 3:
+                self.errCde = self.AdvMot.Acm2_EnableCallBackFuncForOneEvent(ax_id, c_int(ADV_EVENT_SUBSCRIBE.AXIS_MOTION_DONE.value), EvtAxMotionDone_multi_3)
+                self.assertEqual(excepted_err.value, self.errCde)
+            elif i == 4:
+                self.errCde = self.AdvMot.Acm2_EnableCallBackFuncForOneEvent(ax_id, c_int(ADV_EVENT_SUBSCRIBE.AXIS_MOTION_DONE.value), EvtAxMotionDone_multi_4)
+                self.assertEqual(excepted_err.value, self.errCde)
+        time.sleep(1)
         # Move
         threads = []
         for j in range(5):
@@ -2037,7 +2082,7 @@ class AdvCmnAPI_Test(unittest.TestCase):
             thread.start()
         for thread in threads:
             thread.join()
-        time.sleep(3)
+        time.sleep(2)
 
     def SQATest(self):
         excepted_err = c_uint32(ErrorCode2.SUCCESS.value)

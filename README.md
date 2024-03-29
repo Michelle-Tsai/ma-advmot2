@@ -2909,6 +2909,77 @@ Link compare do with axis/counter.
 ```cpp
 U32 Acm2_ChLinkCmpObject(U32 ChID, ADV_OBJ_TYPE ObjType, PU32 ObjArray, U32 ArrayElement)
 ```
+```python
+# Example code
+import time
+import os
+from ctypes import *
+from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI_CM2 as AdvMot
+from AcmP.AdvMotApi_CM2 import *
+from AcmP.AdvMotDrv import *
+from AcmP.AdvMotPropID_CM2 import PropertyID2
+
+# Using this example code after connect AMAX-4820, AMAX-4817
+# Check how to start a EtherCAT subdevice by Acm2_DevConnect
+
+dev_list = (DEVLIST*10)()
+out_ent = c_uint32(0)
+errCde = c_uint32(0)
+# Get Available
+errCde = AdvMot.Acm2_GetAvailableDevs(dev_list, 10, byref(out_ent))
+# Initial device
+errCde = AdvMot.Acm2_DevInitialize()
+
+cnt_ch = c_uint32(1)
+# Local CMP Diff channel is 2
+cmp_ch = c_uint32(2)
+# Set encoder(0) pulse in mode as CW/CCW.
+ppt_arr = c_uint32(PropertyID2.CFG_CH_DaqCntPulseInMode.value)
+val_arr = c_double(PULSE_IN_MODE.I_CW_CCW.value)
+get_val = c_double(0)
+get_cnt_data = c_double(0)
+errCde = AdvMot.Acm2_SetProperty(cnt_ch, ppt_arr, val_arr)
+errCde = AdvMot.Acm2_GetProperty(cnt_ch, ppt_arr, byref(get_val))
+errCde = AdvMot.Acm2_ChGetCntData(cnt_ch, byref(get_cnt_data))
+# Link local encoder/counter to compare
+cnt_arr = [cnt_ch]
+trans_cnt_arr = (c_uint32 * len(cnt_arr))(*cnt_arr)
+axis_type = c_uint(ADV_OBJ_TYPE.ADV_COUNTER_CHANNEL.value)
+# Reset Link connection
+errCde = AdvMot.Acm2_ChLinkCmpObject(cmp_ch, axis_type, trans_cnt_arr, 0)
+errCde = AdvMot.Acm2_ChLinkCmpObject(cmp_ch, axis_type, trans_cnt_arr, len(cnt_arr))
+# Set compare property, disable compare before setting.
+cmp_set_arr = [c_uint32(PropertyID2.CFG_CH_DaqCmpDoEnable.value),
+                c_uint32(PropertyID2.CFG_CH_DaqCmpDoOutputMode.value),
+                c_uint32(PropertyID2.CFG_CH_DaqCmpDoLogic.value)]
+val_arr = [c_double(COMPARE_ENABLE.CMP_DISABLE.value),
+            c_double(COMPARE_OUTPUT_MODE.CMP_TOGGLE.value),
+            c_double(COMPARE_LOGIC.CP_ACT_LOW.value)]
+for i in range(len(cmp_set_arr)):
+    errCde = AdvMot.Acm2_SetProperty(cmp_ch, cmp_set_arr[i].value, val_arr[i])
+# Get value
+get_val = c_double(0)
+for i in range(len(val_arr)):
+    errCde = AdvMot.Acm2_GetProperty(cmp_ch, cmp_set_arr[i], byref(get_val))
+end_pos = c_double(2500)
+# Enable compare
+errCde = AdvMot.Acm2_SetProperty(cmp_ch, c_uint32(PropertyID2.CFG_CH_DaqCmpDoEnable.value).value, c_double(COMPARE_ENABLE.CMP_ENABLE.value).value)
+# Set compare data table
+# Compare DO behavior: ---ON---        ---OFF---        ---ON---       ---OFF---
+set_cmp_data_arr = [c_double(500), c_double(1000), c_double(1500), c_double(2000)]
+trans_cmp_data_arr = (c_double * len(set_cmp_data_arr))(*set_cmp_data_arr)
+errCde = AdvMot.Acm2_ChSetCmpBufferData(cmp_ch, trans_cmp_data_arr, len(set_cmp_data_arr))
+# Reset encoder data as 0
+reset_cnt_data = c_double(0)
+errCde = AdvMot.Acm2_ChSetCntData(cnt_ch, reset_cnt_data)
+# Get encoder data
+get_cnt_data = c_double(0)
+while get_cnt_data.value <= end_pos.value:
+    time.sleep(0.1)
+    errCde = AdvMot.Acm2_ChGetCntData(cnt_ch, byref(get_cnt_data))
+# Disable compare
+errCde = AdvMot.Acm2_SetProperty(cmp_ch, c_uint32(PropertyID2.CFG_CH_DaqCmpDoEnable.value).value, c_double(COMPARE_ENABLE.CMP_DISABLE.value).value)
+```
 <a name="Acm2_ChGetLinkedCmpObject"></a>
 
 #### Acm2_ChGetLinkedCmpObject
@@ -3211,6 +3282,115 @@ Get latch buffer status by channel.
 
 ```cpp
 U32	Acm2_ChGetLatchBufferStatus(U32 LtcChannel, BUFFER_STATUS *bufferstatus)
+```
+```python
+# Example code
+import time
+import os
+from ctypes import *
+from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI_CM2 as AdvMot
+from AcmP.AdvMotApi_CM2 import *
+from AcmP.AdvMotDrv import *
+from AcmP.AdvMotPropID_CM2 import PropertyID2
+
+# Using this example code after connect AMAX-4820, AMAX-4817
+# Check how to start a EtherCAT subdevice by Acm2_DevConnect
+
+dev_list = (DEVLIST*10)()
+out_ent = c_uint32(0)
+errCde = c_uint32(0)
+# Get Available
+errCde = AdvMot.Acm2_GetAvailableDevs(dev_list, 10, byref(out_ent))
+# Initial device
+errCde = AdvMot.Acm2_DevInitialize()
+
+cnt_ch = c_uint32(0)
+cmp_ch = c_uint32(0)
+ltc_ch = c_uint32(0)
+# Set encoder(0) pulse in mode as CW/CCW.
+ppt_arr = c_uint32(PropertyID2.CFG_CH_DaqCntPulseInMode.value)
+val_arr = c_double(PULSE_IN_MODE.I_CW_CCW.value)
+get_val = c_double(0)
+errCde = AdvMot.Acm2_SetProperty(cnt_ch, ppt_arr, val_arr)
+errCde = AdvMot.Acm2_GetProperty(cnt_ch, ppt_arr, byref(get_val))
+# Link local encoder/counter to compare
+cnt_arr = [cnt_ch]
+trans_cnt_arr = (c_uint32 * len(cnt_arr))(*cnt_arr)
+axis_type = c_uint(ADV_OBJ_TYPE.ADV_COUNTER_CHANNEL.value)
+errCde = AdvMot.Acm2_ChLinkCmpObject(cmp_ch, axis_type, trans_cnt_arr, len(cnt_arr))
+# Set compare property, disable compare before setting.
+cmp_set_arr = [c_uint32(PropertyID2.CFG_CH_DaqCmpDoEnable.value),
+                c_uint32(PropertyID2.CFG_CH_DaqCmpDoOutputMode.value),
+                c_uint32(PropertyID2.CFG_CH_DaqCmpDoLogic.value),
+                c_uint32(PropertyID2.CFG_CH_DaqCmpDoPulseWidth.value)]
+val_arr = [c_double(COMPARE_ENABLE.CMP_DISABLE.value),
+            c_double(COMPARE_OUTPUT_MODE.CMP_PULSE.value),
+            c_double(COMPARE_LOGIC.CP_ACT_LOW.value),
+            c_double(500000)]
+for i in range(len(cmp_set_arr)):
+    errCde = AdvMot.Acm2_SetProperty(cmp_ch, cmp_set_arr[i].value, val_arr[i])
+# Get CMP proerty
+get_val = c_double(0)
+for i in range(len(val_arr)):
+    errCde = AdvMot.Acm2_GetProperty(cmp_ch, cmp_set_arr[i], byref(get_val))
+
+# Get linked local encoder/counter to latch
+get_obj_type = c_uint(0)
+get_linked_arr = (c_uint32 * 2)()
+get_linked_cnt = c_uint32(2)
+errCde = AdvMot.Acm2_ChGetLinkedLatchObject(ltc_ch, byref(get_obj_type), get_linked_arr, byref(get_linked_cnt))
+print('Linked type:{0}, linked count:{1}'.format(get_obj_type.value, get_linked_cnt.value))
+for i in range(get_linked_cnt.value):
+    print('Linked channel:{0}'.format(get_linked_arr[i]))
+# Reset LTC buffer
+errCde = AdvMot.Acm2_ChResetLatchBuffer(ltc_ch)
+# Set LTC property
+ltc_set_ppt_arr = [c_uint32(PropertyID2.CFG_CH_DaqLtcMinDist.value),
+                    c_uint32(PropertyID2.CFG_CH_DaqLtcLogic.value),
+                    c_uint32(PropertyID2.CFG_CH_DaqLtcEnable.value)]
+ltc_val_arr = [c_double(10), c_double(COMPARE_LOGIC.CP_ACT_LOW.value), c_double(COMPARE_ENABLE.CMP_ENABLE.value)]
+for i in range(len(ltc_set_ppt_arr)):
+    errCde = AdvMot.Acm2_SetProperty(ltc_ch, ltc_set_ppt_arr[i].value, ltc_val_arr[i])
+# Get LTC property
+get_val_ltc = c_double(0)
+for i in range(len(ltc_val_arr)):
+    errCde = AdvMot.Acm2_GetProperty(ltc_ch, ltc_set_ppt_arr[i], byref(get_val_ltc))
+
+# Set compare data
+set_cmp_data_arr = [c_double(500), c_double(1000), c_double(1500), c_double(2000)]
+trans_cmp_data_arr = (c_double * len(set_cmp_data_arr))(*set_cmp_data_arr)
+errCde = AdvMot.Acm2_ChSetCmpBufferData(cmp_ch, trans_cmp_data_arr, len(set_cmp_data_arr))
+# Reset encoder data as 0
+reset_cnt_data = c_double(0)
+errCde = AdvMot.Acm2_ChSetCntData(cnt_ch, reset_cnt_data)
+# Enable compare
+errCde = AdvMot.Acm2_SetProperty(cmp_ch, c_uint32(PropertyID2.CFG_CH_DaqCmpDoEnable.value).value, c_double(COMPARE_ENABLE.CMP_ENABLE.value).value)
+# Get encoder data
+get_cnt_data = c_double(0)
+end_pos = c_double(2500)
+while get_cnt_data.value <= end_pos.value:
+    time.sleep(0.1)
+    for i in range(2):
+        tmp_ch = c_uint32(i)
+        errCde = AdvMot.Acm2_ChGetCntData(tmp_ch, byref(get_cnt_data))
+        print('[{0}]get_cnt_data:{1}'.format(i, get_cnt_data.value))
+    errCde = AdvMot.Acm2_ChGetCntData(cnt_ch, byref(get_cnt_data))
+# Get LTC data
+get_ltc_buf_status = BUFFER_STATUS()
+get_data_cnt = c_uint32(10)
+act_data_cnt = c_uint32(128)
+get_ltc_data_arr = (c_double * get_data_cnt.value)()
+errCde = AdvMot.Acm2_ChGetLatchBufferStatus(ltc_ch, byref(get_ltc_buf_status))
+print('RemainCount:{0}, FreeSpaceCount:{1}'.format(get_ltc_buf_status.RemainCount, get_ltc_buf_status.FreeSpaceCount))
+errCde = AdvMot.Acm2_ChReadLatchBuffer(ltc_ch, get_ltc_data_arr, get_data_cnt, byref(act_data_cnt))
+print('act_data_cnt:{0}'.format(act_data_cnt.value))
+for i in range(act_data_cnt.value):
+    print('get_ltc_data_arr[{0}]:{1}'.format(i, get_ltc_data_arr[i]))
+# Disable compare and latch
+errCde = AdvMot.Acm2_SetProperty(cmp_ch, c_uint32(PropertyID2.CFG_CH_DaqLtcEnable.value).value,
+                                            c_double(COMPARE_ENABLE.CMP_DISABLE.value).value)
+errCde = AdvMot.Acm2_SetProperty(ltc_ch, c_uint32(PropertyID2.CFG_CH_DaqCmpDoEnable.value).value,
+                                            c_double(COMPARE_ENABLE.CMP_DISABLE.value).value)
 ```
 <a name="Acm2_AxResetLatchBuffer"></a>
 

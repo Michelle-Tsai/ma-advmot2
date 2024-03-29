@@ -2153,12 +2153,18 @@ class AdvCmnAPI_Test(unittest.TestCase):
 
     def test_MotionDoneEvent_MultiThreads(self):
         def unitAxPTP(axis):
-            print('axis:{0}'.format(axis))
+            print('[unitAxPTP] axis:{0}'.format(axis))
             ax_id = c_uint32(axis)
             state_type = c_uint(AXIS_STATUS_TYPE.AXIS_STATE.value)
             abs_mode = c_uint(ABS_MODE.MOVE_REL.value)
             distance = c_double(1000)
             get_state = c_uint32(0)
+            speed_profile = SPEED_PROFILE_PRM()
+            speed_profile.FH = c_double(3000)
+            speed_profile.FL = c_double(1000)
+            speed_profile.Acc = c_double(10000)
+            speed_profile.Dec = c_double(1000)
+            AdvCmnAPI_CM2.Acm2_AxSetSpeedProfile(ax_id, speed_profile)
             AdvCmnAPI_CM2.Acm2_AxPTP(ax_id, abs_mode, distance)
             AdvCmnAPI_CM2.Acm2_AxGetState(ax_id, state_type, byref(get_state))
             while get_state.value != AXIS_STATE.STA_AX_READY.value:
@@ -2463,11 +2469,17 @@ def GetExtData():
     suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
     return suite
 
+def JustGetAvailableDevices():
+    tests = ['test_GetAvailableDevs']
+    suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
+    return suite
+
 if __name__ == '__main__':
     # Test all case without order
     # unittest.main()
     # Test case with self-defined order
     runner = unittest.TextTestRunner()
+    # get_available_devs = runner.run(JustGetAvailableDevices())
     # get_device = runner.run(GetMDevice())
     # export_mapping_table = runner.run(ExportMappingTable())
     # import_mapping_table = runner.run(ImportMappingTable())
@@ -2512,15 +2524,19 @@ if __name__ == '__main__':
     # run_cmp_diff = runner.run(RunCMPDiff())
     # evt_motion_done = runner.run(EventMotionDone())
     # sqa_test = runner.run(SQATest())
-    # evt_motion_multi = runner.run(MotionDoneEventMultiThreads())    
+    # evt_motion_multi = runner.run(MotionDoneEventMultiThreads())
     # run_cmp_ltc = runner.run(RunCMPLTC())
-    get_ext_data = runner.run(GetExtData())
-    # total_run_arr = [get_device, get_device, export_mapping_table, import_mapping_table, ax_ptp, device_do, gp_create, get_all_error,
-    #                  ax_move_continue, set_ax_speed_limit, set_ax_profile, pvt_table, pt_table, gear_0_1, gantry_0_1, gp_move_line,
-    #                  gp_move_2D_arc, gp_move_2D_3P, gp_2D_angle, gp_3D_arc, gp_3D_norm_vec, gp_3D_3P, gp_helix_center, gp_helix_3P,
-    #                  gp_helix_angle, gp_line_pause_resume, set_byte_5057SO, change_vel_when_move, gp_add_load_path, gp_load_path,
-    #                  load_connect, set_5057SO, get_subdevice_info, get_main_device_info, set_pdo_val, set_ao_get_ai, get_commu_error,
-    #                  set_cnt_property, run_cmp_ltc]
+    # get_ext_data = runner.run(GetExtData())
+    # total_run_arr = [get_available_devs, get_device, export_mapping_table, import_mapping_table, ax_ptp,
+    #                  device_do, gp_create, get_all_error, ax_move_continue, set_ax_speed_limit,
+    #                  set_ax_profile, pvt_table, pt_table, gear_0_1, gantry_0_1,
+    #                  gp_move_line, gp_move_2D_arc, gp_move_2D_3P, gp_2D_angle, gp_3D_arc,
+    #                  gp_3D_norm_vec, gp_3D_3P, gp_helix_center, gp_helix_3P, gp_helix_angle,
+    #                  gp_line_pause_resume, set_byte_5057SO, change_vel_when_move, gp_add_load_path, gp_load_path,
+    #                  load_connect, set_5057SO, get_subdevice_info, get_main_device_info, set_pdo_val,
+    #                  set_ao_get_ai, get_commu_error, set_cnt_property, run_cmp_ltc, get_ext_data,
+    #                  evt_motion_multi, evt_motion_done, run_cmp_diff, run_cmp_auto_pulse, run_cmp_cnt_pulse,
+    #                  run_cmp_cnt_toggle, set_cmp_property]
     # failed_cnt = 0
     # total_cnt = 0
     # for i in range(len(total_run_arr)):

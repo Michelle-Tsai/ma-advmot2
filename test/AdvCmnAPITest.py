@@ -2204,15 +2204,20 @@ class AdvCmnAPI_Test(unittest.TestCase):
 
     def test_SQATest(self):
         excepted_err = c_uint32(ErrorCode2.SUCCESS.value)
-        # gp_ax_arr = [c_uint32(0), c_uint32(1)]
-        gp_id = c_uint32(0)
-        # gp_arr = (c_uint32 * len(gp_ax_arr))(*gp_ax_arr)
-        self.errCde = self.AdvMot.Acm2_GpResetError(gp_id);
-        self.assertEqual(excepted_err.value, self.errCde)
-        get_val = PATH_STATUS()
-        self.errCde = self.AdvMot.Acm2_GpGetPathStatus(gp_id, byref(get_val))
-        print('status:', get_val.RemainCount)
-        self.assertEqual(excepted_err.value, self.errCde)
+        cmp_ch = c_uint32(0)
+        cnt_ch_arr = [c_uint32(0), c_uint32(1)]
+        axis_type = c_uint(ADV_OBJ_TYPE.ADV_COUNTER_CHANNEL.value)
+        trans_cnt_arr = (c_uint32 * len(cnt_ch_arr))(*cnt_ch_arr)
+        # Link counter to compare
+        self.errCde = self.AdvMot.Acm2_ChLinkCmpObject(cmp_ch, axis_type, trans_cnt_arr, len(cnt_ch_arr))
+        # Get Linked
+        get_linked_len = c_uint32(8)
+        get_linked_arr = (c_uint32 * get_linked_len.value)()
+        get_type_ch = c_uint(0)
+        self.errCde = self.AdvMot.Acm2_ChGetLinkedCmpObject(cmp_ch, byref(get_type_ch), get_linked_arr, byref(get_linked_len))
+        self.assertEqual(excepted_err.value, self.errCde, '{0} failed.'.format(self._testMethodName))
+        for idx in range(get_linked_len.value):
+            print('Get linked {0}:{1}, Linked type:{2}'.format(idx, get_linked_arr[idx], get_type_ch.value))
 
 def DownloadENISuite():
     tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_LoadENI']
@@ -2523,7 +2528,7 @@ if __name__ == '__main__':
     # run_cmp_auto_pulse = runner.run(RunCMPAutoPulse())
     # run_cmp_diff = runner.run(RunCMPDiff())
     # evt_motion_done = runner.run(EventMotionDone())
-    # sqa_test = runner.run(SQATest())
+    sqa_test = runner.run(SQATest())
     # evt_motion_multi = runner.run(MotionDoneEventMultiThreads())
     # run_cmp_ltc = runner.run(RunCMPLTC())
     # get_ext_data = runner.run(GetExtData())

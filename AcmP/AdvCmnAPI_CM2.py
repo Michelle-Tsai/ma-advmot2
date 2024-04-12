@@ -880,7 +880,7 @@ class AdvCmnAPI_CM2:
 
     try:
         Acm2_ChGetLinkedCmpObject = lib.Acm2_ChGetLinkedCmpObject
-        Acm2_ChGetLinkedCmpObject.argtypes = [c_uint32, c_uint, POINTER(c_uint32), POINTER(c_uint32)]
+        Acm2_ChGetLinkedCmpObject.argtypes = [c_uint32, POINTER(c_uint), POINTER(c_uint32), POINTER(c_uint32)]
         Acm2_ChGetLinkedCmpObject.restype = c_uint32
     except:
         pass

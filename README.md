@@ -41,6 +41,8 @@ Due to our driver running with admin/root authentication, it's important to exec
     + <a href="#Acm2_GetAvailableDevs"><code>Acm2_GetAvailableDevs</code></a>
     + <a href="#Acm2_DevExportMappingTable"><code>Acm2_DevExportMappingTable</code></a>
     + <a href="#Acm2_DevImportMappingTable"><code>Acm2_DevImportMappingTable</code></a>
+    + <a href="#Acm2_DevSaveAllMapFile"><code>Acm2_DevSaveAllMapFile</code></a>
+    + <a href="#Acm2_DevLoadAllMapFile"><code>Acm2_DevLoadAllMapFile</code></a>
     + <a href="#Acm2_GetMappedLogicalIDList"><code>Acm2_GetMappedLogicalIDList</code></a>
     + <a href="#Acm2_GetMappedObjInfo"><code>Acm2_GetMappedObjInfo</code></a>
     + <a href="#Acm2_DevAllClose"><code>Acm2_DevAllClose</code></a>
@@ -264,6 +266,22 @@ Import mapping table of device.
 
 ```cpp
 U32 Acm2_DevImportMappingTable(PI8 FilePath)
+```
+<a name="Acm2_DevSaveAllMapFile"></a>
+
+#### Acm2_DevSaveAllMapFile
+Upload input/output mapping table from device.
+
+```cpp
+U32 Acm2_DevSaveAllMapFile(PI8 FilePath)
+```
+<a name="Acm2_DevLoadAllMapFile"></a>
+
+#### Acm2_DevLoadAllMapFile
+Download input/output mapping table to device.
+
+```cpp
+U32 Acm2_DevLoadAllMapFile(PI8 FilePath)
 ```
 <a name="Acm2_GetMappedPhysicalID"></a>
 

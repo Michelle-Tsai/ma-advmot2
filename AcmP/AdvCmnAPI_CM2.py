@@ -45,6 +45,20 @@ class AdvCmnAPI_CM2:
         pass
 
     try:
+        Acm2_DevSaveAllMapFile = lib.Acm2_DevSaveAllMapFile
+        Acm2_DevSaveAllMapFile.argtypes = [c_char_p]
+        Acm2_DevSaveAllMapFile.restype = c_uint32
+    except:
+        pass
+
+    try:
+        Acm2_DevLoadAllMapFile = lib.Acm2_DevLoadAllMapFile
+        Acm2_DevLoadAllMapFile.argtypes = [c_char_p]
+        Acm2_DevLoadAllMapFile.restype = c_uint32
+    except:
+        pass
+
+    try:
         Acm2_GetMappedPhysicalID = lib.Acm2_GetMappedPhysicalID
         Acm2_GetMappedPhysicalID.argtypes = [c_int, c_uint32, POINTER(c_uint32), POINTER(c_uint32)]
         Acm2_GetMappedPhysicalID.restype = c_uint32

@@ -2217,71 +2217,6 @@ class AdvCmnAPI_Test(unittest.TestCase):
                                                     c_double(COMPARE_ENABLE.CMP_DISABLE.value).value)
             self.assertEqual(excepted_err.value, self.errCde)
 
-    def test_Set2CntInCMPDiff(self):
-        excepted_err = c_uint32(ErrorCode2.SUCCESS.value)
-        cnt_ch = [c_uint32(0), c_uint32(1)]
-        cmp_ch = c_uint32(2)
-        # Set encoder(0) pulse in mode as CW/CCW.
-        ppt_arr = c_uint32(PropertyID2.CFG_CH_DaqCntPulseInMode.value)
-        val_arr = c_double(PULSE_IN_MODE.I_CW_CCW.value)
-        get_val = c_double(0)
-        for i in range(len(cnt_ch)):
-            self.errCde = self.AdvMot.Acm2_SetProperty(cnt_ch[i], ppt_arr, val_arr)
-            self.assertEqual(excepted_err.value, self.errCde)
-            self.errCde = self.AdvMot.Acm2_GetProperty(cnt_ch[i], ppt_arr, byref(get_val))
-            self.assertEqual(excepted_err.value, self.errCde)
-            self.assertEqual(val_arr.value, get_val.value)
-        # Link local encoder/counter to compare
-        cnt_arr = cnt_ch
-        trans_cnt_arr = (c_uint32 * len(cnt_arr))(*cnt_arr)
-        axis_type = c_uint(ADV_OBJ_TYPE.ADV_COUNTER_CHANNEL.value)
-        self.errCde = self.AdvMot.Acm2_ChLinkCmpObject(cmp_ch, axis_type, trans_cnt_arr, len(cnt_arr))
-        self.assertEqual(excepted_err.value, self.errCde)
-        # Set compare property, disable compare before setting.
-        cmp_set_arr = [c_uint32(PropertyID2.CFG_CH_DaqCmpDoEnable.value),
-                       c_uint32(PropertyID2.CFG_CH_DaqCmpDoOutputMode.value),
-                       c_uint32(PropertyID2.CFG_CH_DaqCmpDoLogic.value)]
-        val_arr = [c_double(COMPARE_ENABLE.CMP_DISABLE.value),
-                   c_double(COMPARE_OUTPUT_MODE.CMP_TOGGLE.value),
-                   c_double(COMPARE_LOGIC.CP_ACT_LOW.value)]
-        for i in range(len(cmp_set_arr)):
-            self.errCde = self.AdvMot.Acm2_SetProperty(cmp_ch, cmp_set_arr[i].value, val_arr[i])
-            self.assertEqual(excepted_err.value, self.errCde)
-        # Get CMP proerty
-        get_val = c_double(0)
-        for i in range(len(val_arr)):
-            self.errCde = self.AdvMot.Acm2_GetProperty(cmp_ch, cmp_set_arr[i], byref(get_val))
-            self.assertEqual(excepted_err.value, self.errCde)
-            self.assertEqual(val_arr[i].value, get_val.value)
-        # Set compare data
-        set_cmp_data_arr = [c_double(500), c_double(1000), c_double(1500), c_double(2000), c_double(2500), c_double(3000),
-                            c_double(500), c_double(1000), c_double(1500), c_double(2000), c_double(2500), c_double(3000)]
-        trans_cmp_data_arr = (c_double * len(set_cmp_data_arr))(*set_cmp_data_arr)
-        self.errCde = self.AdvMot.Acm2_ChSetMultiCmpBufferData(cmp_ch, trans_cmp_data_arr, len(cnt_ch), c_uint32(int(len(set_cmp_data_arr)/len(cnt_ch))))
-        self.assertEqual(excepted_err.value, self.errCde, '{0} failed.'.format(self._testMethodName))
-        # Reset encoder data as 0
-        reset_cnt_data = c_double(0)
-        for i in range(len(cnt_ch)):
-            self.errCde = self.AdvMot.Acm2_ChSetCntData(cnt_ch[i], reset_cnt_data)
-            self.assertEqual(excepted_err.value, self.errCde)
-        # Enable compare
-        self.errCde = self.AdvMot.Acm2_SetProperty(cmp_ch, c_uint32(PropertyID2.CFG_CH_DaqCmpDoEnable.value).value, c_double(COMPARE_ENABLE.CMP_ENABLE.value).value)
-        self.assertEqual(excepted_err.value, self.errCde)
-        # Get encoder data
-        get_cnt_data = c_double(0)
-        end_pos = c_double(3500)
-        while get_cnt_data.value <= end_pos.value:
-            time.sleep(0.1)
-            for i in range(len(cnt_ch)):
-                tmp_ch = c_uint32(i)
-                self.errCde = self.AdvMot.Acm2_ChGetCntData(tmp_ch, byref(get_cnt_data))
-                self.assertEqual(excepted_err.value, self.errCde)
-                # print('[{0}]get_cnt_data:{1}'.format(i, get_cnt_data.value))
-        # Disable compare
-        self.errCde = self.AdvMot.Acm2_SetProperty(cmp_ch, c_uint32(PropertyID2.CFG_CH_DaqCmpDoEnable.value).value,
-                                                   c_double(COMPARE_ENABLE.CMP_DISABLE.value).value)
-        self.assertEqual(excepted_err.value, self.errCde)
-
     def test_Set2CntInCMP(self):
         channel_arr = [0, 1]
         for ch in range(len(channel_arr)):
@@ -2323,7 +2258,7 @@ class AdvCmnAPI_Test(unittest.TestCase):
             val_arr = [c_double(COMPARE_ENABLE.CMP_DISABLE.value),
                     c_double(COMPARE_OUTPUT_MODE.CMP_PULSE.value),
                     c_double(COMPARE_LOGIC.CP_ACT_LOW.value),
-                    c_double(500000), c_double(100)]
+                    c_double(500000), c_double(0)]
             for i in range(len(cmp_set_arr)):
                 self.errCde = self.AdvMot.Acm2_SetProperty(cmp_ch, cmp_set_arr[i].value, val_arr[i])
                 self.assertEqual(excepted_err.value, self.errCde)
@@ -2358,8 +2293,8 @@ class AdvCmnAPI_Test(unittest.TestCase):
                 self.assertEqual(ltc_val_arr[i].value, get_val_ltc.value)
 
             # Set compare data
-            set_cmp_data_arr = [c_double(500), c_double(1000), c_double(1500), c_double(2000), c_double(2500), c_double(3000),
-                                c_double(550), c_double(1050), c_double(1550), c_double(2050), c_double(2550), c_double(3050)]
+            set_cmp_data_arr = [c_double(100), c_double(500), c_double(1000), c_double(1500), c_double(2000), c_double(3000), 
+                                c_double(100), c_double(500), c_double(1000), c_double(1500), c_double(2000), c_double(3000)]
             trans_cmp_data_arr = (c_double * len(set_cmp_data_arr))(*set_cmp_data_arr)
             self.errCde = self.AdvMot.Acm2_ChSetMultiCmpBufferData(cmp_ch, trans_cmp_data_arr, len(cnt_ch), c_uint32(int(len(set_cmp_data_arr) / len(cnt_ch))))
             self.assertEqual(excepted_err.value, self.errCde, '{0} failed.'.format(self._testMethodName))
@@ -2379,7 +2314,246 @@ class AdvCmnAPI_Test(unittest.TestCase):
                 for i in range(len(cnt_ch)):
                     tmp_ch = c_uint32(i)
                     self.errCde = self.AdvMot.Acm2_ChGetCntData(tmp_ch, byref(get_cnt_data))
-                    # print('[{0}]get_cnt_data:{1}'.format(i, get_cnt_data.value))
+                    print('[{0}]get_cnt_data:{1}'.format(i, get_cnt_data.value))
+            # Get LTC data
+            get_ltc_buf_status = BUFFER_STATUS()
+            act_data_cnt = c_uint32(128)
+            get_ltc_data_arr = (c_double * act_data_cnt.value)()
+            self.errCde = self.AdvMot.Acm2_ChGetLatchBufferStatus(ltc_ch, byref(get_ltc_buf_status))
+            self.assertEqual(excepted_err.value, self.errCde)
+            print('RemainCount:{0}, FreeSpaceCount:{1}'.format(get_ltc_buf_status.RemainCount, get_ltc_buf_status.FreeSpaceCount))
+            self.errCde = self.AdvMot.Acm2_ChReadLatchBuffer(ltc_ch, get_ltc_data_arr, act_data_cnt, byref(act_data_cnt))
+            self.assertEqual(excepted_err.value, self.errCde)
+            print('act_data_cnt:{0}'.format(act_data_cnt.value))
+            for i in range(act_data_cnt.value):
+                print('get_ltc_data_arr[{0}]:{1}'.format(i, get_ltc_data_arr[i]))
+            # Disable compare and latch
+            self.errCde = self.AdvMot.Acm2_SetProperty(cmp_ch, c_uint32(PropertyID2.CFG_CH_DaqLtcEnable.value).value,
+                                                    c_double(COMPARE_ENABLE.CMP_DISABLE.value).value)
+            self.assertEqual(excepted_err.value, self.errCde)
+            self.errCde = self.AdvMot.Acm2_SetProperty(ltc_ch, c_uint32(PropertyID2.CFG_CH_DaqCmpDoEnable.value).value,
+                                                    c_double(COMPARE_ENABLE.CMP_DISABLE.value).value)
+            self.assertEqual(excepted_err.value, self.errCde)
+
+    def test_Set2CntInCMPWithDeviation(self):
+        channel_arr = [0, 1]
+        for ch in range(len(channel_arr)):
+            excepted_err = c_uint32(ErrorCode2.SUCCESS.value)
+            cnt_ch = [c_uint32(0), c_uint32(1)]
+            cmp_ch = c_uint32(ch)
+            ltc_ch = c_uint32(ch)
+            # Set encoder(0) pulse in mode as CW/CCW.
+            ppt_arr = c_uint32(PropertyID2.CFG_CH_DaqCntPulseInMode.value)
+            val_arr = c_double(PULSE_IN_MODE.I_CW_CCW.value)
+            get_val = c_double(0)
+            for i in range(len(cnt_ch)):
+                self.errCde = self.AdvMot.Acm2_SetProperty(cnt_ch[i], ppt_arr, val_arr)
+                self.assertEqual(excepted_err.value, self.errCde)
+                self.errCde = self.AdvMot.Acm2_GetProperty(cnt_ch[i], ppt_arr, byref(get_val))
+                self.assertEqual(excepted_err.value, self.errCde)
+                self.assertEqual(val_arr.value, get_val.value)
+            # Link local encoder/counter to compare
+            cnt_arr = cnt_ch
+            trans_cnt_arr = (c_uint32 * len(cnt_arr))(*cnt_arr)
+            axis_type = c_uint(ADV_OBJ_TYPE.ADV_COUNTER_CHANNEL.value)
+            self.errCde = self.AdvMot.Acm2_ChLinkCmpObject(cmp_ch, axis_type, trans_cnt_arr, len(cnt_arr))
+            self.assertEqual(excepted_err.value, self.errCde)
+            get_obj_type = c_uint(0)
+            get_linked_arr = (c_uint32 * 2)()
+            get_linked_cnt = c_uint32(2)
+            # Get linked local encoder/counter to compare
+            self.errCde = self.AdvMot.Acm2_ChGetLinkedCmpObject(cmp_ch, byref(get_obj_type), get_linked_arr, byref(get_linked_cnt))
+            self.assertEqual(excepted_err.value, self.errCde)
+            print('[CMP] Linked type:{0}, linked count:{1}'.format(get_obj_type.value, get_linked_cnt.value))
+            for i in range(get_linked_cnt.value):
+                print('Linked channel:{0}'.format(get_linked_arr[i]))
+            # Set compare property, disable compare before setting.
+            cmp_set_arr = [c_uint32(PropertyID2.CFG_CH_DaqCmpDoEnable.value),
+                        c_uint32(PropertyID2.CFG_CH_DaqCmpDoOutputMode.value),
+                        c_uint32(PropertyID2.CFG_CH_DaqCmpDoLogic.value),
+                        c_uint32(PropertyID2.CFG_CH_DaqCmpDoPulseWidth.value),
+                        c_uint32(PropertyID2.CFG_CH_DaqCmpDeviation.value)]
+            val_arr = [c_double(COMPARE_ENABLE.CMP_DISABLE.value),
+                    c_double(COMPARE_OUTPUT_MODE.CMP_PULSE.value),
+                    c_double(COMPARE_LOGIC.CP_ACT_LOW.value),
+                    c_double(500000), c_double(10)]
+            for i in range(len(cmp_set_arr)):
+                self.errCde = self.AdvMot.Acm2_SetProperty(cmp_ch, cmp_set_arr[i].value, val_arr[i])
+                self.assertEqual(excepted_err.value, self.errCde)
+            # Get CMP proerty
+            get_val = c_double(0)
+            for i in range(len(val_arr)):
+                self.errCde = self.AdvMot.Acm2_GetProperty(cmp_ch, cmp_set_arr[i], byref(get_val))
+                self.assertEqual(excepted_err.value, self.errCde)
+                self.assertEqual(val_arr[i].value, get_val.value)
+            # Get linked local encoder/counter to latch
+            self.errCde = self.AdvMot.Acm2_ChGetLinkedLatchObject(ltc_ch, byref(get_obj_type), get_linked_arr, byref(get_linked_cnt))
+            self.assertEqual(excepted_err.value, self.errCde)
+            print('[LTC] Linked type:{0}, linked count:{1}'.format(get_obj_type.value, get_linked_cnt.value))
+            for i in range(get_linked_cnt.value):
+                print('Linked channel:{0}'.format(get_linked_arr[i]))
+            # Reset LTC buffer
+            self.errCde = self.AdvMot.Acm2_ChResetLatchBuffer(ltc_ch)
+            self.assertEqual(excepted_err.value, self.errCde)
+            # Set LTC property
+            ltc_set_ppt_arr = [c_uint32(PropertyID2.CFG_CH_DaqLtcMinDist.value),
+                            c_uint32(PropertyID2.CFG_CH_DaqLtcLogic.value),
+                            c_uint32(PropertyID2.CFG_CH_DaqLtcEnable.value)]
+            ltc_val_arr = [c_double(10), c_double(COMPARE_LOGIC.CP_ACT_LOW.value), c_double(COMPARE_ENABLE.CMP_ENABLE.value)]
+            for i in range(len(ltc_set_ppt_arr)):
+                self.errCde = self.AdvMot.Acm2_SetProperty(ltc_ch, ltc_set_ppt_arr[i].value, ltc_val_arr[i])
+                self.assertEqual(excepted_err.value, self.errCde)
+            # Get LTC property
+            get_val_ltc = c_double(0)
+            for i in range(len(ltc_val_arr)):
+                self.errCde = self.AdvMot.Acm2_GetProperty(ltc_ch, ltc_set_ppt_arr[i], byref(get_val_ltc))
+                self.assertEqual(excepted_err.value, self.errCde)
+                self.assertEqual(ltc_val_arr[i].value, get_val_ltc.value)
+
+            # Set compare data
+            set_cmp_data_arr = [c_double(100), c_double(500), c_double(1000), c_double(1500), c_double(2000), c_double(3000), 
+                                c_double(110), c_double(510), c_double(1010), c_double(1510), c_double(2010), c_double(3010)]
+            trans_cmp_data_arr = (c_double * len(set_cmp_data_arr))(*set_cmp_data_arr)
+            self.errCde = self.AdvMot.Acm2_ChSetMultiCmpBufferData(cmp_ch, trans_cmp_data_arr, len(cnt_ch), c_uint32(int(len(set_cmp_data_arr) / len(cnt_ch))))
+            self.assertEqual(excepted_err.value, self.errCde, '{0} failed.'.format(self._testMethodName))
+            # Reset encoder data as 0
+            reset_cnt_data = c_double(0)
+            for i in range(len(cnt_ch)):
+                self.errCde = self.AdvMot.Acm2_ChSetCntData(cnt_ch[i], reset_cnt_data)
+                self.assertEqual(excepted_err.value, self.errCde)
+            # Enable compare
+            self.errCde = self.AdvMot.Acm2_SetProperty(cmp_ch, c_uint32(PropertyID2.CFG_CH_DaqCmpDoEnable.value).value, c_double(COMPARE_ENABLE.CMP_ENABLE.value).value)
+            self.assertEqual(excepted_err.value, self.errCde)
+            # Get encoder data
+            get_cnt_data = c_double(0)
+            end_pos = c_double(3500)
+            while get_cnt_data.value <= end_pos.value:
+                time.sleep(0.1)
+                for i in range(len(cnt_ch)):
+                    tmp_ch = c_uint32(i)
+                    self.errCde = self.AdvMot.Acm2_ChGetCntData(tmp_ch, byref(get_cnt_data))
+                    print('[{0}]get_cnt_data:{1}'.format(i, get_cnt_data.value))
+            # Get LTC data
+            get_ltc_buf_status = BUFFER_STATUS()
+            act_data_cnt = c_uint32(128)
+            get_ltc_data_arr = (c_double * act_data_cnt.value)()
+            self.errCde = self.AdvMot.Acm2_ChGetLatchBufferStatus(ltc_ch, byref(get_ltc_buf_status))
+            self.assertEqual(excepted_err.value, self.errCde)
+            print('RemainCount:{0}, FreeSpaceCount:{1}'.format(get_ltc_buf_status.RemainCount, get_ltc_buf_status.FreeSpaceCount))
+            self.errCde = self.AdvMot.Acm2_ChReadLatchBuffer(ltc_ch, get_ltc_data_arr, act_data_cnt, byref(act_data_cnt))
+            self.assertEqual(excepted_err.value, self.errCde)
+            print('act_data_cnt:{0}'.format(act_data_cnt.value))
+            for i in range(act_data_cnt.value):
+                print('get_ltc_data_arr[{0}]:{1}'.format(i, get_ltc_data_arr[i]))
+            # Disable compare and latch
+            self.errCde = self.AdvMot.Acm2_SetProperty(cmp_ch, c_uint32(PropertyID2.CFG_CH_DaqLtcEnable.value).value,
+                                                    c_double(COMPARE_ENABLE.CMP_DISABLE.value).value)
+            self.assertEqual(excepted_err.value, self.errCde)
+            self.errCde = self.AdvMot.Acm2_SetProperty(ltc_ch, c_uint32(PropertyID2.CFG_CH_DaqCmpDoEnable.value).value,
+                                                    c_double(COMPARE_ENABLE.CMP_DISABLE.value).value)
+            self.assertEqual(excepted_err.value, self.errCde)
+
+
+    def test_Set2CntInCMPWithDifferentTable(self):
+        channel_arr = [0, 1]
+        for ch in range(len(channel_arr)):
+            excepted_err = c_uint32(ErrorCode2.SUCCESS.value)
+            cnt_ch = [c_uint32(0), c_uint32(1)]
+            cmp_ch = c_uint32(ch)
+            ltc_ch = c_uint32(ch)
+            # Set encoder(0) pulse in mode as CW/CCW.
+            ppt_arr = c_uint32(PropertyID2.CFG_CH_DaqCntPulseInMode.value)
+            val_arr = c_double(PULSE_IN_MODE.I_CW_CCW.value)
+            get_val = c_double(0)
+            for i in range(len(cnt_ch)):
+                self.errCde = self.AdvMot.Acm2_SetProperty(cnt_ch[i], ppt_arr, val_arr)
+                self.assertEqual(excepted_err.value, self.errCde)
+                self.errCde = self.AdvMot.Acm2_GetProperty(cnt_ch[i], ppt_arr, byref(get_val))
+                self.assertEqual(excepted_err.value, self.errCde)
+                self.assertEqual(val_arr.value, get_val.value)
+            # Link local encoder/counter to compare
+            cnt_arr = cnt_ch
+            trans_cnt_arr = (c_uint32 * len(cnt_arr))(*cnt_arr)
+            axis_type = c_uint(ADV_OBJ_TYPE.ADV_COUNTER_CHANNEL.value)
+            self.errCde = self.AdvMot.Acm2_ChLinkCmpObject(cmp_ch, axis_type, trans_cnt_arr, len(cnt_arr))
+            self.assertEqual(excepted_err.value, self.errCde)
+            get_obj_type = c_uint(0)
+            get_linked_arr = (c_uint32 * 2)()
+            get_linked_cnt = c_uint32(2)
+            # Get linked local encoder/counter to compare
+            self.errCde = self.AdvMot.Acm2_ChGetLinkedCmpObject(cmp_ch, byref(get_obj_type), get_linked_arr, byref(get_linked_cnt))
+            self.assertEqual(excepted_err.value, self.errCde)
+            print('[CMP] Linked type:{0}, linked count:{1}'.format(get_obj_type.value, get_linked_cnt.value))
+            for i in range(get_linked_cnt.value):
+                print('Linked channel:{0}'.format(get_linked_arr[i]))
+            # Set compare property, disable compare before setting.
+            cmp_set_arr = [c_uint32(PropertyID2.CFG_CH_DaqCmpDoEnable.value),
+                        c_uint32(PropertyID2.CFG_CH_DaqCmpDoOutputMode.value),
+                        c_uint32(PropertyID2.CFG_CH_DaqCmpDoLogic.value),
+                        c_uint32(PropertyID2.CFG_CH_DaqCmpDoPulseWidth.value),
+                        c_uint32(PropertyID2.CFG_CH_DaqCmpDeviation.value)]
+            val_arr = [c_double(COMPARE_ENABLE.CMP_DISABLE.value),
+                    c_double(COMPARE_OUTPUT_MODE.CMP_PULSE.value),
+                    c_double(COMPARE_LOGIC.CP_ACT_LOW.value),
+                    c_double(500000), c_double(0)]
+            for i in range(len(cmp_set_arr)):
+                self.errCde = self.AdvMot.Acm2_SetProperty(cmp_ch, cmp_set_arr[i].value, val_arr[i])
+                self.assertEqual(excepted_err.value, self.errCde)
+            # Get CMP proerty
+            get_val = c_double(0)
+            for i in range(len(val_arr)):
+                self.errCde = self.AdvMot.Acm2_GetProperty(cmp_ch, cmp_set_arr[i], byref(get_val))
+                self.assertEqual(excepted_err.value, self.errCde)
+                self.assertEqual(val_arr[i].value, get_val.value)
+            # Get linked local encoder/counter to latch
+            self.errCde = self.AdvMot.Acm2_ChGetLinkedLatchObject(ltc_ch, byref(get_obj_type), get_linked_arr, byref(get_linked_cnt))
+            self.assertEqual(excepted_err.value, self.errCde)
+            print('[LTC] Linked type:{0}, linked count:{1}'.format(get_obj_type.value, get_linked_cnt.value))
+            for i in range(get_linked_cnt.value):
+                print('Linked channel:{0}'.format(get_linked_arr[i]))
+            # Reset LTC buffer
+            self.errCde = self.AdvMot.Acm2_ChResetLatchBuffer(ltc_ch)
+            self.assertEqual(excepted_err.value, self.errCde)
+            # Set LTC property
+            ltc_set_ppt_arr = [c_uint32(PropertyID2.CFG_CH_DaqLtcMinDist.value),
+                            c_uint32(PropertyID2.CFG_CH_DaqLtcLogic.value),
+                            c_uint32(PropertyID2.CFG_CH_DaqLtcEnable.value)]
+            ltc_val_arr = [c_double(10), c_double(COMPARE_LOGIC.CP_ACT_LOW.value), c_double(COMPARE_ENABLE.CMP_ENABLE.value)]
+            for i in range(len(ltc_set_ppt_arr)):
+                self.errCde = self.AdvMot.Acm2_SetProperty(ltc_ch, ltc_set_ppt_arr[i].value, ltc_val_arr[i])
+                self.assertEqual(excepted_err.value, self.errCde)
+            # Get LTC property
+            get_val_ltc = c_double(0)
+            for i in range(len(ltc_val_arr)):
+                self.errCde = self.AdvMot.Acm2_GetProperty(ltc_ch, ltc_set_ppt_arr[i], byref(get_val_ltc))
+                self.assertEqual(excepted_err.value, self.errCde)
+                self.assertEqual(ltc_val_arr[i].value, get_val_ltc.value)
+
+            # Set compare data
+            set_cmp_data_arr = [c_double(100), c_double(500), c_double(1000), c_double(1500), c_double(2000), c_double(3000), 
+                                c_double(110), c_double(510), c_double(1010), c_double(1510), c_double(2010), c_double(3010)]
+            trans_cmp_data_arr = (c_double * len(set_cmp_data_arr))(*set_cmp_data_arr)
+            self.errCde = self.AdvMot.Acm2_ChSetMultiCmpBufferData(cmp_ch, trans_cmp_data_arr, len(cnt_ch), c_uint32(int(len(set_cmp_data_arr) / len(cnt_ch))))
+            self.assertEqual(excepted_err.value, self.errCde, '{0} failed.'.format(self._testMethodName))
+            # Reset encoder data
+            reset_cnt_data = c_double(0)
+            self.errCde = self.AdvMot.Acm2_ChSetCntData(cnt_ch[0], reset_cnt_data)
+            self.assertEqual(excepted_err.value, self.errCde)
+            reset_cnt_data_1 = c_double(10)
+            self.errCde = self.AdvMot.Acm2_ChSetCntData(cnt_ch[1], reset_cnt_data_1)
+            self.assertEqual(excepted_err.value, self.errCde)
+            # Enable compare
+            self.errCde = self.AdvMot.Acm2_SetProperty(cmp_ch, c_uint32(PropertyID2.CFG_CH_DaqCmpDoEnable.value).value, c_double(COMPARE_ENABLE.CMP_ENABLE.value).value)
+            self.assertEqual(excepted_err.value, self.errCde)
+            # Get encoder data
+            get_cnt_data = c_double(0)
+            end_pos = c_double(3500)
+            while get_cnt_data.value <= end_pos.value:
+                time.sleep(0.1)
+                for i in range(len(cnt_ch)):
+                    tmp_ch = c_uint32(i)
+                    self.errCde = self.AdvMot.Acm2_ChGetCntData(tmp_ch, byref(get_cnt_data))
+                    print('[{0}]get_cnt_data:{1}'.format(i, get_cnt_data.value))
             # Get LTC data
             get_ltc_buf_status = BUFFER_STATUS()
             act_data_cnt = c_uint32(128)
@@ -2582,6 +2756,205 @@ class AdvCmnAPI_Test(unittest.TestCase):
         self.errCde = self.AdvMot.Acm2_SetProperty(cmp_ch, c_uint32(PropertyID2.CFG_CH_DaqCmpDoEnable.value).value,
                                                    c_double(COMPARE_ENABLE.CMP_DISABLE.value).value)
         self.assertEqual(excepted_err.value, self.errCde)
+    
+    def test_2CntInCMPDiffTable(self):
+        excepted_err = c_uint32(ErrorCode2.SUCCESS.value)
+        cnt_ch = [c_uint32(0), c_uint32(1)]
+        cmp_ch = c_uint32(2)
+        # Set encoder(0) pulse in mode as CW/CCW.
+        ppt_arr = c_uint32(PropertyID2.CFG_CH_DaqCntPulseInMode.value)
+        val_arr = c_double(PULSE_IN_MODE.I_CW_CCW.value)
+        get_val = c_double(0)
+        for i in range(len(cnt_ch)):
+            self.errCde = self.AdvMot.Acm2_SetProperty(cnt_ch[i], ppt_arr, val_arr)
+            self.assertEqual(excepted_err.value, self.errCde)
+            self.errCde = self.AdvMot.Acm2_GetProperty(cnt_ch[i], ppt_arr, byref(get_val))
+            self.assertEqual(excepted_err.value, self.errCde)
+            self.assertEqual(val_arr.value, get_val.value)
+        # Link local encoder/counter to compare
+        cnt_arr = cnt_ch
+        trans_cnt_arr = (c_uint32 * len(cnt_arr))(*cnt_arr)
+        axis_type = c_uint(ADV_OBJ_TYPE.ADV_COUNTER_CHANNEL.value)
+        self.errCde = self.AdvMot.Acm2_ChLinkCmpObject(cmp_ch, axis_type, trans_cnt_arr, len(cnt_arr))
+        self.assertEqual(excepted_err.value, self.errCde)
+        # Set compare property, disable compare before setting.
+        cmp_set_arr = [c_uint32(PropertyID2.CFG_CH_DaqCmpDoEnable.value),
+                       c_uint32(PropertyID2.CFG_CH_DaqCmpDoOutputMode.value),
+                       c_uint32(PropertyID2.CFG_CH_DaqCmpDoLogic.value)]
+        val_arr = [c_double(COMPARE_ENABLE.CMP_DISABLE.value),
+                   c_double(COMPARE_OUTPUT_MODE.CMP_TOGGLE.value),
+                   c_double(COMPARE_LOGIC.CP_ACT_LOW.value)]
+        for i in range(len(cmp_set_arr)):
+            self.errCde = self.AdvMot.Acm2_SetProperty(cmp_ch, cmp_set_arr[i].value, val_arr[i])
+            self.assertEqual(excepted_err.value, self.errCde)
+        # Get CMP proerty
+        get_val = c_double(0)
+        for i in range(len(val_arr)):
+            self.errCde = self.AdvMot.Acm2_GetProperty(cmp_ch, cmp_set_arr[i], byref(get_val))
+            self.assertEqual(excepted_err.value, self.errCde)
+            self.assertEqual(val_arr[i].value, get_val.value)
+        # Set compare data
+        set_cmp_data_arr = [c_double(500), c_double(1000), c_double(1500), c_double(2000), c_double(2500), c_double(3000),
+                            c_double(500), c_double(1000), c_double(1500), c_double(2000), c_double(2500), c_double(3000)]
+        trans_cmp_data_arr = (c_double * len(set_cmp_data_arr))(*set_cmp_data_arr)
+        self.errCde = self.AdvMot.Acm2_ChSetMultiCmpBufferData(cmp_ch, trans_cmp_data_arr, len(cnt_ch), c_uint32(int(len(set_cmp_data_arr)/len(cnt_ch))))
+        self.assertEqual(excepted_err.value, self.errCde, '{0} failed.'.format(self._testMethodName))
+        # Reset encoder data as 0
+        reset_cnt_data = c_double(0)
+        for i in range(len(cnt_ch)):
+            self.errCde = self.AdvMot.Acm2_ChSetCntData(cnt_ch[i], reset_cnt_data)
+            self.assertEqual(excepted_err.value, self.errCde)
+        # Enable compare
+        self.errCde = self.AdvMot.Acm2_SetProperty(cmp_ch, c_uint32(PropertyID2.CFG_CH_DaqCmpDoEnable.value).value, c_double(COMPARE_ENABLE.CMP_ENABLE.value).value)
+        self.assertEqual(excepted_err.value, self.errCde)
+        # Get encoder data
+        get_cnt_data = c_double(0)
+        end_pos = c_double(3500)
+        while get_cnt_data.value <= end_pos.value:
+            time.sleep(0.1)
+            for i in range(len(cnt_ch)):
+                tmp_ch = c_uint32(i)
+                self.errCde = self.AdvMot.Acm2_ChGetCntData(tmp_ch, byref(get_cnt_data))
+                self.assertEqual(excepted_err.value, self.errCde)
+                # print('[{0}]get_cnt_data:{1}'.format(i, get_cnt_data.value))
+        # Disable compare
+        self.errCde = self.AdvMot.Acm2_SetProperty(cmp_ch, c_uint32(PropertyID2.CFG_CH_DaqCmpDoEnable.value).value,
+                                                   c_double(COMPARE_ENABLE.CMP_DISABLE.value).value)
+        self.assertEqual(excepted_err.value, self.errCde)
+    
+    def test_2CntInCMPDiffWithDifferentTable(self):
+        excepted_err = c_uint32(ErrorCode2.SUCCESS.value)
+        cnt_ch = [c_uint32(0), c_uint32(1)]
+        cmp_ch = c_uint32(2)
+        # Set encoder(0) pulse in mode as CW/CCW.
+        ppt_arr = c_uint32(PropertyID2.CFG_CH_DaqCntPulseInMode.value)
+        val_arr = c_double(PULSE_IN_MODE.I_CW_CCW.value)
+        get_val = c_double(0)
+        for i in range(len(cnt_ch)):
+            self.errCde = self.AdvMot.Acm2_SetProperty(cnt_ch[i], ppt_arr, val_arr)
+            self.assertEqual(excepted_err.value, self.errCde)
+            self.errCde = self.AdvMot.Acm2_GetProperty(cnt_ch[i], ppt_arr, byref(get_val))
+            self.assertEqual(excepted_err.value, self.errCde)
+            self.assertEqual(val_arr.value, get_val.value)
+        # Link local encoder/counter to compare
+        cnt_arr = cnt_ch
+        trans_cnt_arr = (c_uint32 * len(cnt_arr))(*cnt_arr)
+        axis_type = c_uint(ADV_OBJ_TYPE.ADV_COUNTER_CHANNEL.value)
+        self.errCde = self.AdvMot.Acm2_ChLinkCmpObject(cmp_ch, axis_type, trans_cnt_arr, len(cnt_arr))
+        self.assertEqual(excepted_err.value, self.errCde)
+        # Set compare property, disable compare before setting.
+        cmp_set_arr = [c_uint32(PropertyID2.CFG_CH_DaqCmpDoEnable.value),
+                       c_uint32(PropertyID2.CFG_CH_DaqCmpDoOutputMode.value),
+                       c_uint32(PropertyID2.CFG_CH_DaqCmpDoLogic.value),
+                       c_uint32(PropertyID2.CFG_CH_DaqCmpDeviation.value)]
+        val_arr = [c_double(COMPARE_ENABLE.CMP_DISABLE.value),
+                   c_double(COMPARE_OUTPUT_MODE.CMP_TOGGLE.value),
+                   c_double(COMPARE_LOGIC.CP_ACT_LOW.value), c_double(0)]
+        for i in range(len(cmp_set_arr)):
+            self.errCde = self.AdvMot.Acm2_SetProperty(cmp_ch, cmp_set_arr[i].value, val_arr[i])
+            self.assertEqual(excepted_err.value, self.errCde)
+        # Get CMP proerty
+        get_val = c_double(0)
+        for i in range(len(val_arr)):
+            self.errCde = self.AdvMot.Acm2_GetProperty(cmp_ch, cmp_set_arr[i], byref(get_val))
+            self.assertEqual(excepted_err.value, self.errCde)
+            self.assertEqual(val_arr[i].value, get_val.value)
+        # Set compare data
+        set_cmp_data_arr = [c_double(500), c_double(1000), c_double(1500), c_double(2000), c_double(2500), c_double(3000),
+                            c_double(510), c_double(1010), c_double(1510), c_double(2010), c_double(2510), c_double(3010)]
+        trans_cmp_data_arr = (c_double * len(set_cmp_data_arr))(*set_cmp_data_arr)
+        self.errCde = self.AdvMot.Acm2_ChSetMultiCmpBufferData(cmp_ch, trans_cmp_data_arr, len(cnt_ch), c_uint32(int(len(set_cmp_data_arr)/len(cnt_ch))))
+        self.assertEqual(excepted_err.value, self.errCde, '{0} failed.'.format(self._testMethodName))
+        # Reset encoder data
+        reset_cnt_data = c_double(0)
+        reset_cnt_data_1 = c_double(10)
+        self.errCde = self.AdvMot.Acm2_ChSetCntData(cnt_ch[0], reset_cnt_data)
+        self.assertEqual(excepted_err.value, self.errCde)
+        self.errCde = self.AdvMot.Acm2_ChSetCntData(cnt_ch[1], reset_cnt_data_1)
+        self.assertEqual(excepted_err.value, self.errCde)
+        # Enable compare
+        self.errCde = self.AdvMot.Acm2_SetProperty(cmp_ch, c_uint32(PropertyID2.CFG_CH_DaqCmpDoEnable.value).value, c_double(COMPARE_ENABLE.CMP_ENABLE.value).value)
+        self.assertEqual(excepted_err.value, self.errCde)
+        # Get encoder data
+        get_cnt_data = c_double(0)
+        end_pos = c_double(3500)
+        while get_cnt_data.value <= end_pos.value:
+            time.sleep(0.1)
+            for i in range(len(cnt_ch)):
+                tmp_ch = c_uint32(i)
+                self.errCde = self.AdvMot.Acm2_ChGetCntData(tmp_ch, byref(get_cnt_data))
+                self.assertEqual(excepted_err.value, self.errCde)
+                # print('[{0}]get_cnt_data:{1}'.format(i, get_cnt_data.value))
+        # Disable compare
+        self.errCde = self.AdvMot.Acm2_SetProperty(cmp_ch, c_uint32(PropertyID2.CFG_CH_DaqCmpDoEnable.value).value,
+                                                   c_double(COMPARE_ENABLE.CMP_DISABLE.value).value)
+        self.assertEqual(excepted_err.value, self.errCde)
+
+    def test_2CntInCMPDiffWithDeviation(self):
+        excepted_err = c_uint32(ErrorCode2.SUCCESS.value)
+        cnt_ch = [c_uint32(0), c_uint32(1)]
+        cmp_ch = c_uint32(2)
+        # Set encoder(0) pulse in mode as CW/CCW.
+        ppt_arr = c_uint32(PropertyID2.CFG_CH_DaqCntPulseInMode.value)
+        val_arr = c_double(PULSE_IN_MODE.I_CW_CCW.value)
+        get_val = c_double(0)
+        for i in range(len(cnt_ch)):
+            self.errCde = self.AdvMot.Acm2_SetProperty(cnt_ch[i], ppt_arr, val_arr)
+            self.assertEqual(excepted_err.value, self.errCde)
+            self.errCde = self.AdvMot.Acm2_GetProperty(cnt_ch[i], ppt_arr, byref(get_val))
+            self.assertEqual(excepted_err.value, self.errCde)
+            self.assertEqual(val_arr.value, get_val.value)
+        # Link local encoder/counter to compare
+        cnt_arr = cnt_ch
+        trans_cnt_arr = (c_uint32 * len(cnt_arr))(*cnt_arr)
+        axis_type = c_uint(ADV_OBJ_TYPE.ADV_COUNTER_CHANNEL.value)
+        self.errCde = self.AdvMot.Acm2_ChLinkCmpObject(cmp_ch, axis_type, trans_cnt_arr, len(cnt_arr))
+        self.assertEqual(excepted_err.value, self.errCde)
+        # Set compare property, disable compare before setting.
+        cmp_set_arr = [c_uint32(PropertyID2.CFG_CH_DaqCmpDoEnable.value),
+                       c_uint32(PropertyID2.CFG_CH_DaqCmpDoOutputMode.value),
+                       c_uint32(PropertyID2.CFG_CH_DaqCmpDoLogic.value),
+                       c_uint32(PropertyID2.CFG_CH_DaqCmpDeviation.value)]
+        val_arr = [c_double(COMPARE_ENABLE.CMP_DISABLE.value),
+                   c_double(COMPARE_OUTPUT_MODE.CMP_TOGGLE.value),
+                   c_double(COMPARE_LOGIC.CP_ACT_LOW.value), c_double(10)]
+        for i in range(len(cmp_set_arr)):
+            self.errCde = self.AdvMot.Acm2_SetProperty(cmp_ch, cmp_set_arr[i].value, val_arr[i])
+            self.assertEqual(excepted_err.value, self.errCde)
+        # Get CMP proerty
+        get_val = c_double(0)
+        for i in range(len(val_arr)):
+            self.errCde = self.AdvMot.Acm2_GetProperty(cmp_ch, cmp_set_arr[i], byref(get_val))
+            self.assertEqual(excepted_err.value, self.errCde)
+            self.assertEqual(val_arr[i].value, get_val.value)
+        # Set compare data
+        set_cmp_data_arr = [c_double(100), c_double(500), c_double(1000), c_double(1500), c_double(2000), c_double(3000), 
+                            c_double(110), c_double(510), c_double(1010), c_double(1510), c_double(2010), c_double(3010)]
+        trans_cmp_data_arr = (c_double * len(set_cmp_data_arr))(*set_cmp_data_arr)
+        self.errCde = self.AdvMot.Acm2_ChSetMultiCmpBufferData(cmp_ch, trans_cmp_data_arr, len(cnt_ch), c_uint32(int(len(set_cmp_data_arr)/len(cnt_ch))))
+        self.assertEqual(excepted_err.value, self.errCde, '{0} failed.'.format(self._testMethodName))
+        # Reset encoder data as 0
+        reset_cnt_data = c_double(0)
+        for i in range(len(cnt_ch)):
+            self.errCde = self.AdvMot.Acm2_ChSetCntData(cnt_ch[i], reset_cnt_data)
+            self.assertEqual(excepted_err.value, self.errCde)
+        # Enable compare
+        self.errCde = self.AdvMot.Acm2_SetProperty(cmp_ch, c_uint32(PropertyID2.CFG_CH_DaqCmpDoEnable.value).value, c_double(COMPARE_ENABLE.CMP_ENABLE.value).value)
+        self.assertEqual(excepted_err.value, self.errCde)
+        # Get encoder data
+        get_cnt_data = c_double(0)
+        end_pos = c_double(3500)
+        while get_cnt_data.value <= end_pos.value:
+            time.sleep(0.1)
+            for i in range(len(cnt_ch)):
+                tmp_ch = c_uint32(i)
+                self.errCde = self.AdvMot.Acm2_ChGetCntData(tmp_ch, byref(get_cnt_data))
+                self.assertEqual(excepted_err.value, self.errCde)
+                # print('[{0}]get_cnt_data:{1}'.format(i, get_cnt_data.value))
+        # Disable compare
+        self.errCde = self.AdvMot.Acm2_SetProperty(cmp_ch, c_uint32(PropertyID2.CFG_CH_DaqCmpDoEnable.value).value,
+                                                   c_double(COMPARE_ENABLE.CMP_DISABLE.value).value)
+        self.assertEqual(excepted_err.value, self.errCde)
 
     def test_MPG(self):
         excepted_err = c_uint32(ErrorCode2.SUCCESS.value)
@@ -2675,37 +3048,33 @@ class AdvCmnAPI_Test(unittest.TestCase):
 
     def test_SQATest(self):
         excepted_err = c_uint32(ErrorCode2.SUCCESS.value)
-        cnt_ch = [c_uint32(0)]
-        cnt_ch_1 = [c_uint32(1)]
-        empty_cnt = []
-        empty_arr = (c_uint32 * len(empty_cnt))(*empty_cnt)
-        cnt_ch_arr = (c_uint32 * len(cnt_ch))(*cnt_ch)
-        cnt_ch_arr_1 = (c_uint32 * len(cnt_ch_1))(*cnt_ch_1)
-        # Link 0
-        self.errCde = self.AdvMot.Acm2_ChLinkCmpObject(0, c_uint(ADV_OBJ_TYPE.ADV_COUNTER_CHANNEL.value), cnt_ch_arr, len(cnt_ch))
+        cnt_ch = [c_uint32(0), c_uint32(1)]
+        # Set encoder(0) pulse in mode as CW/CCW.
+        ppt_arr = c_uint32(PropertyID2.CFG_CH_DaqCntPulseInMode.value)
+        val_arr = c_double(PULSE_IN_MODE.I_CW_CCW.value)
+        get_val = c_double(0)
+        for i in range(len(cnt_ch)):
+            self.errCde = self.AdvMot.Acm2_SetProperty(cnt_ch[i], ppt_arr, val_arr)
+            self.assertEqual(excepted_err.value, self.errCde)
+            self.errCde = self.AdvMot.Acm2_GetProperty(cnt_ch[i], ppt_arr, byref(get_val))
+            self.assertEqual(excepted_err.value, self.errCde)
+            self.assertEqual(val_arr.value, get_val.value)
+        # Reset encoder data as 0
+        reset_cnt_data = c_double(0)
+        self.errCde = self.AdvMot.Acm2_ChSetCntData(cnt_ch[0], reset_cnt_data)
         self.assertEqual(excepted_err.value, self.errCde)
-        self.errCde = self.AdvMot.Acm2_ChEnableCmp(0, 0)
+        reset_cnt_data_1 = c_double(10)
+        self.errCde = self.AdvMot.Acm2_ChSetCntData(cnt_ch[1], reset_cnt_data_1)
         self.assertEqual(excepted_err.value, self.errCde)
-        self.errCde = self.AdvMot.Acm2_SetProperty(0, c_uint(PropertyID2.CFG_CH_DaqDoFuncSelect.value), 0)
-        self.assertEqual(excepted_err.value, self.errCde)
-        self.errCde = self.AdvMot.Acm2_SetProperty(0, c_uint(PropertyID2.CFG_CH_DaqDoLinkCmpDo.value), 0)
-        self.assertEqual(excepted_err.value, self.errCde)
-        self.errCde = self.AdvMot.Acm2_SetProperty(0, c_uint(PropertyID2.CFG_CH_DaqDoFuncSelect.value), 2)
-        self.assertEqual(excepted_err.value, self.errCde)
-        # Unlink
-        self.errCde = self.AdvMot.Acm2_ChLinkCmpObject(0, c_uint(ADV_OBJ_TYPE.ADV_COUNTER_CHANNEL.value), empty_arr, len(empty_cnt))
-        self.assertEqual(excepted_err.value, self.errCde)
-        # Link 1
-        self.errCde = self.AdvMot.Acm2_ChLinkCmpObject(1, c_uint(ADV_OBJ_TYPE.ADV_COUNTER_CHANNEL.value), cnt_ch_arr_1, len(cnt_ch_1))
-        self.assertEqual(excepted_err.value, self.errCde)
-        self.errCde = self.AdvMot.Acm2_ChEnableCmp(1, 0)
-        self.assertEqual(excepted_err.value, self.errCde)
-        self.errCde = self.AdvMot.Acm2_SetProperty(1, c_uint(PropertyID2.CFG_CH_DaqDoFuncSelect.value), 0)
-        self.assertEqual(excepted_err.value, self.errCde)
-        self.errCde = self.AdvMot.Acm2_SetProperty(1, c_uint(PropertyID2.CFG_CH_DaqDoLinkCmpDo.value), 0)
-        self.assertEqual(excepted_err.value, self.errCde)
-        self.errCde = self.AdvMot.Acm2_SetProperty(1, c_uint(PropertyID2.CFG_CH_DaqDoFuncSelect.value), 2)
-        self.assertEqual(excepted_err.value, self.errCde)
+        # Get encoder data
+        get_cnt_data = c_double(0)
+        end_pos = c_double(3500)
+        while get_cnt_data.value <= end_pos.value:
+            time.sleep(0.1)
+            for i in range(len(cnt_ch)):
+                tmp_ch = c_uint32(i)
+                self.errCde = self.AdvMot.Acm2_ChGetCntData(tmp_ch, byref(get_cnt_data))
+                print('[{0}]get_cnt_data:{1}'.format(i, get_cnt_data.value))
         
 def DownloadENISuite():
     tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_LoadENI']
@@ -2962,10 +3331,30 @@ def Run2CntLinkedCMP():
     suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
     return suite
 
-def Run2CntLinkedCMPDiff():
-    tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_ResetAll', 'test_Set2CntInCMPDiff', 'test_ResetAll']
+def Run2CntLinkedCMPDifferentTable():
+    tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_ResetAll', 'test_Set2CntInCMPWithDifferentTable', 'test_ResetAll']
     suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
     return suite
+
+def Run2CntLinkedCMPDeviation():
+    tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_ResetAll', 'test_Set2CntInCMPWithDeviation', 'test_ResetAll']
+    suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
+    return suite
+
+def Run2CntLinkedCMPDiff():
+    tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_ResetAll', 'test_2CntInCMPDiffTable', 'test_ResetAll']
+    suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
+    return suite
+
+def Run2CntLinkedCMPDiffWithDifferentTable():
+    tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_ResetAll', 'test_2CntInCMPDiffWithDifferentTable', 'test_ResetAll']
+    suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
+    return suite
+
+def Run2CntLinkedCMPDiffWithDeviation():
+    tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_ResetAll', 'test_2CntInCMPDiffWithDeviation', 'test_ResetAll']
+    suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
+    return suite    
 
 def Run2CntCMPLTCAuto():
     tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_ResetAll', 'test_2CntCMPLTCAuto', 'test_ResetAll']
@@ -3036,10 +3425,14 @@ if __name__ == '__main__':
     # run_cmp_auto_pulse = runner.run(RunCMPAutoPulse())
     # run_cmp_cnt_toggle = runner.run(RunCMPCNTToggle())
     # run_cmp_ltc = runner.run(RunCMPLTC())
-    run_2_cnt_linked_cmp = runner.run(Run2CntLinkedCMP())
+    # run_2_cnt_linked_cmp = runner.run(Run2CntLinkedCMP())
     # run_2_cnt_linked_cmp_diff = runner.run(Run2CntLinkedCMPDiff())
     # run_2_cnt_cmp_ltc_auto = runner.run(Run2CntCMPLTCAuto())
     # run_2_cnt_cmp_diff_atuo = runner.run(Run2CntCMPDiffAuto())
+    # run_2_cnt_cmp_diff_with_deviation = runner.run(Run2CntLinkedCMPDiffWithDeviation())
+    run_2_cnt_cmp_diff_with_different_table = runner.run(Run2CntLinkedCMPDiffWithDifferentTable())
+    # run_2_cnt_cmp_ltc_different_table = runner.run(Run2CntLinkedCMPDifferentTable())
+    # run_2_cnt_cmp_ltc_deviation = runner.run(Run2CntLinkedCMPDeviation())
     # evt_motion_done = runner.run(EventMotionDone())
     # sqa_test = runner.run(SQATest())
     # evt_motion_multi = runner.run(MotionDoneEventMultiThreads())

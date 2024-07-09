@@ -2137,11 +2137,12 @@ class AdvCmnAPI_Test(unittest.TestCase):
             cmp_set_arr = [c_uint32(PropertyID2.CFG_CH_DaqCmpDoEnable.value),
                         c_uint32(PropertyID2.CFG_CH_DaqCmpDoOutputMode.value),
                         c_uint32(PropertyID2.CFG_CH_DaqCmpDoLogic.value),
-                        c_uint32(PropertyID2.CFG_CH_DaqCmpDoPulseWidth.value)]
+                        c_uint32(PropertyID2.CFG_CH_DaqCmpDoPulseWidth.value),
+                        c_uint32(PropertyID2.CFG_CH_DaqCmpDeviation.value)]
             val_arr = [c_double(COMPARE_ENABLE.CMP_DISABLE.value),
                     c_double(COMPARE_OUTPUT_MODE.CMP_PULSE.value),
                     c_double(COMPARE_LOGIC.CP_ACT_LOW.value),
-                    c_double(500000)]
+                    c_double(500000), c_double(0)]
             for i in range(len(cmp_set_arr)):
                 self.errCde = self.AdvMot.Acm2_SetProperty(cmp_ch, cmp_set_arr[i].value, val_arr[i])
                 self.assertEqual(excepted_err.value, self.errCde)
@@ -3424,13 +3425,13 @@ if __name__ == '__main__':
     # run_cmp_diff = runner.run(RunCMPDiff())
     # run_cmp_auto_pulse = runner.run(RunCMPAutoPulse())
     # run_cmp_cnt_toggle = runner.run(RunCMPCNTToggle())
-    # run_cmp_ltc = runner.run(RunCMPLTC())
+    run_cmp_ltc = runner.run(RunCMPLTC())
     # run_2_cnt_linked_cmp = runner.run(Run2CntLinkedCMP())
     # run_2_cnt_linked_cmp_diff = runner.run(Run2CntLinkedCMPDiff())
     # run_2_cnt_cmp_ltc_auto = runner.run(Run2CntCMPLTCAuto())
     # run_2_cnt_cmp_diff_atuo = runner.run(Run2CntCMPDiffAuto())
     # run_2_cnt_cmp_diff_with_deviation = runner.run(Run2CntLinkedCMPDiffWithDeviation())
-    run_2_cnt_cmp_diff_with_different_table = runner.run(Run2CntLinkedCMPDiffWithDifferentTable())
+    # run_2_cnt_cmp_diff_with_different_table = runner.run(Run2CntLinkedCMPDiffWithDifferentTable())
     # run_2_cnt_cmp_ltc_different_table = runner.run(Run2CntLinkedCMPDifferentTable())
     # run_2_cnt_cmp_ltc_deviation = runner.run(Run2CntLinkedCMPDeviation())
     # evt_motion_done = runner.run(EventMotionDone())

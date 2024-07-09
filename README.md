@@ -8,7 +8,7 @@ $ pip install -i pip install -i https://test.pypi.org/simple/ AcmP
 ```
 Before using this package, please ensure the following items are already installed:
 ## Linux
-1. PCIE-1203.ko
+1. PCIE-1203M.ko
 2. libadvmot.so
 3. libpcie1203.so
 
@@ -19,9 +19,9 @@ $ ls /lib | grep adv
 $ ls /lib | grep pci
 ```
 ## Windows
-1. PCIE1203s.sys
+1. PCIE1203Ms.sys
 2. ADVMOT.dll
-3. PCIE1203.dll
+3. PCIE1203M.dll
 
 You can check the installation using the following commands.
 ```shell

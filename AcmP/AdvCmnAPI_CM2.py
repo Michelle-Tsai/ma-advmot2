@@ -1171,20 +1171,20 @@ class AdvCmnAPI_CM2:
         Acm2_DevMDaqGetData.restype = c_uint32
     except:
         pass
-# Donwload DSP FW
-    try:
-        Acm2_GetDSPFrmWareDwnLoadRate = lib.Acm2_GetDSPFrmWareDwnLoadRate
-        Acm2_GetDSPFrmWareDwnLoadRate.argtypes = [c_uint32, POINTER(c_double)]
-        Acm2_GetDSPFrmWareDwnLoadRate.restype = c_uint32
-    except:
-        pass
+# # Donwload DSP FW
+#     try:
+#         Acm2_GetDSPFrmWareDwnLoadRate = lib.Acm2_GetDSPFrmWareDwnLoadRate
+#         Acm2_GetDSPFrmWareDwnLoadRate.argtypes = [c_uint32, POINTER(c_double)]
+#         Acm2_GetDSPFrmWareDwnLoadRate.restype = c_uint32
+#     except:
+#         pass
 
-    try:
-        Acm2_DevDownLoadDSPFrmWare_STP2 = lib.Acm2_DevDownLoadDSPFrmWare_STP2
-        Acm2_DevDownLoadDSPFrmWare_STP2.argtypes = [c_uint32, c_char_p]
-        Acm2_DevDownLoadDSPFrmWare_STP2.restype = c_uint32
-    except:
-        pass
+#     try:
+#         Acm2_DevDownLoadDSPFrmWare_STP2 = lib.Acm2_DevDownLoadDSPFrmWare_STP2
+#         Acm2_DevDownLoadDSPFrmWare_STP2.argtypes = [c_uint32, c_char_p]
+#         Acm2_DevDownLoadDSPFrmWare_STP2.restype = c_uint32
+#     except:
+#         pass
 # EtherCAT
     try:
         Acm2_DevLoadENI = lib.Acm2_DevLoadENI

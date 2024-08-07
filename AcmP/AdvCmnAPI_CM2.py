@@ -10,12 +10,12 @@ else:
 
 class AdvCmnAPI_CM2:
 # Device
-    try:
-        Acm2_DevOpen = lib.Acm2_DevOpen
-        Acm2_DevOpen.argtypes = [c_uint32, POINTER(DEVICEINFO)]
-        Acm2_DevOpen.restype = c_uint32
-    except:
-        pass
+    # try:
+    #     Acm2_DevOpen = lib.Acm2_DevOpen
+    #     Acm2_DevOpen.argtypes = [c_uint32, POINTER(DEVICEINFO)]
+    #     Acm2_DevOpen.restype = c_uint32
+    # except:
+    #     pass
 
     try:
         Acm2_DevInitialize = lib.Acm2_DevInitialize
@@ -30,19 +30,19 @@ class AdvCmnAPI_CM2:
     except:
         pass
 
-    try:
-        Acm2_DevExportMappingTable = lib.Acm2_DevExportMappingTable
-        Acm2_DevExportMappingTable.argtypes = [c_char_p]
-        Acm2_DevExportMappingTable.restype = c_uint32
-    except:
-        pass
+    # try:
+    #     Acm2_DevExportMappingTable = lib.Acm2_DevExportMappingTable
+    #     Acm2_DevExportMappingTable.argtypes = [c_char_p]
+    #     Acm2_DevExportMappingTable.restype = c_uint32
+    # except:
+    #     pass
 
-    try:
-        Acm2_DevImportMappingTable = lib.Acm2_DevImportMappingTable
-        Acm2_DevImportMappingTable.argtypes = [c_char_p]
-        Acm2_DevImportMappingTable.restype = c_uint32
-    except:
-        pass
+    # try:
+    #     Acm2_DevImportMappingTable = lib.Acm2_DevImportMappingTable
+    #     Acm2_DevImportMappingTable.argtypes = [c_char_p]
+    #     Acm2_DevImportMappingTable.restype = c_uint32
+    # except:
+    #     pass
 
     try:
         Acm2_DevSaveAllMapFile = lib.Acm2_DevSaveAllMapFile

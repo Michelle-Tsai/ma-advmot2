@@ -47,11 +47,11 @@ Due to our driver running with admin/root authentication, it's important to exec
 
 ### AdvCmnAPI_CM2
 * Device
-    + <a href="#Acm2_DevOpen"><code>Acm2_DevOpen</code></a>
+    <!-- + <a href="#Acm2_DevOpen"><code>Acm2_DevOpen</code></a> -->
     + <a href="#Acm2_DevInitialize"><code>Acm2_DevInitialize</code></a>
     + <a href="#Acm2_GetAvailableDevs"><code>Acm2_GetAvailableDevs</code></a>
-    + <a href="#Acm2_DevExportMappingTable"><code>Acm2_DevExportMappingTable</code></a>
-    + <a href="#Acm2_DevImportMappingTable"><code>Acm2_DevImportMappingTable</code></a>
+    <!-- + <a href="#Acm2_DevExportMappingTable"><code>Acm2_DevExportMappingTable</code></a> -->
+    <!-- + <a href="#Acm2_DevImportMappingTable"><code>Acm2_DevImportMappingTable</code></a> -->
     + <a href="#Acm2_DevSaveAllMapFile"><code>Acm2_DevSaveAllMapFile</code></a>
     + <a href="#Acm2_DevLoadAllMapFile"><code>Acm2_DevLoadAllMapFile</code></a>
     + <a href="#Acm2_GetMappedLogicalIDList"><code>Acm2_GetMappedLogicalIDList</code></a>
@@ -254,15 +254,15 @@ Get all device list.
 ```cpp
 U32 Acm2_GetAvailableDevs(DEVLIST *DeviceList, U32 MaxEntries, PU32 OutEntries)
 ```
-<a name="Acm2_DevOpen"></a>
+<!-- <a name="Acm2_DevOpen"></a>
 
 #### Acm2_DevOpen
 Open device with device number.
 
 ```cpp
 U32 Acm2_DevOpen(U32 DeviceNumber, DEVICEINFO *DeviceHandle)
-```
-<a name="Acm2_DevExportMappingTable"></a>
+``` -->
+<!-- <a name="Acm2_DevExportMappingTable"></a>
 
 #### Acm2_DevExportMappingTable
 Export mapping table of device.
@@ -277,7 +277,7 @@ Import mapping table of device.
 
 ```cpp
 U32 Acm2_DevImportMappingTable(PI8 FilePath)
-```
+``` -->
 <a name="Acm2_DevSaveAllMapFile"></a>
 
 #### Acm2_DevSaveAllMapFile

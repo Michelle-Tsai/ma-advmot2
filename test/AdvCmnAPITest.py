@@ -85,15 +85,6 @@ class AdvCmnAPI_Test(unittest.TestCase):
             print('Dev number:{0:x}'.format(self.devlist[i].dwDeviceNum))
         # result_dev = self.devlist[0].dwDeviceNum
         # self.assertEqual(excepted_dev, result_dev, '{0} failed.'.format(self._testMethodName))
-    
-    def test_DevOpen(self):
-        excepted_dev_hex = '0x63003000'
-        excepted_dev = int(excepted_dev_hex, 16)
-        device_number = c_uint32(excepted_dev)
-        self.device_info = DEVICEINFO()
-        excepted_err = 0
-        self.errCde = self.AdvMot.Acm2_DevOpen(device_number, byref(self.device_info))
-        self.assertEqual(excepted_err, self.errCde, '{0} failed.'.format(self._testMethodName))
 
     def test_Initialize(self):
         self.errCde = self.AdvMot.Acm2_DevInitialize()
@@ -123,24 +114,24 @@ class AdvCmnAPI_Test(unittest.TestCase):
         excepted_err = 0
         self.assertEqual(excepted_err, self.errCde, '{0} failed.'.format(self._testMethodName))
     
-    def test_DevExportMappingTable(self):
-        # test0.xml will saved under current folder
-        if os.name == 'nt':
-            file_path = b'test\\test0.xml'
-        else:
-            file_path = b'test/test0.xml'
-        self.errCde = self.AdvMot.Acm2_DevExportMappingTable(file_path)
-        excepted_err = 0
-        self.assertEqual(excepted_err, self.errCde, '{0} failed.'.format(self._testMethodName))
+    # def test_DevExportMappingTable(self):
+    #     # test0.xml will saved under current folder
+    #     if os.name == 'nt':
+    #         file_path = b'test\\test0.xml'
+    #     else:
+    #         file_path = b'test/test0.xml'
+    #     self.errCde = self.AdvMot.Acm2_DevExportMappingTable(file_path)
+    #     excepted_err = 0
+    #     self.assertEqual(excepted_err, self.errCde, '{0} failed.'.format(self._testMethodName))
     
-    def test_DevImportMappingTable(self):
-        if os.name == 'nt':
-            file_path = b'test\\test0.xml'
-        else:
-            file_path = b'test/test0.xml'        
-        self.errCde = self.AdvMot.Acm2_DevImportMappingTable(file_path)
-        excepted_err = 0
-        self.assertEqual(excepted_err, self.errCde, '{0} failed.'.format(self._testMethodName))
+    # def test_DevImportMappingTable(self):
+    #     if os.name == 'nt':
+    #         file_path = b'test\\test0.xml'
+    #     else:
+    #         file_path = b'test/test0.xml'        
+    #     self.errCde = self.AdvMot.Acm2_DevImportMappingTable(file_path)
+    #     excepted_err = 0
+    #     self.assertEqual(excepted_err, self.errCde, '{0} failed.'.format(self._testMethodName))
 
     def test_AxPTP(self):
         ax_id = c_uint32(0)
@@ -3087,11 +3078,6 @@ def GetMDevice():
     suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
     return suite
 
-def DeviceOpen():
-    tests = ['test_GetAvailableDevs', 'test_DevOpen']
-    suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
-    return suite
-
 def DeviceClose():
     tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_DevClose']
     suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
@@ -3102,15 +3088,15 @@ def AxMoveContinue():
     suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
     return suite
 
-def ExportMappingTable():
-    tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_DevExportMappingTable']
-    suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
-    return suite
+# def ExportMappingTable():
+#     tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_DevExportMappingTable']
+#     suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
+#     return suite
 
-def ImportMappingTable():
-    tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_DevImportMappingTable']
-    suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
-    return suite
+# def ImportMappingTable():
+#     tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_DevImportMappingTable']
+#     suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
+#     return suite
 
 def AxPTP_Check():
     tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_ResetAll', 'test_AxPTP', 'test_AxGetPosition', 'test_ResetAll']
@@ -3384,8 +3370,6 @@ if __name__ == '__main__':
     runner = unittest.TextTestRunner()
     # get_available_devs = runner.run(JustGetAvailableDevices())
     # get_device = runner.run(GetMDevice())
-    # export_mapping_table = runner.run(ExportMappingTable())
-    # import_mapping_table = runner.run(ImportMappingTable())
     # ax_ptp = runner.run(AxPTP_Check())
     # device_do = runner.run(DeviceDO())
     # gp_create = runner.run(GroupCreateCheck())

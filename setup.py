@@ -17,6 +17,6 @@ setuptools.setup(
     author='Advantech/MA',
     author_email='michelle.tsai@advantech.com.tw',
     license='Apache License 2.0',
-    keywords=['Advantech', 'PCIE-1203', 'PCIE1203'],
+    keywords=['Advantech', 'PCIE-1203M', 'PCIE1203M', 'PCIE-1245', 'PCIE1245'],
     url='https://github.com/Michelle-Tsai/ma-advmot2'
 )

@@ -4,24 +4,34 @@ This SDK package allows developers to esaily use Advantech AdvMot api.
 # Installation
 This SDK supports Python version 3.10 or later
 ```shell
-$ pip install -i pip install -i https://test.pypi.org/simple/ AcmP
+$ pip install AcmP
 ```
 Before using this package, please ensure the following items are already installed:
 ## Linux
-1. PCIE-1203M.ko
-2. libadvmot.so
-3. libpcie1203.so
+### Shared driver:
+* libadvmot.so
+### For PCIE-1203M:
+1. pcie1203m.ko
+2. libpcie1203.so
+### For PCIE-1245
+1. pcie1245.ko
+2. libpcie1245.so
 
 You can check the installation using the following commands.
 ```shell
 $ lsmod | grep PCI
 $ ls /lib | grep adv
-$ ls /lib | grep pci
+$ ls /lib | grep pcie
 ```
 ## Windows
+### Shared driver:
+* ADVMOT.dll
+### For PCIE-1203M:
 1. PCIE1203Ms.sys
-2. ADVMOT.dll
-3. PCIE1203M.dll
+2. PCIE1203M.dll
+### For PCIE-1245:
+1. PCIE1245s.sys
+2. PCIE1245.dll
 
 You can check the installation using the following commands.
 ```shell
@@ -29,7 +39,8 @@ ls C:\Windows\System32\ | findstr ADVMOT
 ls C:\Windows\System32\ | findstr PCIE1203
 ```
 # Available Devices
-* <a href="https://www.advantech.com/en/products/7d3c9775-8c30-4f65-83ec-755bee93b1d4/pcie-1203/mod_bb3ec42a-e9b1-4839-8b26-96551d894bb9">Advantech PCIE-1203</a>
+* <a href="https://www.advantech.com/en/products/7d3c9775-8c30-4f65-83ec-755bee93b1d4/pcie-1203/mod_bb3ec42a-e9b1-4839-8b26-96551d894bb9">Advantech PCIE-1203M</a>
+* <a href="https://www.advantech.com/zh-tw/products/e37baca6-8e5d-40f4-83c6-6bf379307dcf/pcie-1245/mod_212c4df1-455d-4153-8293-e0a216690702">Advantech PCIE-1245</>
 # API
 ## How to use?
 Due to our driver running with admin/root authentication, it's important to execute the project with admin/root privileges.

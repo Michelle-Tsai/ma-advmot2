@@ -4110,6 +4110,7 @@ Get Osc. channel status.
 U32  Acm2_DevGetOscChannelStatus(U32 DevID, PU32 Status)
 ```
 
+---
 ### AdvCmnAPI_CM (Common Motion API 1.0)
 * Device
     + <a href="#Acm_GetAvailableDevs"><code>Acm_GetAvailableDevs</code></a>
@@ -4439,7 +4440,7 @@ U32  Acm2_DevGetOscChannelStatus(U32 DevID, PU32 Status)
     + <a href="#Acm_DaqDoGetBytes"><code>Acm_DaqDoGetBytes</code></a>
     + <a href="#Acm_DaqDiGetByteEx"><code>Acm_DaqDiGetByteEx</code></a>
     + <a href="#Acm_DaqDiGetBitEx"><code>Acm_DaqDiGetBitEx</code></a>
-    + <a href="#Acm_DaqDoSetByteEx"><code></code></a>
+    + <a href="#Acm_DaqDoSetByteEx"><code>Acm_DaqDoSetByteEx</code></a>
     + <a href="#Acm_DaqDoGetByteEx"><code>Acm_DaqDoGetByteEx</code></a>
     + <a href="#Acm_DaqDoGetBitEx"><code>Acm_DaqDoGetBitEx</code></a>
 * AIO

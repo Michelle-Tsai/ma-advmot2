@@ -10,7 +10,7 @@ setuptools.setup(
     # name = 名稱，盡量不要包含"-","_"
     name='AcmP',
     # version 版本只能累加，即使刪除project也無法重設版本
-    version='0.1.2',
+    version='0.1.4',
     description='For developers of Advantech PCIE-12xx series access to the AdvMot API.',
     long_description=long_description,
     long_description_content_type='text/markdown',

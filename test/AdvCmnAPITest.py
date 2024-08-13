@@ -1,3 +1,4 @@
+# This unit test is for common motion 2.0
 import unittest
 import time
 import os

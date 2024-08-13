@@ -103,3 +103,11 @@ class DEVICEINFO(Structure):
         ("GenCounterInfo", POINTER(CntGenInfoMap)),
         ("MPGInfo", POINTER(MPGInfoMap)),
     ]
+
+class DEV_PRE_SCAN_DATA(Structure):
+    # _pack_ = 1
+    _fields_ = [
+        ("XScanData", c_double),
+        ("YScanData", c_double),
+        ("ZScanData", c_double)
+    ]

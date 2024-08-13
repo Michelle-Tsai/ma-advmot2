@@ -40,7 +40,7 @@ ls C:\Windows\System32\ | findstr PCIE1203
 ```
 # Available Devices
 * <a href="https://www.advantech.com/en/products/7d3c9775-8c30-4f65-83ec-755bee93b1d4/pcie-1203/mod_bb3ec42a-e9b1-4839-8b26-96551d894bb9">Advantech PCIE-1203M</a>
-* <a href="https://www.advantech.com/zh-tw/products/e37baca6-8e5d-40f4-83c6-6bf379307dcf/pcie-1245/mod_212c4df1-455d-4153-8293-e0a216690702">Advantech PCIE-1245</>
+* <a href="https://www.advantech.com/zh-tw/products/e37baca6-8e5d-40f4-83c6-6bf379307dcf/pcie-1245/mod_212c4df1-455d-4153-8293-e0a216690702">Advantech PCIE-1245</a>
 # API
 ## How to use?
 Due to our driver running with admin/root authentication, it's important to execute the project with admin/root privileges.
@@ -4143,7 +4143,7 @@ U32  Acm2_DevGetOscChannelStatus(U32 DevID, PU32 Status)
     + <a href="#Acm_CancelCheckEvent"><code>Acm_CancelCheckEvent</code></a>
     + <a href="#Acm_DevEnableEvent_All"><code>Acm_DevEnableEvent_All</code></a>
     + <a href="#Acm_DevCheckEvent_All"><code>Acm_DevCheckEvent_All</code></a>
-    + <a href="#Acm_DevLoadConfig"><code><Acm_DevLoadConfig/code></a>
+    + <a href="#Acm_DevLoadConfig"><code>Acm_DevLoadConfig</code></a>
     + <a href="#Acm_DevSlaveFwDownload"><code>Acm_DevSlaveFwDownload</code></a>
     + <a href="#Acm_DevWriteDPMData"><code>Acm_DevWriteDPMData</code></a>
     + <a href="#Acm_DevWriteMultiMailBox"><code>Acm_DevWriteMultiMailBox</code></a>
@@ -4168,7 +4168,7 @@ U32  Acm2_DevGetOscChannelStatus(U32 DevID, PU32 Status)
     + <a href="#Acm_MasGetSlaveInfo"><code>Acm_MasGetSlaveInfo</code></a>
     + <a href="#Acm_MasLogComStatus"><code>Acm_MasLogComStatus</code></a>
     + <a href="#Acm_DevDownloadScanData"><code>Acm_DevDownloadScanData</code></a>
-        + <a href="#Acm_DevMDaqConfig"><code>Acm_DevMDaqConfig</code></a>
+    + <a href="#Acm_DevMDaqConfig"><code>Acm_DevMDaqConfig</code></a>
     + <a href="#Acm_DevMDaqStart"><code>Acm_DevMDaqStart</code></a>
     + <a href="#Acm_DevMDaqStop"><code>Acm_DevMDaqStop</code></a>
     + <a href="#Acm_DevMDaqReset"><code>Acm_DevMDaqReset</code></a>

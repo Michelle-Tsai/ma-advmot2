@@ -1,6 +1,10 @@
 # Change log
 All notable changes to this project will be documented in this file.
 
+## [0.1.4] - 2024-08-13
+### Added
+- Support Common motion 1.0 APIs
+
 ## [0.1.2] - 2024-04-17
 ### Added
 - CM2.0 input/output mapping table APIs

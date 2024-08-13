@@ -47,280 +47,670 @@ Due to our driver running with admin/root authentication, it's important to exec
 
 ### AdvCmnAPI_CM2 (Common Motion API 2.0)
 * Device
-    <!-- + <a href="#Acm2_DevOpen"><code>Acm2_DevOpen</code></a> -->
-    + <a href="#Acm2_DevInitialize"><code>Acm2_DevInitialize</code></a>
-    + <a href="#Acm2_GetAvailableDevs"><code>Acm2_GetAvailableDevs</code></a>
-    <!-- + <a href="#Acm2_DevExportMappingTable"><code>Acm2_DevExportMappingTable</code></a> -->
-    <!-- + <a href="#Acm2_DevImportMappingTable"><code>Acm2_DevImportMappingTable</code></a> -->
-    + <a href="#Acm2_DevSaveAllMapFile"><code>Acm2_DevSaveAllMapFile</code></a>
-    + <a href="#Acm2_DevLoadAllMapFile"><code>Acm2_DevLoadAllMapFile</code></a>
-    + <a href="#Acm2_GetMappedLogicalIDList"><code>Acm2_GetMappedLogicalIDList</code></a>
-    + <a href="#Acm2_GetMappedObjInfo"><code>Acm2_GetMappedObjInfo</code></a>
-    + <a href="#Acm2_DevAllClose"><code>Acm2_DevAllClose</code></a>
-    + <a href="#Acm2_GetLastError"><code>Acm2_GetLastError</code></a>
-    + <a href="#Acm2_GetMappedPhysicalID"><code>Acm2_GetMappedPhysicalID</code></a>
-    + <a href="#Acm2_SetProperty"><code>Acm2_SetProperty</code></a>
-    + <a href="#Acm2_GetProperty"><code>Acm2_GetProperty</code></a>
-    + <a href="#Acm2_SetMultiProperty"><code>Acm2_SetMultiProperty</code></a>
-    + <a href="#Acm2_GetMultiProperty"><code>Acm2_GetMultiProperty</code></a>
-    + <a href="#Acm2_GetRawProperty"><code>Acm2_GetRawProperty</code></a>
-    + <a href="#Acm2_EnableCallBackFuncForOneEvent"><code>Acm2_EnableCallBackFuncForOneEvent</code></a>
-    + <a href="#Acm2_DevLoadAllConfig"><code>Acm2_DevLoadAllConfig</code></a>
-    + <a href="#Acm2_DevLoadConfig"><code>Acm2_DevLoadConfig</code></a>
-    + <a href="#Acm2_DevReadMailBox"><code>Acm2_DevReadMailBox</code></a>
-    + <a href="#Acm2_DevWriteMailBox"><code>Acm2_DevWriteMailBox</code></a>
-    + <a href="#Acm2_GetErrors"><code>Acm2_GetErrors</code></a>
-    + <a href="#Acm2_ResetErrorRecord"><code>Acm2_ResetErrorRecord</code></a>
-    + <a href="#Acm2_DevPreviewMotion"><code>Acm2_DevPreviewMotion</code></a>
+    + <a href="#Acm2_DevInitialize"><code>Acm2_DevInitialize</code />
+    + <a href="#Acm2_GetAvailableDevs"><code>Acm2_GetAvailableDevs</code />
+    + <a href="#Acm2_DevSaveAllMapFile"><code>Acm2_DevSaveAllMapFile</code />
+    + <a href="#Acm2_DevLoadAllMapFile"><code>Acm2_DevLoadAllMapFile</code />
+    + <a href="#Acm2_GetMappedLogicalIDList"><code>Acm2_GetMappedLogicalIDList</code />
+    + <a href="#Acm2_GetMappedObjInfo"><code>Acm2_GetMappedObjInfo</code />
+    + <a href="#Acm2_DevAllClose"><code>Acm2_DevAllClose</code />
+    + <a href="#Acm2_GetLastError"><code>Acm2_GetLastError</code />
+    + <a href="#Acm2_GetMappedPhysicalID"><code>Acm2_GetMappedPhysicalID</code />
+    + <a href="#Acm2_SetProperty"><code>Acm2_SetProperty</code />
+    + <a href="#Acm2_GetProperty"><code>Acm2_GetProperty</code />
+    + <a href="#Acm2_SetMultiProperty"><code>Acm2_SetMultiProperty</code />
+    + <a href="#Acm2_GetMultiProperty"><code>Acm2_GetMultiProperty</code />
+    + <a href="#Acm2_GetRawProperty"><code>Acm2_GetRawProperty</code />
+    + <a href="#Acm2_EnableCallBackFuncForOneEvent"><code>Acm2_EnableCallBackFuncForOneEvent</code />
+    + <a href="#Acm2_DevLoadAllConfig"><code>Acm2_DevLoadAllConfig</code />
+    + <a href="#Acm2_DevLoadConfig"><code>Acm2_DevLoadConfig</code />
+    + <a href="#Acm2_DevReadMailBox"><code>Acm2_DevReadMailBox</code />
+    + <a href="#Acm2_DevWriteMailBox"><code>Acm2_DevWriteMailBox</code />
+    + <a href="#Acm2_GetErrors"><code>Acm2_GetErrors</code />
+    + <a href="#Acm2_ResetErrorRecord"><code>Acm2_ResetErrorRecord</code />
+    + <a href="#Acm2_DevPreviewMotion"><code>Acm2_DevPreviewMotion</code />
 * Axis
-    + <a href="#Acm2_AxReturnPausePosition"><code>Acm2_AxReturnPausePosition</code></a>
-    + <a href="#Acm2_AxSetSvOn"><code>Acm2_AxSetSvOn</code></a>
-    + <a href="#Acm2_DevSetAllSvOn"><code>Acm2_DevSetAllSvOn</code></a>
-    + <a href="#Acm2_AxSetErcOn"><code>Acm2_AxSetErcOn</code></a>
-    + <a href="#Acm2_AxResetAlm"><code>Acm2_AxResetAlm</code></a>
-    + <a href="#Acm2_AxPTP"><code>Acm2_AxPTP</code></a>
-    + <a href="#Acm2_AxMoveContinue"><code>Acm2_AxMoveContinue</code></a>
-    + <a href="#Acm2_AxMotionStop"><code>Acm2_AxMotionStop</code></a>
-    + <a href="#Acm2_AxHome"><code>Acm2_AxHome</code></a>
-    + <a href="#Acm2_AxMoveGantryHome"><code>Acm2_AxMoveGantryHome</code></a>
-    + <a href="#Acm2_AxSetHomeSpeedProfile"><code>Acm2_AxSetHomeSpeedProfile</code></a>
-    + <a href="#Acm2_AxChangePos"><code>Acm2_AxChangePos</code></a>
-    + <a href="#Acm2_AxChangeVel"><code>Acm2_AxChangeVel</code></a>
-    + <a href="#Acm2_AxChangeVelByRate"><code>Acm2_AxChangeVelByRate</code></a>
-    + <a href="#Acm2_AxMoveImpose"><code>Acm2_AxMoveImpose</code></a>
-    + <a href="#Acm2_AxResetError"><code>Acm2_AxResetError</code></a>
-    + <a href="#Acm2_DevResetAllError"><code>Acm2_DevResetAllError</code></a>
-    + <a href="#Acm2_AxGetState"><code>Acm2_AxGetState</code></a>
-    + <a href="#Acm2_AxGetMotionIO"><code>Acm2_AxGetMotionIO</code></a>
-    + <a href="#Acm2_AxSetPosition"><code>Acm2_AxSetPosition</code></a>
-    + <a href="#Acm2_AxGetPosition"><code>Acm2_AxGetPosition</code></a>
-    + <a href="#Acm2_AxSetSpeedProfile"><code>Acm2_AxSetSpeedProfile</code></a>
-    + <a href="#Acm2_AxGetVel"><code>Acm2_AxGetVel</code></a>
-    + <a href="#Acm2_AxEnableExternalMode"><code>Acm2_AxEnableExternalMode</code></a>
-    + <a href="#Acm2_AxSoftJog"><code>Acm2_AxSoftJog</code></a>
-    + <a href="#Acm2_AxSetJogSpeedProfile"><code>Acm2_AxSetJogSpeedProfile</code></a>
-    + <a href="#Acm2_AxMotionStart"><code>Acm2_AxMotionStart</code></a>
-    + <a href="#Acm2_AxPause"><code>Acm2_AxPause</code></a>
-    + <a href="#Acm2_AxResume"><code>Acm2_AxResume</code></a>
-    + <a href="#Acm2_AxResetPVTTable"><code>Acm2_AxResetPVTTable</code></a>
-    + <a href="#Acm2_AxLoadPVTTable"><code>Acm2_AxLoadPVTTable</code></a>
-    + <a href="#Acm2_AxLoadPVTTableContinuous"><code>Acm2_AxLoadPVTTableContinuous</code></a>
-    + <a href="#Acm2_AxMovePVT"><code>Acm2_AxMovePVT</code></a>
-    + <a href="#Acm2_AxCheckPTBuffer"><code>Acm2_AxCheckPTBuffer</code></a>
-    + <a href="#Acm2_AxAddPTData"><code>Acm2_AxAddPTData</code></a>
-    + <a href="#Acm2_AxMovePT"><code>Acm2_AxMovePT</code></a>
-    + <a href="#Acm2_AxResetPTData"><code>Acm2_AxResetPTData</code></a>
-    + <a href="#Acm2_AxGearIn"><code>Acm2_AxGearIn</code></a>
-    + <a href="#Acm2_AxGantryIn"><code>Acm2_AxGantryIn</code></a>
-    + <a href="#Acm2_AxPhaseAx"><code>Acm2_AxPhaseAx</code></a>
-    + <a href="#Acm2_AxSyncOut"><code>Acm2_AxSyncOut</code></a>
+    + <a href="#Acm2_AxReturnPausePosition"><code>Acm2_AxReturnPausePosition</code />
+    + <a href="#Acm2_AxSetSvOn"><code>Acm2_AxSetSvOn</code />
+    + <a href="#Acm2_DevSetAllSvOn"><code>Acm2_DevSetAllSvOn</code />
+    + <a href="#Acm2_AxSetErcOn"><code>Acm2_AxSetErcOn</code />
+    + <a href="#Acm2_AxResetAlm"><code>Acm2_AxResetAlm</code />
+    + <a href="#Acm2_AxPTP"><code>Acm2_AxPTP</code />
+    + <a href="#Acm2_AxMoveContinue"><code>Acm2_AxMoveContinue</code />
+    + <a href="#Acm2_AxMotionStop"><code>Acm2_AxMotionStop</code />
+    + <a href="#Acm2_AxHome"><code>Acm2_AxHome</code />
+    + <a href="#Acm2_AxMoveGantryHome"><code>Acm2_AxMoveGantryHome</code />
+    + <a href="#Acm2_AxSetHomeSpeedProfile"><code>Acm2_AxSetHomeSpeedProfile</code />
+    + <a href="#Acm2_AxChangePos"><code>Acm2_AxChangePos</code />
+    + <a href="#Acm2_AxChangeVel"><code>Acm2_AxChangeVel</code />
+    + <a href="#Acm2_AxChangeVelByRate"><code>Acm2_AxChangeVelByRate</code />
+    + <a href="#Acm2_AxMoveImpose"><code>Acm2_AxMoveImpose</code />
+    + <a href="#Acm2_AxResetError"><code>Acm2_AxResetError</code />
+    + <a href="#Acm2_DevResetAllError"><code>Acm2_DevResetAllError</code />
+    + <a href="#Acm2_AxGetState"><code>Acm2_AxGetState</code />
+    + <a href="#Acm2_AxGetMotionIO"><code>Acm2_AxGetMotionIO</code />
+    + <a href="#Acm2_AxSetPosition"><code>Acm2_AxSetPosition</code />
+    + <a href="#Acm2_AxGetPosition"><code>Acm2_AxGetPosition</code />
+    + <a href="#Acm2_AxSetSpeedProfile"><code>Acm2_AxSetSpeedProfile</code />
+    + <a href="#Acm2_AxGetVel"><code>Acm2_AxGetVel</code />
+    + <a href="#Acm2_AxEnableExternalMode"><code>Acm2_AxEnableExternalMode</code />
+    + <a href="#Acm2_AxSoftJog"><code>Acm2_AxSoftJog</code />
+    + <a href="#Acm2_AxSetJogSpeedProfile"><code>Acm2_AxSetJogSpeedProfile</code />
+    + <a href="#Acm2_AxMotionStart"><code>Acm2_AxMotionStart</code />
+    + <a href="#Acm2_AxPause"><code>Acm2_AxPause</code />
+    + <a href="#Acm2_AxResume"><code>Acm2_AxResume</code />
+    + <a href="#Acm2_AxResetPVTTable"><code>Acm2_AxResetPVTTable</code />
+    + <a href="#Acm2_AxLoadPVTTable"><code>Acm2_AxLoadPVTTable</code />
+    + <a href="#Acm2_AxLoadPVTTableContinuous"><code>Acm2_AxLoadPVTTableContinuous</code />
+    + <a href="#Acm2_AxMovePVT"><code>Acm2_AxMovePVT</code />
+    + <a href="#Acm2_AxCheckPTBuffer"><code>Acm2_AxCheckPTBuffer</code />
+    + <a href="#Acm2_AxAddPTData"><code>Acm2_AxAddPTData</code />
+    + <a href="#Acm2_AxMovePT"><code>Acm2_AxMovePT</code />
+    + <a href="#Acm2_AxResetPTData"><code>Acm2_AxResetPTData</code />
+    + <a href="#Acm2_AxGearIn"><code>Acm2_AxGearIn</code />
+    + <a href="#Acm2_AxGantryIn"><code>Acm2_AxGantryIn</code />
+    + <a href="#Acm2_AxPhaseAx"><code>Acm2_AxPhaseAx</code />
+    + <a href="#Acm2_AxSyncOut"><code>Acm2_AxSyncOut</code />
 * Group
-    + <a href="#Acm2_GpGetPausePosition"><code>Acm2_GpGetPausePosition</code></a>
-    + <a href="#Acm2_GpCreate"><code>Acm2_GpCreate</code></a>
-    + <a href="#Acm2_GpGetAxesInGroup"><code>Acm2_GpGetAxesInGroup</code></a>
-    + <a href="#Acm2_GpResetError"><code>Acm2_GpResetError</code></a>
-    + <a href="#Acm2_GpLine"><code>Acm2_GpLine</code></a>
-    + <a href="#Acm2_GpArc_Center"><code>Acm2_GpArc_Center</code></a>
-    + <a href="#Acm2_GpArc_3P"><code>Acm2_GpArc_3P</code></a>
-    + <a href="#Acm2_GpArc_Angle"><code>Acm2_GpArc_Angle</code></a>
-    + <a href="#Acm2_Gp3DArc_Center"><code>Acm2_Gp3DArc_Center</code></a>
-    + <a href="#Acm2_Gp3DArc_NormVec"><code>Acm2_Gp3DArc_NormVec</code></a>
-    + <a href="#Acm2_Gp3DArc_3P"><code>Acm2_Gp3DArc_3P</code></a>
-    + <a href="#Acm2_Gp3DArc_3PAngle"><code>Acm2_Gp3DArc_3PAngle</code></a>
-    + <a href="#Acm2_GpHelix_Center"><code>Acm2_GpHelix_Center</code></a>
-    + <a href="#Acm2_GpHelix_3P"><code>Acm2_GpHelix_3P</code></a>
-    + <a href="#Acm2_GpHelix_Angle"><code>Acm2_GpHelix_Angle</code></a>
-    + <a href="#Acm2_GpResume"><code>Acm2_GpResume</code></a>
-    + <a href="#Acm2_GpPause"><code>Acm2_GpPause</code></a>
-    + <a href="#Acm2_GpMotionStop"><code>Acm2_GpMotionStop</code></a>
-    + <a href="#Acm2_GpChangeVel"><code>Acm2_GpChangeVel</code></a>
-    + <a href="Acm2_GpChangeVelByRate"><code>Acm2_GpChangeVelByRate</code></a>
-    + <a href="#Acm2_GpGetVel"><code>Acm2_GpGetVel</code></a>
-    + <a href="#Acm2_GpSetSpeedProfile"><code>Acm2_GpSetSpeedProfile</code></a>
-    + <a href="#Acm2_GpGetState"><code>Acm2_GpGetState</code></a>
-    + <a href="#Acm2_GpLoadPath"><code>Acm2_GpLoadPath</code></a>
-    + <a href="#Acm2_GpAddPath"><code>Acm2_GpAddPath</code></a>
-    + <a href="#Acm2_GpMovePath"><code>Acm2_GpMovePath</code></a>
-    + <a href="#Acm2_GpResetPath"><code>Acm2_GpResetPath</code></a>
-    + <a href="#Acm2_GpGetPathStatus"><code>Acm2_GpGetPathStatus</code></a>
-    + <a href="#Acm2_GpMoveSelPath"><code>Acm2_GpMoveSelPath</code></a>
-    + <a href="#Acm2_GpGetPathIndexStatus"><code>Acm2_GpGetPathIndexStatus</code></a>
-    + <a href="#Acm2_GpDelay"><code>Acm2_GpDelay</code></a>
-    + <a href="#Acm2_GpPathDO"><code>Acm2_GpPathDO</code></a>
-    + <a href="#Acm2_GpPathWaitDI"><code>Acm2_GpPathWaitDI</code></a>
-    + <a href="#Acm2_GpPathWaitForAxis"><code>Acm2_GpPathWaitForAxis</code></a>
-    + <a href="#Acm2_GpLookAheadPath"><code>Acm2_GpLookAheadPath</code></a>
-    + <a href="#Acm2_GpLookAheadPathFile"><code>Acm2_GpLookAheadPathFile</code></a>
-    <!-- + <a href="#Acm2_GpLoadAndMovePath"><code>Acm2_GpLoadAndMovePath</code></a> -->
+    + <a href="#Acm2_GpGetPausePosition"><code>Acm2_GpGetPausePosition</code />
+    + <a href="#Acm2_GpCreate"><code>Acm2_GpCreate</code />
+    + <a href="#Acm2_GpGetAxesInGroup"><code>Acm2_GpGetAxesInGroup</code />
+    + <a href="#Acm2_GpResetError"><code>Acm2_GpResetError</code />
+    + <a href="#Acm2_GpLine"><code>Acm2_GpLine</code />
+    + <a href="#Acm2_GpArc_Center"><code>Acm2_GpArc_Center</code />
+    + <a href="#Acm2_GpArc_3P"><code>Acm2_GpArc_3P</code />
+    + <a href="#Acm2_GpArc_Angle"><code>Acm2_GpArc_Angle</code />
+    + <a href="#Acm2_Gp3DArc_Center"><code>Acm2_Gp3DArc_Center</code />
+    + <a href="#Acm2_Gp3DArc_NormVec"><code>Acm2_Gp3DArc_NormVec</code />
+    + <a href="#Acm2_Gp3DArc_3P"><code>Acm2_Gp3DArc_3P</code />
+    + <a href="#Acm2_Gp3DArc_3PAngle"><code>Acm2_Gp3DArc_3PAngle</code />
+    + <a href="#Acm2_GpHelix_Center"><code>Acm2_GpHelix_Center</code />
+    + <a href="#Acm2_GpHelix_3P"><code>Acm2_GpHelix_3P</code />
+    + <a href="#Acm2_GpHelix_Angle"><code>Acm2_GpHelix_Angle</code />
+    + <a href="#Acm2_GpResume"><code>Acm2_GpResume</code />
+    + <a href="#Acm2_GpPause"><code>Acm2_GpPause</code />
+    + <a href="#Acm2_GpMotionStop"><code>Acm2_GpMotionStop</code />
+    + <a href="#Acm2_GpChangeVel"><code>Acm2_GpChangeVel</code />
+    + <a href="Acm2_GpChangeVelByRate"><code>Acm2_GpChangeVelByRate</code />
+    + <a href="#Acm2_GpGetVel"><code>Acm2_GpGetVel</code />
+    + <a href="#Acm2_GpSetSpeedProfile"><code>Acm2_GpSetSpeedProfile</code />
+    + <a href="#Acm2_GpGetState"><code>Acm2_GpGetState</code />
+    + <a href="#Acm2_GpLoadPath"><code>Acm2_GpLoadPath</code />
+    + <a href="#Acm2_GpAddPath"><code>Acm2_GpAddPath</code />
+    + <a href="#Acm2_GpMovePath"><code>Acm2_GpMovePath</code />
+    + <a href="#Acm2_GpResetPath"><code>Acm2_GpResetPath</code />
+    + <a href="#Acm2_GpGetPathStatus"><code>Acm2_GpGetPathStatus</code />
+    + <a href="#Acm2_GpMoveSelPath"><code>Acm2_GpMoveSelPath</code />
+    + <a href="#Acm2_GpGetPathIndexStatus"><code>Acm2_GpGetPathIndexStatus</code />
+    + <a href="#Acm2_GpDelay"><code>Acm2_GpDelay</code />
+    + <a href="#Acm2_GpPathDO"><code>Acm2_GpPathDO</code />
+    + <a href="#Acm2_GpPathWaitDI"><code>Acm2_GpPathWaitDI</code />
+    + <a href="#Acm2_GpPathWaitForAxis"><code>Acm2_GpPathWaitForAxis</code />
+    + <a href="#Acm2_GpLookAheadPath"><code>Acm2_GpLookAheadPath</code />
+    + <a href="#Acm2_GpLookAheadPathFile"><code>Acm2_GpLookAheadPathFile</code />
+    <!-- + <a href="#Acm2_GpLoadAndMovePath"><code>Acm2_GpLoadAndMovePath</code /> -->
 * DIO
-    + <a href="#Acm2_ChSetDOBit"><code>Acm2_ChSetDOBit</code></a>
-    + <a href="#Acm2_ChGetDOBit"><code>Acm2_ChGetDOBit</code></a>
-    + <a href="#Acm2_ChGetDIBit"><code>Acm2_ChGetDIBit</code></a>
-    + <a href="#Acm2_ChSetDOBitByRingNo"><code>Acm2_ChSetDOBitByRingNo</code></a>
-    + <a href="#Acm2_ChGetDOBitByRingNo"><code>Acm2_ChGetDOBitByRingNo</code></a>
-    + <a href="#Acm2_ChGetDIBitByRingNo"><code>Acm2_ChGetDIBitByRingNo</code></a>
-    + <a href="#Acm2_ChSetDOByte"><code>Acm2_ChSetDOByte</code></a>
-    + <a href="#Acm2_ChGetDOByte"><code>Acm2_ChGetDOByte</code></a>
-    + <a href="#Acm2_ChGetDIByte"><code>Acm2_ChGetDIByte</code></a>
-    + <a href="#Acm2_ChSetDOByteByRingNo"><code>Acm2_ChSetDOByteByRingNo</code></a>
-    + <a href="#Acm2_ChGetDOByteByRingNo"><code>Acm2_ChGetDOByteByRingNo</code></a>
-    + <a href="#Acm2_ChGetDIByteByRingNo"><code>Acm2_ChGetDIByteByRingNo</code></a>
+    + <a href="#Acm2_ChSetDOBit"><code>Acm2_ChSetDOBit</code />
+    + <a href="#Acm2_ChGetDOBit"><code>Acm2_ChGetDOBit</code />
+    + <a href="#Acm2_ChGetDIBit"><code>Acm2_ChGetDIBit</code />
+    + <a href="#Acm2_ChSetDOBitByRingNo"><code>Acm2_ChSetDOBitByRingNo</code />
+    + <a href="#Acm2_ChGetDOBitByRingNo"><code>Acm2_ChGetDOBitByRingNo</code />
+    + <a href="#Acm2_ChGetDIBitByRingNo"><code>Acm2_ChGetDIBitByRingNo</code />
+    + <a href="#Acm2_ChSetDOByte"><code>Acm2_ChSetDOByte</code />
+    + <a href="#Acm2_ChGetDOByte"><code>Acm2_ChGetDOByte</code />
+    + <a href="#Acm2_ChGetDIByte"><code>Acm2_ChGetDIByte</code />
+    + <a href="#Acm2_ChSetDOByteByRingNo"><code>Acm2_ChSetDOByteByRingNo</code />
+    + <a href="#Acm2_ChGetDOByteByRingNo"><code>Acm2_ChGetDOByteByRingNo</code />
+    + <a href="#Acm2_ChGetDIByteByRingNo"><code>Acm2_ChGetDIByteByRingNo</code />
 * AIO
-    + <a href="#Acm2_ChSetAOData"><code>Acm2_ChSetAOData</code></a>
-    + <a href="#Acm2_ChGetAOData"><code>Acm2_ChGetAOData</code></a>
-    + <a href="#Acm2_ChSetAODataByRingNo"><code>Acm2_ChSetAODataByRingNo</code></a>
-    + <a href="#Acm2_ChGetAODataByRingNo"><code>Acm2_ChGetAODataByRingNo</code></a>
-    + <a href="#Acm2_ChGetAIData"><code>Acm2_ChGetAIData</code></a>
-    + <a href="#Acm2_ChGetAIDataByRingNo"><code>Acm2_ChGetAIDataByRingNo</code></a>
-    + <a href="#Acm2_ChGetCntData"><code>Acm2_ChGetCntData</code></a>
-    + <a href="#Acm2_ChSetCntData"><code>Acm2_ChSetCntData</code></a>
-    + <a href="#Acm2_ChLinkCmpFIFO"><code>Acm2_ChLinkCmpFIFO</code></a>
-    + <a href="#Acm2_ChLinkCmpObject"><code>Acm2_ChLinkCmpObject</code></a>
-    + <a href="#Acm2_ChGetLinkedCmpObject"><code>Acm2_ChGetLinkedCmpObject</code></a>
-    + <a href="#Acm2_ChEnableCmp"><code>Acm2_ChEnableCmp</code></a>
-    + <a href="#Acm2_ChSetCmpOut"><code>Acm2_ChSetCmpOut</code></a>
-    + <a href="#Acm2_ChSetCmpDoOut"><code>Acm2_ChSetCmpDoOut</code></a>
-    + <a href="#Acm2_AxGetCmpData"><code>Acm2_AxGetCmpData</code></a>
-    + <a href="#Acm2_ChGetCmpData"><code>Acm2_ChGetCmpData</code></a>
-    + <a href="#Acm2_AxSetCmpTable"><code>Acm2_AxSetCmpTable</code></a>
-    + <a href="#Acm2_AxSetCmpAuto"><code>Acm2_AxSetCmpAuto</code></a>
-    + <a href="#Acm2_ChSetCmpAuto"><code>Acm2_ChSetCmpAuto</code></a>
-    + <a href="#Acm2_ChSetCmpBufferData"><code>Acm2_ChSetCmpBufferData</code></a>
-    + <a href="#Acm2_ChSetMultiCmpTable"><code>Acm2_ChSetMultiCmpTable</code></a>
-    + <a href="#Acm2_ChSetMultiCmpBufferData"><code>Acm2_ChSetMultiCmpBufferData</code></a>
-    + <a href="#Acm2_ChResetCmpData"><code>Acm2_ChResetCmpData</code></a>
-    + <a href="#Acm2_ChGetCmpBufferStatus"><code>Acm2_ChGetCmpBufferStatus</code></a>
-    + <a href="#Acm2_ChLinkLatchAxis"><code>Acm2_ChLinkLatchAxis</code></a>
-    + <a href="#Acm2_ChLinkLatchObject"><code>Acm2_ChLinkLatchObject</code></a>
-    + <a href="#Acm2_ChGetLinkedLatchObject"><code>Acm2_ChGetLinkedLatchObject</code></a>
-    + <a href="#Acm2_ChTriggerLatch"><code>Acm2_ChTriggerLatch</code></a>
-    + <a href="#Acm2_AxReadLatchBuffer"><code>Acm2_AxReadLatchBuffer</code></a>
-    + <a href="#Acm2_ChReadLatchBuffer"><code>Acm2_ChReadLatchBuffer</code></a>
-    + <a href="#Acm2_AxGetLatchBufferStatus"><code>Acm2_AxGetLatchBufferStatus</code></a>
-    + <a href="#Acm2_ChGetLatchBufferStatus"><code>Acm2_ChGetLatchBufferStatus</code></a>
-    + <a href="#Acm2_AxResetLatchBuffer"><code>Acm2_AxResetLatchBuffer</code></a>
-    + <a href="#Acm2_ChResetLatchBuffer"><code>Acm2_ChResetLatchBuffer</code></a>
-    + <a href="#Acm2_ChLinkPWMTable"><code>Acm2_ChLinkPWMTable</code></a>
-    + <a href="#Acm2_ChGetLinkedPWMTable"><code>Acm2_ChGetLinkedPWMTable</code></a>
-    + <a href="#Acm2_ChSetPWMTable"><code>Acm2_ChSetPWMTable</code></a>
-    + <a href="#Acm2_ChLoadPWMTableFile"><code>Acm2_ChLoadPWMTableFile</code></a>
-    + <a href="#Acm2_ChGetPWMTableStatus"><code>Acm2_ChGetPWMTableStatus</code></a>
-    + <a href="#Acm2_ChGetExtDriveData"><code>Acm2_ChGetExtDriveData</code></a>
-    + <a href="#Acm2_ChSetExtDriveData"><code>Acm2_ChSetExtDriveData</code></a>
-    + <a href="#Acm2_ChLinkExtDriveObject"><code>Acm2_ChLinkExtDriveObject</code></a>
-    + <a href="#Acm2_ChGetLinkedExtDriveObject"><code>Acm2_ChGetLinkedExtDriveObject</code></a>
-    + <a href="#Acm2_DevMDaqConfig"><code>Acm2_DevMDaqConfig</code></a>
-    + <a href="#Acm2_DevMDaqGetConfig"><code>Acm2_DevMDaqGetConfig</code></a>
-    + <a href="#Acm2_DevMDaqStart"><code>Acm2_DevMDaqStart</code></a>
-    + <a href="#Acm2_DevMDaqStop"><code>Acm2_DevMDaqStop</code></a>
-    + <a href="#Acm2_DevMDaqReset"><code>Acm2_DevMDaqReset</code></a>
-    + <a href="#Acm2_DevMDaqGetStatus"><code>Acm2_DevMDaqGetStatus</code></a>
-    + <a href="#Acm2_DevMDaqGetData"><code>Acm2_DevMDaqGetData</code></a>
-    + <a href="#Acm2_GetDSPFrmWareDwnLoadRate"><code>Acm2_GetDSPFrmWareDwnLoadRate</code></a>
+    + <a href="#Acm2_ChSetAOData"><code>Acm2_ChSetAOData</code />
+    + <a href="#Acm2_ChGetAOData"><code>Acm2_ChGetAOData</code />
+    + <a href="#Acm2_ChSetAODataByRingNo"><code>Acm2_ChSetAODataByRingNo</code />
+    + <a href="#Acm2_ChGetAODataByRingNo"><code>Acm2_ChGetAODataByRingNo</code />
+    + <a href="#Acm2_ChGetAIData"><code>Acm2_ChGetAIData</code />
+    + <a href="#Acm2_ChGetAIDataByRingNo"><code>Acm2_ChGetAIDataByRingNo</code />
+    + <a href="#Acm2_ChGetCntData"><code>Acm2_ChGetCntData</code />
+    + <a href="#Acm2_ChSetCntData"><code>Acm2_ChSetCntData</code />
+    + <a href="#Acm2_ChLinkCmpFIFO"><code>Acm2_ChLinkCmpFIFO</code />
+    + <a href="#Acm2_ChLinkCmpObject"><code>Acm2_ChLinkCmpObject</code />
+    + <a href="#Acm2_ChGetLinkedCmpObject"><code>Acm2_ChGetLinkedCmpObject</code />
+    + <a href="#Acm2_ChEnableCmp"><code>Acm2_ChEnableCmp</code />
+    + <a href="#Acm2_ChSetCmpOut"><code>Acm2_ChSetCmpOut</code />
+    + <a href="#Acm2_ChSetCmpDoOut"><code>Acm2_ChSetCmpDoOut</code />
+    + <a href="#Acm2_AxGetCmpData"><code>Acm2_AxGetCmpData</code />
+    + <a href="#Acm2_ChGetCmpData"><code>Acm2_ChGetCmpData</code />
+    + <a href="#Acm2_AxSetCmpTable"><code>Acm2_AxSetCmpTable</code />
+    + <a href="#Acm2_AxSetCmpAuto"><code>Acm2_AxSetCmpAuto</code />
+    + <a href="#Acm2_ChSetCmpAuto"><code>Acm2_ChSetCmpAuto</code />
+    + <a href="#Acm2_ChSetCmpBufferData"><code>Acm2_ChSetCmpBufferData</code />
+    + <a href="#Acm2_ChSetMultiCmpTable"><code>Acm2_ChSetMultiCmpTable</code />
+    + <a href="#Acm2_ChSetMultiCmpBufferData"><code>Acm2_ChSetMultiCmpBufferData</code />
+    + <a href="#Acm2_ChResetCmpData"><code>Acm2_ChResetCmpData</code />
+    + <a href="#Acm2_ChGetCmpBufferStatus"><code>Acm2_ChGetCmpBufferStatus</code />
+    + <a href="#Acm2_ChLinkLatchAxis"><code>Acm2_ChLinkLatchAxis</code />
+    + <a href="#Acm2_ChLinkLatchObject"><code>Acm2_ChLinkLatchObject</code />
+    + <a href="#Acm2_ChGetLinkedLatchObject"><code>Acm2_ChGetLinkedLatchObject</code />
+    + <a href="#Acm2_ChTriggerLatch"><code>Acm2_ChTriggerLatch</code />
+    + <a href="#Acm2_AxReadLatchBuffer"><code>Acm2_AxReadLatchBuffer</code />
+    + <a href="#Acm2_ChReadLatchBuffer"><code>Acm2_ChReadLatchBuffer</code />
+    + <a href="#Acm2_AxGetLatchBufferStatus"><code>Acm2_AxGetLatchBufferStatus</code />
+    + <a href="#Acm2_ChGetLatchBufferStatus"><code>Acm2_ChGetLatchBufferStatus</code />
+    + <a href="#Acm2_AxResetLatchBuffer"><code>Acm2_AxResetLatchBuffer</code />
+    + <a href="#Acm2_ChResetLatchBuffer"><code>Acm2_ChResetLatchBuffer</code />
+    + <a href="#Acm2_ChLinkPWMTable"><code>Acm2_ChLinkPWMTable</code />
+    + <a href="#Acm2_ChGetLinkedPWMTable"><code>Acm2_ChGetLinkedPWMTable</code />
+    + <a href="#Acm2_ChSetPWMTable"><code>Acm2_ChSetPWMTable</code />
+    + <a href="#Acm2_ChLoadPWMTableFile"><code>Acm2_ChLoadPWMTableFile</code />
+    + <a href="#Acm2_ChGetPWMTableStatus"><code>Acm2_ChGetPWMTableStatus</code />
+    + <a href="#Acm2_ChGetExtDriveData"><code>Acm2_ChGetExtDriveData</code />
+    + <a href="#Acm2_ChSetExtDriveData"><code>Acm2_ChSetExtDriveData</code />
+    + <a href="#Acm2_ChLinkExtDriveObject"><code>Acm2_ChLinkExtDriveObject</code />
+    + <a href="#Acm2_ChGetLinkedExtDriveObject"><code>Acm2_ChGetLinkedExtDriveObject</code />
+    + <a href="#Acm2_DevMDaqConfig"><code>Acm2_DevMDaqConfig</code />
+    + <a href="#Acm2_DevMDaqGetConfig"><code>Acm2_DevMDaqGetConfig</code />
+    + <a href="#Acm2_DevMDaqStart"><code>Acm2_DevMDaqStart</code />
+    + <a href="#Acm2_DevMDaqStop"><code>Acm2_DevMDaqStop</code />
+    + <a href="#Acm2_DevMDaqReset"><code>Acm2_DevMDaqReset</code />
+    + <a href="#Acm2_DevMDaqGetStatus"><code>Acm2_DevMDaqGetStatus</code />
+    + <a href="#Acm2_DevMDaqGetData"><code>Acm2_DevMDaqGetData</code />
+    + <a href="#Acm2_GetDSPFrmWareDwnLoadRate"><code>Acm2_GetDSPFrmWareDwnLoadRate</code />
 * EtherCAT
-    + <a href="#Acm2_DevLoadENI"><code>Acm2_DevLoadENI</code></a>
-    + <a href="#Acm2_DevConnect"><code>Acm2_DevConnect</code></a>
-    + <a href="#Acm2_DevDisConnect"><code>Acm2_DevDisConnect</code></a>
-    + <a href="#Acm2_DevGetSubDevicesID"><code>Acm2_DevGetSubDevicesID</code></a>
-    + <a href="#Acm2_DevGetMDeviceInfo"><code>Acm2_DevGetMDeviceInfo</code></a>
-    + <a href="#Acm2_DevGetSubDeviceInfo"><code>Acm2_DevGetSubDeviceInfo</code></a>
-    + <a href="#Acm2_DevGetSubDeviceFwVersion"><code>Acm2_DevGetSubDeviceFwVersion</code></a>
-    + <a href="#Acm2_DevSetSubDeviceID"><code>Acm2_DevSetSubDeviceID</code></a>
-    + <a href="#Acm2_DevSetSubDeviceStates"><code>Acm2_DevSetSubDeviceStates</code></a>
-    + <a href="#Acm2_DevGetSubDeviceStates"><code>Acm2_DevGetSubDeviceStates</code></a>
-    + <a href="#Acm2_DevWriteSDO"><code>Acm2_DevWriteSDO</code></a>
-    + <a href="#Acm2_DevReadSDO"><code>Acm2_DevReadSDO</code></a>
-    + <a href="#Acm2_DevWritePDO"><code>Acm2_DevWritePDO</code></a>
-    + <a href="#Acm2_DevReadPDO"><code>Acm2_DevReadPDO</code></a>
-    + <a href="#Acm2_DevWriteReg"><code>Acm2_DevWriteReg</code></a>
-    + <a href="#Acm2_DevReadReg"><code>Acm2_DevReadReg</code></a>
-    + <a href="#Acm2_DevReadSubDeviceCommErrCnt"><code>Acm2_DevReadSubDeviceCommErrCnt</code></a>
-    + <a href="#Acm2_Ax1DCompensateTable"><code>Acm2_Ax1DCompensateTable</code></a>
-    + <a href="#Acm2_Ax2DCompensateTable"><code>Acm2_Ax2DCompensateTable</code></a>
-    + <a href="#Acm2_AxZAxisCompensateTable"><code>Acm2_AxZAxisCompensateTable</code></a>
-    + <a href="#Acm2_AxGetCompensatePosition"><code>Acm2_AxGetCompensatePosition</code></a>
-    + <a href="#Acm2_DevOscChannelDataStart"><code>Acm2_DevOscChannelDataStart</code></a>
-    + <a href="#Acm2_DevOscChannelDataStop"><code>Acm2_DevOscChannelDataStop</code></a>
-    + <a href="#Acm2_DevGetOscChannelDataConfig"><code>Acm2_DevGetOscChannelDataConfig</code></a>
-    + <a href="#Acm2_DevSetOscChannelDataConfig"><code>Acm2_DevSetOscChannelDataConfig</code></a>
-    + <a href="#Acm2_DevGetOscChannelData"><code>Acm2_DevGetOscChannelData</code></a>
-    + <a href="#Acm2_DevGetOscChannelStatus"><code>Acm2_DevGetOscChannelStatus</code></a>
+    + <a href="#Acm2_DevLoadENI"><code>Acm2_DevLoadENI</code />
+    + <a href="#Acm2_DevConnect"><code>Acm2_DevConnect</code />
+    + <a href="#Acm2_DevDisConnect"><code>Acm2_DevDisConnect</code />
+    + <a href="#Acm2_DevGetSubDevicesID"><code>Acm2_DevGetSubDevicesID</code />
+    + <a href="#Acm2_DevGetMDeviceInfo"><code>Acm2_DevGetMDeviceInfo</code />
+    + <a href="#Acm2_DevGetSubDeviceInfo"><code>Acm2_DevGetSubDeviceInfo</code />
+    + <a href="#Acm2_DevGetSubDeviceFwVersion"><code>Acm2_DevGetSubDeviceFwVersion</code />
+    + <a href="#Acm2_DevSetSubDeviceID"><code>Acm2_DevSetSubDeviceID</code />
+    + <a href="#Acm2_DevSetSubDeviceStates"><code>Acm2_DevSetSubDeviceStates</code />
+    + <a href="#Acm2_DevGetSubDeviceStates"><code>Acm2_DevGetSubDeviceStates</code />
+    + <a href="#Acm2_DevWriteSDO"><code>Acm2_DevWriteSDO</code />
+    + <a href="#Acm2_DevReadSDO"><code>Acm2_DevReadSDO</code />
+    + <a href="#Acm2_DevWritePDO"><code>Acm2_DevWritePDO</code />
+    + <a href="#Acm2_DevReadPDO"><code>Acm2_DevReadPDO</code />
+    + <a href="#Acm2_DevWriteReg"><code>Acm2_DevWriteReg</code />
+    + <a href="#Acm2_DevReadReg"><code>Acm2_DevReadReg</code />
+    + <a href="#Acm2_DevReadSubDeviceCommErrCnt"><code>Acm2_DevReadSubDeviceCommErrCnt</code />
+    + <a href="#Acm2_Ax1DCompensateTable"><code>Acm2_Ax1DCompensateTable</code />
+    + <a href="#Acm2_Ax2DCompensateTable"><code>Acm2_Ax2DCompensateTable</code />
+    + <a href="#Acm2_AxZAxisCompensateTable"><code>Acm2_AxZAxisCompensateTable</code />
+    + <a href="#Acm2_AxGetCompensatePosition"><code>Acm2_AxGetCompensatePosition</code />
+    + <a href="#Acm2_DevOscChannelDataStart"><code>Acm2_DevOscChannelDataStart</code />
+    + <a href="#Acm2_DevOscChannelDataStop"><code>Acm2_DevOscChannelDataStop</code />
+    + <a href="#Acm2_DevGetOscChannelDataConfig"><code>Acm2_DevGetOscChannelDataConfig</code />
+    + <a href="#Acm2_DevSetOscChannelDataConfig"><code>Acm2_DevSetOscChannelDataConfig</code />
+    + <a href="#Acm2_DevGetOscChannelData"><code>Acm2_DevGetOscChannelData</code />
+    + <a href="#Acm2_DevGetOscChannelStatus"><code>Acm2_DevGetOscChannelStatus</code />
 ----
-<a name="Acm2_GetAvailableDevs"></a>
+### AdvCmnAPI_CM (Common Motion API 1.0)
+* Device
+    + <a href="#Acm_GetAvailableDevs"><code>Acm_GetAvailableDevs</code />
+    + <a href="#Acm_GetErrorMessage"><code>Acm_GetErrorMessage</code />
+    + <a href="#Acm_DevOpen"><code>Acm_DevOpen</code />
+    + <a href="#Acm_DevReOpen"><code>Acm_DevReOpen</code />
+    + <a href="#Acm_DevClose"><code>Acm_DevClose</code />
+    + <a href="#Acm_GetLastError"><code>Acm_GetLastError</code />
+    + <a href="#Acm_GetProperty"><code>Acm_GetProperty</code />
+    + <a href="#Acm_SetProperty"><code>Acm_SetProperty</code />
+    + <a href="#Acm_GetU32Property"><code>Acm_GetU32Property</code />
+    + <a href="#Acm_GetI32Property"><code>Acm_GetI32Property</code />
+    + <a href="#Acm_GetF64Property"><code>Acm_GetF64Property</code />
+    + <a href="#Acm_GetStringProperty"><code>Acm_GetStringProperty</code />
+    + <a href="#Acm_SetU32Property"><code>Acm_SetU32Property</code />
+    + <a href="#Acm_SetI32Property"><code>Acm_SetI32Property</code />
+    + <a href="#Acm_SetF64Property"><code>Acm_SetF64Property</code />
+    + <a href="#Acm_SetStringProperty"><code>Acm_SetStringProperty</code />
+    + <a href="#Acm_GetMultiProperty"><code>Acm_GetMultiProperty</code />
+    + <a href="#Acm_SetMultiU32Property"><code>Acm_SetMultiU32Property</code />
+    + <a href="#Acm_SetMultiI32Property"><code>Acm_SetMultiI32Property</code />
+    + <a href="#Acm_SetMultiF64Property"><code>Acm_SetMultiF64Property</code />
+    + <a href="#Acm_GetChannelProperty"><code>Acm_GetChannelProperty</code />
+    + <a href="#Acm_SetChannelProperty"><code>Acm_SetChannelProperty</code />
+    + <a href="#Acm_GetMultiChannelProperty"><code>Acm_GetMultiChannelProperty</code />
+    + <a href="#Acm_SetMultiChannelProperty"><code>Acm_SetMultiChannelProperty</code />
+    + <a href="#Acm_DevEnableEvent"><code>Acm_DevEnableEvent</code />
+    + <a href="#Acm_DevCheckEvent"><code>Acm_DevCheckEvent</code />
+    + <a href="#Acm_EnableMotionEvent"><code>Acm_EnableMotionEvent</code />
+    + <a href="#Acm_CheckMotionEvent"><code>Acm_CheckMotionEvent</code />
+    + <a href="#Acm_CancelCheckEvent"><code>Acm_CancelCheckEvent</code />
+    + <a href="#Acm_DevEnableEvent_All"><code>Acm_DevEnableEvent_All</code />
+    + <a href="#Acm_DevCheckEvent_All"><code>Acm_DevCheckEvent_All</code />
+    + <a href="#Acm_DevLoadConfig"><code>Acm_DevLoadConfig</code />
+    + <a href="#Acm_DevSlaveFwDownload"><code>Acm_DevSlaveFwDownload</code />
+    + <a href="#Acm_DevWriteDPMData"><code>Acm_DevWriteDPMData</code />
+    + <a href="#Acm_DevWriteMultiMailBox"><code>Acm_DevWriteMultiMailBox</code />
+    + <a href="#Acm_WriteRingBuffer"><code>Acm_WriteRingBuffer</code />
+    + <a href="#Acm_ReadRingBuffer"><code>Acm_ReadRingBuffer</code />
+    + <a href="#Acm_DevGetComStatus"><code>Acm_DevGetComStatus</code />
+    + <a href="#Acm_DevGetErrorTable"><code>Acm_DevGetErrorTable</code />
+    + <a href="#Acm_DevGetIOInfo"><code>Acm_DevGetIOInfo</code />
+    + <a href="#Acm_CheckVersion"><code>Acm_CheckVersion</code />
+    + <a href="#Acm_DevMultiTrigSetPWMTableOnTime"><code>Acm_DevMultiTrigSetPWMTableOnTime</code />
+    + <a href="#Acm_DevMultiTrigSetCmpDO"><code>Acm_DevMultiTrigSetCmpDO</code />
+    + <a href="#Acm_DevMultiTrigForceCmpOut"><code>Acm_DevMultiTrigForceCmpOut</code />
+    + <a href="#Acm_DevMutiTrigSetCmpDO"><code>Acm_DevMutiTrigSetCmpDO</code />
+    + <a href="#Acm_DevMutiTrigForceCmpOut"><code>Acm_DevMutiTrigForceCmpOut</code />
+    + <a href="#Acm_MasStartRing"><code>Acm_MasStartRing</code />
+    + <a href="#Acm_MasStopRing"><code>Acm_MasStopRing</code />
+    + <a href="#Acm_MasGetComStatus"><code>Acm_MasGetComStatus</code />
+    + <a href="#Acm_MasGetComCyclicTime"><code>Acm_MasGetComCyclicTime</code />
+    + <a href="#Acm_MasGetDataCyclicTime"><code>Acm_MasGetDataCyclicTime</code />
+    + <a href="#Acm_MasGetActiveTable"><code>Acm_MasGetActiveTable</code />
+    + <a href="#Acm_MasGetErrorTable"><code>Acm_MasGetErrorTable</code />
+    + <a href="#Acm_MasGetSlaveInfo"><code>Acm_MasGetSlaveInfo</code />
+    + <a href="#Acm_MasLogComStatus"><code>Acm_MasLogComStatus</code />
+    + <a href="#Acm_DevDownloadScanData"><code>Acm_DevDownloadScanData</code />
+    + <a href="#Acm_DevMDaqConfig"><code>Acm_DevMDaqConfig</code />
+    + <a href="#Acm_DevMDaqStart"><code>Acm_DevMDaqStart</code />
+    + <a href="#Acm_DevMDaqStop"><code>Acm_DevMDaqStop</code />
+    + <a href="#Acm_DevMDaqReset"><code>Acm_DevMDaqReset</code />
+    + <a href="#Acm_DevMDaqGetStatus"><code>Acm_DevMDaqGetStatus</code />
+    + <a href="#Acm_DevMDaqGetData"><code>Acm_DevMDaqGetData</code />
+    + <a href="#Acm_DevMDaqGetConfig"><code>Acm_DevMDaqGetConfig</code />
+    + <a href="#Acm_RegCallBackFunc"><code>Acm_RegCallBackFunc</code />
+    + <a href="#Acm_EnableEventCallBack"><code>Acm_EnableEventCallBack</code />
+    + <a href="#Acm_RegCallBackFuncForOneEvent"><code>Acm_RegCallBackFuncForOneEvent</code />
+    + <a href="#Acm_DevEnableMotionEvent"><code>Acm_DevEnableMotionEvent</code />
+    + <a href="#Acm_ServoSetCom"><code>Acm_ServoSetCom</code />
+    + <a href="#Acm_ServoGetAbsPosition"><code>Acm_ServoGetAbsPosition</code />
+    + <a href="#Acm_AxSetCmdPosi_Pulse"><code>Acm_AxSetCmdPosi_Pulse</code />
+    + <a href="#Acm_AxSpecialDiSetBit"><code>Acm_AxSpecialDiSetBit</code />
+    + <a href="#Acm_DevEnableLTC"><code>Acm_DevEnableLTC</code />
+    + <a href="#Acm_DevLTCSaftyDist"><code>Acm_DevLTCSaftyDist</code />
+    + <a href="#Acm_DevEnableCmp"><code>Acm_DevEnableCmp</code />
+    + <a href="#Acm_DevLtcLinkCmp"><code>Acm_DevLtcLinkCmp</code />
+    + <a href="#Acm_DevSetCmp"><code>Acm_DevSetCmp</code />
+    + <a href="#Acm_DevSetCmpDO"><code>Acm_DevSetCmpDO</code />
+    + <a href="#Acm_DevSetCmpData"><code>Acm_DevSetCmpData</code />
+    + <a href="#Acm_DevSetCmpAuto"><code>Acm_DevSetCmpAuto</code />
+    + <a href="#Acm_DevGetCmpData"><code>Acm_DevGetCmpData</code />
+    + <a href="#Acm_DevEnableCmpFIFO"><code>Acm_DevEnableCmpFIFO</code />
+    + <a href="#Acm_DevGetCmpFIFOCount"><code>Acm_DevGetCmpFIFOCount</code />
+    + <a href="#Acm_DevGetCmpCounter"><code>Acm_DevGetCmpCounter</code />
+    + <a href="#Acm_DevResetCmpFIFO"><code>Acm_DevResetCmpFIFO</code />
+    + <a href="#Acm_DevSetLTCInEdge"><code>Acm_DevSetLTCInEdge</code />
+    + <a href="#Acm_DevGetLTCData"><code>Acm_DevGetLTCData</code />
+    + <a href="#Acm_DevGetLTCFlag"><code>Acm_DevGetLTCFlag</code />
+    + <a href="#Acm_DevResetLTC"><code>Acm_DevResetLTC</code />
+    + <a href="#Acm_DevGetCmpFlag"><code>Acm_DevGetCmpFlag</code />
+    + <a href="#Acm_DevResetCmpFlag"><code>Acm_DevResetCmpFlag</code />
+    + <a href="#Acm_DevGetLtcLinkCmpStatus"><code>Acm_DevGetLtcLinkCmpStatus</code />
+    + <a href="#Acm_DevResetCmpData"><code>Acm_DevResetCmpData</code />
+    + <a href="#Acm_DevGetLTCInEdge"><code>Acm_DevGetLTCInEdge</code />
+    + <a href="#Acm_DevGetLTCInPol"><code>Acm_DevGetLTCInPol</code />
+    + <a href="#Acm_DevGetLTCSaftyDist"><code>Acm_DevGetLTCSaftyDist</code />
+    + <a href="#Acm_DevGetLTCInSource"><code>Acm_DevGetLTCInSource</code />
+    + <a href="#Acm_DevSetLTCInSource"><code>Acm_DevSetLTCInSource</code />
+    + <a href="#Acm_DevGetCmp"><code>Acm_DevGetCmp</code />
+    + <a href="#Acm_DevReadLatchBuffer"><code>Acm_DevReadLatchBuffer</code />
+    + <a href="#Acm_DevGetLatchBufferStatus"><code>Acm_DevGetLatchBufferStatus</code />
+    + <a href="#Acm_DevResetLatchBuffer"><code>Acm_DevResetLatchBuffer</code />
+    + <a href="#Acm_DevSetLTCInAxisID"><code>Acm_DevSetLTCInAxisID</code />
+    + <a href="#Acm_DevGetLTCInAxisID"><code>Acm_DevGetLTCInAxisID</code />
+    + <a href="#Acm_DevSetCmpAxisID"><code>Acm_DevSetCmpAxisID</code />
+    + <a href="#Acm_DevGetCmpAxisID"><code>Acm_DevGetCmpAxisID</code />
+    + <a href="#Acm_GetDevNum"><code>Acm_GetDevNum</code />
+    + <a href="#Acm_DevSaveMapFile"><code>Acm_DevSaveMapFile</code />
+    + <a href="#Acm_DevLoadMapFile"><code>Acm_DevLoadMapFile</code />
+    + <a href="#Acm_DevUpLoadMapInfo"><code>Acm_DevUpLoadMapInfo</code />
+    + <a href="#Acm_DevDownLoadMapInfo"><code>Acm_DevDownLoadMapInfo</code />
+    + <a href="#Acm_DevSetSlaveStates"><code>Acm_DevSetSlaveStates</code />
+    + <a href="#Acm_DevGetSlaveStates"><code>Acm_DevGetSlaveStates</code />
+    + <a href="#Acm_DevGetSlaveTxPDO"><code>Acm_DevGetSlaveTxPDO</code />
+    + <a href="#Acm_DevGetSlaveRxPDO"><code>Acm_DevGetSlaveRxPDO</code />
+    + <a href="#Acm_DevWriteSDOComplete"><code>Acm_DevWriteSDOComplete</code />
+    + <a href="#Acm_DevWriteSDOData"><code>Acm_DevWriteSDOData</code />
+    + <a href="#Acm_DevReadSDOData"><code>Acm_DevReadSDOData</code />
+    + <a href="#Acm_DevWriteRegData"><code>Acm_DevWriteRegData</code />
+    + <a href="#Acm_DevReadRegData"><code>Acm_DevReadRegData</code />
+    + <a href="#Acm_DevReadEmgMessage"><code>Acm_DevReadEmgMessage</code />
+    + <a href="#Acm_DevReadSlvCommErrCnt"><code>Acm_DevReadSlvCommErrCnt</code />
+    + <a href="#Acm_DaqLinkPDO"><code>Acm_DaqLinkPDO</code />
+    + <a href="#Acm_AxMoveTorque"><code>Acm_AxMoveTorque</code />
+    + <a href="#Acm_AxGetActTorque"><code>Acm_AxGetActTorque</code />
+    + <a href="#Acm_Ax2DCompensateInAx"><code>Acm_Ax2DCompensateInAx</code />
+    + <a href="#Acm_Ax1DCompensateTable"><code>Acm_Ax1DCompensateTable</code />
+    + <a href="#Acm_DevZAxisCompensateTable"><code>Acm_DevZAxisCompensateTable</code />
+    + <a href="#Acm_Dev2DCompensateTable"><code>Acm_Dev2DCompensateTable</code />
+    + <a href="#Acm_DevZAxisCompensateTableEx"><code>Acm_DevZAxisCompensateTableEx</code />
+    + <a href="#Acm_Dev2DCompensateTableEx"><code>Acm_Dev2DCompensateTableEx</code />
+    + <a href="#Acm_AxGetCompensatePosition"><code>Acm_AxGetCompensatePosition</code />
+    + <a href="#Acm_DevMultiTrigInitial"><code>Acm_DevMultiTrigInitial</code />
+    + <a href="#Acm_EnableOneDevEventCallBack"><code>Acm_EnableOneDevEventCallBack</code />
+    + <a href="#Acm_AxGetRawData"><code>Acm_AxGetRawData</code />
+    + <a href="#Acm_AxSetRawData"><code>Acm_AxSetRawData</code />
+    + <a href="#Acm_AxReturnPausePosition"><code>Acm_AxReturnPausePosition</code />
+    + <a href="#Acm_AxAddOnAx"><code>Acm_AxAddOnAx</code />
+    + <a href="#Acm_AxAddRemove"><code>Acm_AxAddRemove</code />
+    + <a href="#Acm_AxGetAddOnNum"><code>Acm_AxGetAddOnNum</code />
+    + <a href="#Acm_AxSetCompensateDistance"><code>Acm_AxSetCompensateDistance</code />
+    + <a href="#Acm_AxGetCompensateDistance"><code>Acm_AxGetCompensateDistance</code />
+* Axis
+    + <a href="#Acm_AxOpen"><code>Acm_AxOpen</code />
+    + <a href="#Acm_AxOpenbyID"><code>Acm_AxOpenbyID</code />
+    + <a href="#Acm_AxClose"><code>Acm_AxClose</code />
+    + <a href="#Acm_AxSetSvOn"><code>Acm_AxSetSvOn</code />
+    + <a href="#Acm_AxResetAlm"><code>Acm_AxResetAlm</code />
+    + <a href="#Acm_AxMoveRel"><code>Acm_AxMoveRel</code />
+    + <a href="#Acm_AxMoveRel_T"><code>Acm_AxMoveRel_T</code />
+    + <a href="#Acm_AxMoveRel_SD"><code>Acm_AxMoveRel_SD</code />
+    + <a href="#Acm_AxMoveRel_EC"><code>Acm_AxMoveRel_EC</code />
+    + <a href="#Acm_AxMoveAbs"><code>Acm_AxMoveAbs</code />
+    + <a href="#Acm_AxMoveAbs_T"><code>Acm_AxMoveAbs_T</code />
+    + <a href="#Acm_AxMoveAbs_SD"><code>Acm_AxMoveAbs_SD</code />
+    + <a href="#Acm_AxMoveAbs_EC"><code>Acm_AxMoveAbs_EC</code />
+    + <a href="#Acm_AxMoveVel"><code>Acm_AxMoveVel</code />
+    + <a href="#Acm_AxStopDec"><code>Acm_AxStopDec</code />
+    + <a href="#Acm_AxStopDecEx"><code>Acm_AxStopDecEx</code />
+    + <a href="#Acm_AxStopEmg"><code>Acm_AxStopEmg</code />
+    + <a href="#Acm_AxMoveImpose"><code>Acm_AxMoveImpose</code />
+    + <a href="#Acm_AxHomeEx"><code>Acm_AxHomeEx</code />
+    + <a href="#Acm_AxHome"><code>Acm_AxHome</code />
+    + <a href="#Acm_AxMoveHome"><code>Acm_AxMoveHome</code />
+    + <a href="#Acm_AxMoveGantryHome"><code>Acm_AxMoveGantryHome</code />
+    + <a href="#Acm_AxChangeVel"><code>Acm_AxChangeVel</code />
+    + <a href="#Acm_AxChangePos"><code>Acm_AxChangePos</code />
+    + <a href="#Acm_AxChangeVelByRate"><code>Acm_AxChangeVelByRate</code />
+    + <a href="#Acm_AxChangeVelExByRate"><code>Acm_AxChangeVelExByRate</code />
+    + <a href="#Acm_AxResetError"><code>Acm_AxResetError</code />
+    + <a href="#Acm_AxGetState"><code>Acm_AxGetState</code />
+    + <a href="#Acm_AxGetMotionIO"><code>Acm_AxGetMotionIO</code />
+    + <a href="#Acm_AxGetMotionStatus"><code>Acm_AxGetMotionStatus</code />
+    + <a href="#Acm_AxGetCmdPosition"><code>Acm_AxGetCmdPosition</code />
+    + <a href="#Acm_AxGetMachPosition"><code>Acm_AxGetMachPosition</code />
+    + <a href="#Acm_AxSetCmdPosition"><code>Acm_AxSetCmdPosition</code />
+    + <a href="#Acm_AxGetActualPosition"><code>Acm_AxGetActualPosition</code />
+    + <a href="#Acm_AxSetActualPosition"><code>Acm_AxSetActualPosition</code />
+    + <a href="#Acm_AxGetCmdVelocity"><code>Acm_AxGetCmdVelocity</code />
+    + <a href="#Acm_AxGetActVelocity"><code>Acm_AxGetActVelocity</code />
+    + <a href="#Acm_AxGetLagCounter"><code>Acm_AxGetLagCounter</code />
+    + <a href="#Acm_AxSetExtDrive"><code>Acm_AxSetExtDrive</code />
+    + <a href="#Acm_AxDoSetBit"><code>Acm_AxDoSetBit</code />
+    + <a href="#Acm_AxDiSetBit"><code>Acm_AxDiSetBit</code />
+    + <a href="#Acm_AxDoGetBit"><code>Acm_AxDoGetBit</code />
+    + <a href="#Acm_AxDiGetBit"><code>Acm_AxDiGetBit</code />
+    + <a href="#Acm_AxDoSetByte"><code>Acm_AxDoSetByte</code />
+    + <a href="#Acm_AxDoGetByte"><code>Acm_AxDoGetByte</code />
+    + <a href="#Acm_AxDiGetByte"><code>Acm_AxDiGetByte</code />
+    + <a href="#Acm_AxSimStartSuspendVel"><code>Acm_AxSimStartSuspendVel</code />
+    + <a href="#Acm_AxSimStartSuspendRel"><code>Acm_AxSimStartSuspendRel</code />
+    + <a href="#Acm_AxSimStartSuspendAbs"><code>Acm_AxSimStartSuspendAbs</code />
+    + <a href="#Acm_AxSimStart"><code>Acm_AxSimStart</code />
+    + <a href="#Acm_AxSimStop"><code>Acm_AxSimStop</code />
+    + <a href="#Acm_AxGetLatchData"><code>Acm_AxGetLatchData</code />
+    + <a href="#Acm_AxStartSoftLatch"><code>Acm_AxStartSoftLatch</code />
+    + <a href="#Acm_AxResetLatch"><code>Acm_AxResetLatch</code />
+    + <a href="#Acm_AxGetLatchFlag"><code>Acm_AxGetLatchFlag</code />
+    + <a href="#Acm_AxTriggerLatch"><code>Acm_AxTriggerLatch</code />
+    + <a href="#Acm_AxReadLatchBuffer"><code>Acm_AxReadLatchBuffer</code />
+    + <a href="#Acm_AxResetLatchBuffer"><code>Acm_AxResetLatchBuffer</code />
+    + <a href="#Acm_AxGetLatchBufferStatus"><code>Acm_AxGetLatchBufferStatus</code />
+    + <a href="#Acm_AxGearInAx"><code>Acm_AxGearInAx</code />
+    + <a href="#Acm_AxTangentInGp"><code>Acm_AxTangentInGp</code />
+    + <a href="#Acm_AxGantryInAx"><code>Acm_AxGantryInAx</code />
+    + <a href="#Acm_AxPhaseAx"><code>Acm_AxPhaseAx</code />
+    + <a href="#Acm_AxSetChannelCmpSetting"><code>Acm_AxSetChannelCmpSetting</code />
+    + <a href="#Acm_AxGetChannelCmpSetting"><code>Acm_AxGetChannelCmpSetting</code />
+    + <a href="#Acm_AxResetChannelCmp"><code>Acm_AxResetChannelCmp</code />
+    + <a href="#Acm_AxAddChannelCmpDatas"><code>Acm_AxAddChannelCmpDatas</code />
+    + <a href="#Acm_AxGetChannelCmpData"><code>Acm_AxGetChannelCmpData</code />
+    + <a href="#Acm_AxLoadChannelNextData"><code>Acm_AxLoadChannelNextData</code />
+    + <a href="#Acm_AxGetCmpbufferRemainCount"><code>Acm_AxGetCmpbufferRemainCount</code />
+    + <a href="#Acm_AxSetCmpAuto"><code>Acm_AxSetCmpAuto</code />
+    + <a href="#Acm_AxGetCmpData"><code>Acm_AxGetCmpData</code />
+    + <a href="#Acm_AxSetCmpData"><code>Acm_AxSetCmpData</code />
+    + <a href="#Acm_AxChangeCmpIndex"><code>Acm_AxChangeCmpIndex</code />
+    + <a href="#Acm_AxSetCmpBufferData"><code>Acm_AxSetCmpBufferData</code />
+    + <a href="#Acm_AxResetCmpData"><code>Acm_AxResetCmpData</code />
+    + <a href="#Acm_AxGetCmpBufferStatus"><code>Acm_AxGetCmpBufferStatus</code />
+    + <a href="#Acm_AxResetMPGOffset"><code>Acm_AxResetMPGOffset</code />
+    + <a href="#Acm_AxMovePTPBufferRel"><code>Acm_AxMovePTPBufferRel</code />
+    + <a href="#Acm_AxMovePTPBufferAbs"><code>Acm_AxMovePTPBufferAbs</code />
+    + <a href="#Acm_AxEnableCompensation"><code>Acm_AxEnableCompensation</code />
+    + <a href="#Acm_AxGetCompensationValue"><code>Acm_AxGetCompensationValue</code />
+    + <a href="#Acm_AxSetCompenPara"><code>Acm_AxSetCompenPara</code />
+    + <a href="#Acm_AxDIStartMoveAbs"><code>Acm_AxDIStartMoveAbs</code />
+    + <a href="#Acm_AxDIStartMoveRel"><code>Acm_AxDIStartMoveRel</code />
+    + <a href="#Acm_AxDIStartMoveVel"><code>Acm_AxDIStartMoveVel</code />
+    + <a href="#Acm_AxDisableDIStart"><code>Acm_AxDisableDIStart</code />
+    + <a href="#Acm_AxSetPWMTableOnTime"><code>Acm_AxSetPWMTableOnTime</code />
+    + <a href="#Acm_AxGetINxStopStatus"><code>Acm_AxGetINxStopStatus</code />
+    + <a href="#Acm_AxResetINxStopStatus"><code>Acm_AxResetINxStopStatus</code />
+    + <a href="#Acm_AxJog"><code>Acm_AxJog</code />
+    + <a href="#Acm_AxSetCmpDO"><code>Acm_AxSetCmpDO</code />
+    + <a href="#Acm_AxDownloadTorqueTable"><code>Acm_AxDownloadTorqueTable</code />
+    + <a href="#Acm_AxLoadTorqueTableFile"><code>Acm_AxLoadTorqueTableFile</code />
+    + <a href="#Acm_AxResetPVTTable"><code>Acm_AxResetPVTTable</code />
+    + <a href="#Acm_AxLoadPVTTable"><code>Acm_AxLoadPVTTable</code />
+    + <a href="#Acm_AxCalculatePVTTableContinuous"><code>Acm_AxCalculatePVTTableContinuous</code />
+    + <a href="#Acm_AxLoadPVTTableContinuous"><code>Acm_AxLoadPVTTableContinuous</code />
+    + <a href="#Acm_AxStartPVT"><code>Acm_AxStartPVT</code />
+    + <a href="#Acm_AxStartAllPVT"><code>Acm_AxStartAllPVT</code />
+    + <a href="#Acm_AxCheckPTBuffer"><code>Acm_AxCheckPTBuffer</code />
+    + <a href="#Acm_AxAddPTData"><code>Acm_AxAddPTData</code />
+    + <a href="#Acm_AxStartPT"><code>Acm_AxStartPT</code />
+    + <a href="#Acm_AxStartAllPT"><code>Acm_AxStartAllPT</code />
+    + <a href="#Acm_AxResetPTData"><code>Acm_AxResetPTData</code />
+    + <a href="#Acm_AxAddPVAData"><code>Acm_AxAddPVAData</code />
+* Group
+    + <a href="#Acm_GpOpen"><code>Acm_GpOpen</code />
+    + <a href="#Acm_GpAddAxis"><code>Acm_GpAddAxis</code />
+    + <a href="#Acm_GpRemAxis"><code>Acm_GpRemAxis</code />
+    + <a href="#Acm_GpClose"><code>Acm_GpClose</code />
+    + <a href="#Acm_GpGetState"><code>Acm_GpGetState</code />
+    + <a href="#Acm_GpResetError"><code>Acm_GpResetError</code />
+    + <a href="#Acm_GpIpoMask"><code>Acm_GpIpoMask</code />
+    + <a href="#Acm_GpMoveLinearRel"><code>Acm_GpMoveLinearRel</code />
+    + <a href="#Acm_GpMoveLinearAbs"><code>Acm_GpMoveLinearAbs</code />
+    + <a href="#Acm_GpMoveDirectRel"><code>Acm_GpMoveDirectRel</code />
+    + <a href="#Acm_GpMoveDirectAbs"><code>Acm_GpMoveDirectAbs</code />
+    + <a href="#Acm_GpMoveCircularRel"><code>Acm_GpMoveCircularRel</code />
+    + <a href="#Acm_GpMoveCircularAbs"><code>Acm_GpMoveCircularAbs</code />
+    + <a href="#Acm_GpMoveCircularRel_3P"><code>Acm_GpMoveCircularRel_3P</code />
+    + <a href="#Acm_GpMoveCircularAbs_3P"><code>Acm_GpMoveCircularAbs_3P</code />
+    + <a href="#Acm_GpMoveCircularRel_Angle"><code>Acm_GpMoveCircularRel_Angle</code />
+    + <a href="#Acm_GpMoveCircularAbs_Angle"><code>Acm_GpMoveCircularAbs_Angle</code />
+    + <a href="#Acm_GpMoveArcRel_Angle"><code>Acm_GpMoveArcRel_Angle</code />
+    + <a href="#Acm_GpMoveArcAbs_Angle"><code>Acm_GpMoveArcAbs_Angle</code />
+    + <a href="#Acm_GpMove3DArcAbs"><code>Acm_GpMove3DArcAbs</code />
+    + <a href="#Acm_GpMove3DArcRel"><code>Acm_GpMove3DArcRel</code />
+    + <a href="#Acm_GpMove3DArcAbs_V"><code>Acm_GpMove3DArcAbs_V</code />
+    + <a href="#Acm_GpMove3DArcRel_V"><code>Acm_GpMove3DArcRel_V</code />
+    + <a href="#Acm_GpMove3DArcAbs_3P"><code>Acm_GpMove3DArcAbs_3P</code />
+    + <a href="#Acm_GpMove3DArcRel_3P"><code>Acm_GpMove3DArcRel_3P</code />
+    + <a href="#Acm_GpMove3DArcAbs_3PAngle"><code>Acm_GpMove3DArcAbs_3PAngle</code />
+    + <a href="#Acm_GpMove3DArcRel_3PAngle"><code>Acm_GpMove3DArcRel_3PAngle</code />
+    + <a href="#Acm_GpMoveHelixAbs"><code>Acm_GpMoveHelixAbs</code />
+    + <a href="#Acm_GpMoveHelixRel"><code>Acm_GpMoveHelixRel</code />
+    + <a href="#Acm_GpMoveHelixAbs_3P"><code>Acm_GpMoveHelixAbs_3P</code />
+    + <a href="#Acm_GpMove3DArcRel_3PAngle"><code>Acm_GpMove3DArcRel_3PAngle</code />
+    + <a href="#Acm_GpMoveHelixAbs"><code>Acm_GpMoveHelixAbs</code />
+    + <a href="#Acm_GpMoveHelixRel"><code>Acm_GpMoveHelixRel</code />
+    + <a href="#Acm_GpMoveHelixAbs_3P"><code>Acm_GpMoveHelixAbs_3P</code />
+    + <a href="#Acm_GpMoveHelixRel_3P"><code>Acm_GpMoveHelixRel_3P</code />
+    + <a href="#Acm_GpMoveHelixRel_Angle"><code>Acm_GpMoveHelixRel_Angle</code />
+    + <a href="#Acm_GpMoveHelixAbs_Angle"><code>Acm_GpMoveHelixAbs_Angle</code />
+    + <a href="#Acm_GpMoveEllipticalRel"><code>Acm_GpMoveEllipticalRel</code />
+    + <a href="#Acm_GpMoveEllipticalAbs"><code>Acm_GpMoveEllipticalAbs</code />
+    + <a href="#Acm_GpLoadPath"><code>Acm_GpLoadPath</code />
+    + <a href="#Acm_GpUnloadPath"><code>Acm_GpUnloadPath</code />
+    + <a href="#Acm_GpMovePath"><code>Acm_GpMovePath</code />
+    + <a href="#Acm_GpMoveAllPath"><code>Acm_GpMoveAllPath</code />
+    + <a href="#Acm_GpAddPath"><code>Acm_GpAddPath</code />
+    + <a href="#Acm_GpAddPath2"><code>Acm_GpAddPath2</code />
+    + <a href="#Acm_GpLookAheadPath"><code>Acm_GpLookAheadPath</code />
+    + <a href="#Acm_GpResetPath"><code>Acm_GpResetPath</code />
+    + <a href="#Acm_GpGetPathStatus"><code>Acm_GpGetPathStatus</code />
+    + <a href="#Acm_GpMoveSelPath"><code>Acm_GpMoveSelPath</code />
+    + <a href="#Acm_GpGetPathIndexStatus"><code>Acm_GpGetPathIndexStatus</code />
+    + <a href="#Acm_GpAddBSplinePath"><code>Acm_GpAddBSplinePath</code />
+    + <a href="#Acm_GpAddCSplinePath"><code>Acm_GpAddCSplinePath</code />
+    + <a href="#Acm_GpResumeMotion"><code>Acm_GpResumeMotion</code />
+    + <a href="#Acm_GpPauseMotion"><code>Acm_GpPauseMotion</code />
+    + <a href="#Acm_GpStopDec"><code>Acm_GpStopDec</code />
+    + <a href="#Acm_GpStopDecEx"><code>Acm_GpStopDecEx</code />
+    + <a href="#Acm_GpStopEmg"><code>Acm_GpStopEmg</code />
+    + <a href="#Acm_GpChangeVel"><code>Acm_GpChangeVel</code />
+    + <a href="#Acm_GpChangeVelByRate"><code>Acm_GpChangeVelByRate</code />
+    + <a href="#Acm_GpGetCmdVel"><code>Acm_GpGetCmdVel</code />
+    + <a href="#Acm_GpGetINxStopStatus"><code>Acm_GpGetINxStopStatus</code />
+    + <a href="#Acm_GpResetINxStopStatus"><code>Acm_GpResetINxStopStatus</code />
+    + <a href="#Acm_GpGetPausePosition"><code>Acm_GpGetPausePosition</code />
+    + <a href="#Acm_GpSetRawData"><code>Acm_GpSetRawData</code />
+    + <a href="#Acm_GpGetRawData"><code>Acm_GpGetRawData</code />
+* DIO
+    + <a href="#Acm_DaqDiGetByte"><code>Acm_DaqDiGetByte</code />
+    + <a href="#Acm_DaqDiGetBit"><code>Acm_DaqDiGetBit</code />
+    + <a href="#Acm_DaqDoSetByte"><code>Acm_DaqDoSetByte</code />
+    + <a href="#Acm_DaqDoSetBit"><code>Acm_DaqDoSetBit</code />
+    + <a href="#Acm_DaqDiSetBit"><code>Acm_DaqDiSetBit</code />
+    + <a href="#Acm_DaqDoGetByte"><code>Acm_DaqDoGetByte</code />
+    + <a href="#Acm_DaqDoGetBit"><code>Acm_DaqDoGetBit</code />
+    + <a href="#Acm_DaqDiGetBytes"><code>Acm_DaqDiGetBytes</code />
+    + <a href="#Acm_DaqDoSetBytes"><code>Acm_DaqDoSetBytes</code />
+    + <a href="#Acm_DaqDoGetBytes"><code>Acm_DaqDoGetBytes</code />
+    + <a href="#Acm_DaqDiGetByteEx"><code>Acm_DaqDiGetByteEx</code />
+    + <a href="#Acm_DaqDiGetBitEx"><code>Acm_DaqDiGetBitEx</code />
+    + <a href="#Acm_DaqDoSetByteEx"><code>Acm_DaqDoSetByteEx</code />
+    + <a href="#Acm_DaqDoGetByteEx"><code>Acm_DaqDoGetByteEx</code />
+    + <a href="#Acm_DaqDoGetBitEx"><code>Acm_DaqDoGetBitEx</code />
+* AIO
+    + <a href="#Acm_DaqAiGetRawData"><code>Acm_DaqAiGetRawData</code />
+    + <a href="#Acm_DaqAiGetEngData"><code>Acm_DaqAiGetEngData</code />
+    + <a href="#Acm_DaqAiGetVoltData"><code>Acm_DaqAiGetVoltData</code />
+    + <a href="#Acm_DaqAiGetCurrData"><code>Acm_DaqAiGetCurrData</code />
+    + <a href="#Acm_DaqAiZeroCalibration"><code>Acm_DaqAiZeroCalibration</code />
+    + <a href="#Acm_DaqAiSpanCalibration"><code>Acm_DaqAiSpanCalibration</code />
+    + <a href="#Acm_DaqAiGetChannelStatus"><code>Acm_DaqAiGetChannelStatus</code />
+    + <a href="#Acm_DaqAoSetRawData"><code>Acm_DaqAoSetRawData</code />
+    + <a href="#Acm_DaqAoSetEngData"><code>Acm_DaqAoSetEngData</code />
+    + <a href="#Acm_DaqAoSetVoltData"><code>Acm_DaqAoSetVoltData</code />
+    + <a href="#Acm_DaqAoSetCurrData"><code>Acm_DaqAoSetCurrData</code />
+    + <a href="#Acm_DaqAoGetRawData"><code>Acm_DaqAoGetRawData</code />
+    + <a href="#Acm_DaqAoGetEngData"><code>Acm_DaqAoGetEngData</code />
+    + <a href="#Acm_DaqAoGetVoltData"><code>Acm_DaqAoGetVoltData</code />
+    + <a href="#Acm_DaqAoGetCurrData"><code>Acm_DaqAoGetCurrData</code />
+    + <a href="#Acm_DaqAoSetCaliType"><code>Acm_DaqAoSetCaliType</code />
+    + <a href="#Acm_DaqAoSetCaliValue"><code>Acm_DaqAoSetCaliValue</code />
+    + <a href="#Acm_DaqAoCaliDone"><code>Acm_DaqAoCaliDone</code />
+    + <a href="#Acm_DaqAoCaliDefault"><code>Acm_DaqAoCaliDefault</code />
+    + <a href="#Acm_DaqAoGetChannelStatus"><code>Acm_DaqAoGetChannelStatus</code />
+    + <a href="#Acm_DaqSetScaledProperty"><code>Acm_DaqSetScaledProperty</code />
+    + <a href="#Acm_DaqAiGetRawDataEx"><code>Acm_DaqAiGetRawDataEx</code />
+    + <a href="#Acm_DaqAiGetEngDataEx"><code>Acm_DaqAiGetEngDataEx</code />
+    + <a href="#Acm_DaqAiGetVoltDataEx"><code>Acm_DaqAiGetVoltDataEx</code />
+    + <a href="#Acm_DaqAiGetCurrDataEx"><code>Acm_DaqAiGetCurrDataEx</code />
+    + <a href="#Acm_DaqAiGetChannelStatusEx"><code>Acm_DaqAiGetChannelStatusEx</code />
+    + <a href="#Acm_DaqAoSetRawDataEx"><code>Acm_DaqAoSetRawDataEx</code />
+    + <a href="#Acm_DaqAoSetEngDataEx"><code>Acm_DaqAoSetEngDataEx</code />
+    + <a href="#Acm_DaqAoSetVoltDataEx"><code>Acm_DaqAoSetVoltDataEx</code />
+    + <a href="#Acm_DaqAoSetCurrDataEx"><code>Acm_DaqAoSetCurrDataEx</code />
+    + <a href="#Acm_DaqAoGetRawDataEx"><code>Acm_DaqAoGetRawDataEx</code />
+    + <a href="#Acm_DaqAoGetEngDataEx"><code>Acm_DaqAoGetEngDataEx</code />
+    + <a href="#Acm_DaqAoGetVoltDataEx"><code>Acm_DaqAoGetVoltDataEx</code />
+    + <a href="#Acm_DaqAoGetCurrDataEx"><code>Acm_DaqAoGetCurrDataEx</code />
+    + <a href="#Acm_DaqGetIOLinkStatus"><code>Acm_DaqGetIOLinkStatus</code />
+    + <a href="#Acm_DaqCntTriggerCmp"><code>Acm_DaqCntTriggerCmp</code />
+    + <a href="#Acm_DaqCntResetLatch"><code>Acm_DaqCntResetLatch</code />
+    + <a href="#Acm_DaqCntResetCmp"><code>Acm_DaqCntResetCmp</code />
+    + <a href="#Acm_DaqCntResetCnt"><code>Acm_DaqCntResetCnt</code />
+    + <a href="#Acm_DaqCntGetCounterData"><code>Acm_DaqCntGetCounterData</code />
+    + <a href="#Acm_DaqCntSetCounterData"><code>Acm_DaqCntSetCounterData</code />
+    + <a href="#Acm_DaqCntGetCounterFrequency"><code>Acm_DaqCntGetCounterFrequency</code />
+    + <a href="#Acm_DaqCntGetExtDriveData"><code>Acm_DaqCntGetExtDriveData</code />
+    + <a href="#Acm_DaqCntSetExtDriveData"><code>Acm_DaqCntSetExtDriveData</code />
+    + <a href="#Acm_DaqCntGetLatchData"><code>Acm_DaqCntGetLatchData</code />
+    + <a href="#Acm_DaqCntGetCmpData"><code>Acm_DaqCntGetCmpData</code />
+    + <a href="#Acm_DaqCntSetCmpData"><code>Acm_DaqCntSetCmpData</code />
+    + <a href="#Acm_DaqCntSetCmpTable"><code>Acm_DaqCntSetCmpTable</code />
+    + <a href="#Acm_DaqCntSetCmpAuto"><code>Acm_DaqCntSetCmpAuto</code />
+    + <a href="#Acm_DaqCntGetLatchBufferStatus"><code>Acm_DaqCntGetLatchBufferStatus</code />
+    + <a href="#Acm_DaqCntReadLatchBuffer"><code>Acm_DaqCntReadLatchBuffer</code />
+    + <a href="#Acm_DaqCntTriggerCmpEx"><code>Acm_DaqCntTriggerCmpEx</code />
+    + <a href="#Acm_DaqCntTriggerLatchEx"><code>Acm_DaqCntTriggerLatchEx</code />
+    + <a href="#Acm_DaqCntResetLatchEx"><code>Acm_DaqCntResetLatchEx</code />
+    + <a href="#Acm_DaqCntResetCmpEx"><code>Acm_DaqCntResetCmpEx</code />
+    + <a href="#Acm_DaqCntResetCntEx"><code>Acm_DaqCntResetCntEx</code />
+    + <a href="#Acm_DaqCntGetCounterDataEx"><code>Acm_DaqCntGetCounterDataEx</code />
+    + <a href="#Acm_DaqCntSetCounterDataEx"><code>Acm_DaqCntSetCounterDataEx</code />
+    + <a href="#Acm_DaqCntGetCounterFrequencyEx"><code>Acm_DaqCntGetCounterFrequencyEx</code />
+    + <a href="#Acm_DaqCntGetExtDriveDataEx"><code>Acm_DaqCntGetExtDriveDataEx</code />
+    + <a href="#Acm_DaqCntSetExtDriveDataEx"><code>Acm_DaqCntSetExtDriveDataEx</code />
+    + <a href="#Acm_DaqCntGetLatchDataEx"><code>Acm_DaqCntGetLatchDataEx</code />
+    + <a href="#Acm_DaqCntGetCmpDataEx"><code>Acm_DaqCntGetCmpDataEx</code />
+    + <a href="#Acm_DaqCntSetCmpDataEx"><code>Acm_DaqCntSetCmpDataEx</code />
+    + <a href="#Acm_DaqCntSetCmpTableEx"><code>Acm_DaqCntSetCmpTableEx</code />
+    + <a href="#Acm_DaqCntSetCmpAutoEx"><code>Acm_DaqCntSetCmpAutoEx</code />
+    + <a href="#Acm_DaqCntGetLatchBufferStatusEx"><code>Acm_DaqCntGetLatchBufferStatusEx</code />
+    + <a href="#Acm_DaqCntReadLatchBufferEx"><code>Acm_DaqCntReadLatchBufferEx</code />
+    + <a href="#Acm_AxPWMOut"><code>Acm_AxPWMOut</code />
+    + <a href="#Acm_AxGetPWMOutState"><code>Acm_AxGetPWMOutState</code />
+* EtherCAT
+    + <a href="#Acm_DevECATOpen"><code>Acm_DevECATOpen</code />
+    + <a href="#Acm_DevReadMailBox"><code>Acm_DevReadMailBox</code />
+    + <a href="#Acm_DevReadMultiMailBox"><code>Acm_DevReadMultiMailBox</code />
+    + <a href="#Acm_DevWriteMailBox"><code>Acm_DevWriteMailBox</code />
+    + <a href="#Acm_LoadENI"><code>Acm_LoadENI</code />
+    + <a href="#Acm_DevGetMasInfo"><code>Acm_DevGetMasInfo</code />
+    + <a href="#Acm_DevGetMasStates"><code>Acm_DevGetMasStates</code />
+    + <a href="#Acm_DevGetSlaveInfo"><code>Acm_DevGetSlaveInfo</code />
+    + <a href="#Acm_DevGetModuleInfo"><code>Acm_DevGetModuleInfo</code />
+    + <a href="#Acm_DevGetSlaveDataCnt"><code>Acm_DevGetSlaveDataCnt</code />
+    + <a href="#Acm_DevGetSlaveFwVersion"><code>Acm_DevGetSlaveFwVersion</code />
+    + <a href="#Acm_DevSetSlaveID"><code>Acm_DevSetSlaveID</code />
+----
 
 #### Acm2_GetAvailableDevs
+<a name="Acm2_GetAvailableDevs" />
 Get all device list.
 
 ```cpp
 U32 Acm2_GetAvailableDevs(DEVLIST *DeviceList, U32 MaxEntries, PU32 OutEntries)
 ```
-<!-- <a name="Acm2_DevOpen"></a>
-
-#### Acm2_DevOpen
-Open device with device number.
-
-```cpp
-U32 Acm2_DevOpen(U32 DeviceNumber, DEVICEINFO *DeviceHandle)
-``` -->
-<!-- <a name="Acm2_DevExportMappingTable"></a>
-
-#### Acm2_DevExportMappingTable
-Export mapping table of device.
-
-```cpp
-U32 Acm2_DevExportMappingTable(PI8 FilePath)
-```
-<a name="Acm2_DevImportMappingTable"></a>
-
-#### Acm2_DevImportMappingTable
-Import mapping table of device.
-
-```cpp
-U32 Acm2_DevImportMappingTable(PI8 FilePath)
-``` -->
-<a name="Acm2_DevSaveAllMapFile"></a>
 
 #### Acm2_DevSaveAllMapFile
+<a name="Acm2_DevSaveAllMapFile" />
 Upload input/output mapping table from device.
 
 ```cpp
 U32 Acm2_DevSaveAllMapFile(PI8 FilePath)
 ```
-<a name="Acm2_DevLoadAllMapFile"></a>
 
 #### Acm2_DevLoadAllMapFile
+<a name="Acm2_DevLoadAllMapFile" />
 Download input/output mapping table to device.
 
 ```cpp
 U32 Acm2_DevLoadAllMapFile(PI8 FilePath)
 ```
-<a name="Acm2_GetMappedPhysicalID"></a>
 
 #### Acm2_GetMappedPhysicalID
+<a name="Acm2_GetMappedPhysicalID" />
 Get mapped physical id of device.
 
 ```cpp
 U32 Acm2_GetMappedPhysicalID(ADV_OBJ_TYPE ObjType, U32 ObjLogicalID, PU32 DeviceNumber, PU32 ObjPhysicalID)
 ```
-<a name="Acm2_GetMappedLogicalIDList"></a>
 
 #### Acm2_GetMappedLogicalIDList
+<a name="Acm2_GetMappedLogicalIDList" />
 Get mapped list of logical id.
 
 ```cpp
 U32 Acm2_GetMappedLogicalIDList(ADV_OBJ_TYPE ObjType, U32 DeviceLogicalID, PU32 LogicallIDList, PU32 ObjCnt)
 ```
-<a name="Acm2_GetMappedObjInfo"></a>
 
 #### Acm2_GetMappedObjInfo
+<a name="Acm2_GetMappedObjInfo" />
 Get mapped object information.
 
 ```cpp
 U32 Acm2_GetMappedObjInfo(ADV_OBJ_TYPE ObjType, U32 ObjLogicalID, VOID *pObjInfo)
 ```
-<a name="Acm2_DevAllClose"></a>
 
 #### Acm2_DevAllClose
+<a name="Acm2_DevAllClose" />
 Close all device at same time.
 
 ```cpp
@@ -347,17 +737,17 @@ errCde = AdvMot.Acm2_DevOpen(device_number, byref(device_info))
 # Close device
 errCde = AdvMot.Acm2_DevAllClose()
 ```
-<a name="Acm2_DevInitialize"></a>
 
 #### Acm2_DevInitialize
+<a name="Acm2_DevInitialize" />
 Initial the device.
 
 ```cpp
 U32 Acm2_DevInitialize()
 ```
-<a name="Acm2_AxGetPosition"></a>
 
 #### Acm2_AxGetPosition
+<a name="Acm2_AxGetPosition" />
 Get axis position by axis number, and position type.
 
 ```cpp
@@ -383,17 +773,17 @@ pos = c_double(0)
 # Get axis 0 command position
 errCde = AdvMot.Acm2_AxGetPosition(axid, pos_type, byref(pos))
 ```
-<a name="Acm2_AxPTP"></a>
 
 #### Acm2_AxPTP
+<a name="Acm2_AxPTP" />
 Set axis move with position.
 
 ```cpp
 U32 Acm2_AxPTP(U32 AxID, ABS_MODE ptpMode, F64 Distance)
 ```
-<a name="Acm2_AxGetState"></a>
 
 #### Acm2_AxGetState
+<a name="Acm2_AxGetState" />
 Get axis state.
 
 ```cpp
@@ -427,17 +817,17 @@ errCde = AdvMot.Acm2_AxPTP(axid, abs_mode, distance)
 # Check axis 0 status
 errCde = AdvMot.Acm2_AxGetState(axid, state_type, byref(state))
 ```
-<a name="Acm2_SetProperty"></a>
 
 #### Acm2_SetProperty
+<a name="Acm2_SetProperty" />
 Set device/axis property.
 
 ```cpp
 U32 Acm2_SetProperty(U32 ObjID, U32 PropertyID, F64 Value)
 ```
-<a name="Acm2_GetProperty"></a>
 
 #### Acm2_GetProperty
+<a name="Acm2_GetProperty" />
 Get device/axis property.
 
 ```cpp
@@ -466,17 +856,17 @@ get_val = c_double(0)
 # Get local DO channel 0 property value
 errCde = AdvMot.Acm2_GetProperty(do_ch, property_id, byref(get_val))
 ```
-<a name="Acm2_SetMultiProperty"></a>
 
 #### Acm2_SetMultiProperty
+<a name="Acm2_SetMultiProperty" />
 Set multiple properties at once.
 
 ```cpp
 U32 Acm2_SetMultiProperty(U32 ObjID, PU32 PropertyID, PF64 Value, U32 Data_Cnt, PU32 ErrorBuffer)
 ```
-<a name="Acm2_GetMultiProperty"></a>
 
 #### Acm2_GetMultiProperty
+<a name="Acm2_GetMultiProperty" />
 Get multiple properties at once.
 
 ```cpp
@@ -513,17 +903,17 @@ errCde = AdvMot.Acm2_GetMultiProperty(ax_id, trans_ppt_arr, get_val, data_cnt, e
 for i range(data_cnt.value):
     print('set[{0}]:{1}, get:{2}'.format(i, value_arr[i].value, get_val[i]))
 ```
-<a name="Acm2_GetRawProperty"></a>
 
 #### Acm2_GetRawProperty
+<a name="Acm2_GetRawProperty" />
 Get raw property value.
 
 ```cpp
 U32 Acm2_GetRawProperty(U32 ObjID, U32 PropertyID, PVOID Value, PU32 BufferLength)
 ```
-<a name="Acm2_EnableCallBackFuncForOneEvent"></a>
 
 #### Acm2_EnableCallBackFuncForOneEvent
+<a name="Acm2_EnableCallBackFuncForOneEvent" />
 Set callback function for event.
 
 ```cpp
@@ -576,65 +966,65 @@ print('AX:{0} is done, event cnt is:{1}'.format(ax_id.value, ax_motion_cnt.value
 errCde = AdvMot.Acm2_EnableCallBackFuncForOneEvent(ax_id, c_int(ADV_EVENT_SUBSCRIBE.EVENT_DISABLE.value), EmptyFunction)
 ```
 
-<a name="Acm2_DevLoadAllConfig"></a>
 
 #### Acm2_DevLoadAllConfig
+<a name="Acm2_DevLoadAllConfig" />
 Load all configuration at once.
 
 ```cpp
 U32 Acm2_DevLoadAllConfig(PI8 ConfigPath)
 ```
-<a name="Acm2_DevLoadConfig"></a>
 
 #### Acm2_DevLoadConfig
+<a name="Acm2_DevLoadConfig" />
 Load configuration.
 
 ```cpp
 U32 Acm2_DevLoadConfig(U32 DevID, PI8 ConfigPath)
 ```
-<a name="Acm2_DevReadMailBox"></a>
 
 #### Acm2_DevReadMailBox
+<a name="Acm2_DevReadMailBox" />
 Read mailbox of device.
 
 ```cpp
 U32 Acm2_DevReadMailBox(ADV_OBJ_TYPE ObjType, U32 ObjID, U32 par_id, U32 data_index, U32 data_count, PU32 DataBuffer)
 ```
-<a name="Acm2_DevWriteMailBox"></a>
 
 #### Acm2_DevWriteMailBox
+<a name="Acm2_DevWriteMailBox" />
 Write mailbox of device.
 
 ```cpp
 U32 Acm2_DevWriteMailBox(ADV_OBJ_TYPE ObjType, U32 ObjID, U32 par_id, U32 data_index, U32 data_count, PU32 DataBuffer)
 ```
-<a name="Acm2_GetErrors"></a>
 
 #### Acm2_GetErrors
+<a name="Acm2_GetErrors" />
 Get error of device.
 
 ```cpp
 U32 Acm2_GetErrors(U32 DevID, PVOID Error, PU32 ErrorCount)
 ```
-<a name="Acm2_ResetErrorRecord"></a>
 
 #### Acm2_ResetErrorRecord
+<a name="Acm2_ResetErrorRecord" />
 Reset error.
 
 ```cpp
 U32 Acm2_ResetErrorRecord(U32 DevID)
 ```
-<a name="Acm2_DevPreviewMotion"></a>
 
 #### Acm2_DevPreviewMotion
+<a name="Acm2_DevPreviewMotion" />
 Preview motion.
 
 ```cpp
 U32 Acm2_DevPreviewMotion(U32 DevID, PI8 InputFile, PI8 OutputFile, U16 NumberOfAxes)
 ```
-<a name="Acm2_ChSetDOBit"></a>
 
 #### Acm2_ChSetDOBit
+<a name="Acm2_ChSetDOBit" />
 Set DO bit by channel.
 
 ```cpp
@@ -674,9 +1064,9 @@ errCde = AdvMot.Acm2_ChGetDOBit(do_channel8, byref(get_data8))
 # Get DO(14) value
 errCde = AdvMot.Acm2_ChGetDOBit(do_channel8, byref(get_data14))
 ```
-<a name="Acm2_ChGetDOBit"></a>
 
 #### Acm2_ChGetDOBit
+<a name="Acm2_ChGetDOBit" />
 Get DO bit by channel.
 
 ```cpp
@@ -712,65 +1102,65 @@ errCde = AdvMot.Acm2_ChSetDOBit(do_ch, data)
 get_data = c_uint32(0)
 errCde = AdvMot.Acm2_ChGetDOBit(do_ch, byref(get_data))
 ```
-<a name="Acm2_GetLastError"></a>
 
 #### Acm2_GetLastError
+<a name="Acm2_GetLastError" />
 Get last error of system.
 
 ```cpp
 U32 Acm2_GetLastError(ADV_OBJ_TYPE ObjType, U32 ObjLogicalID)
 ```
-<a name="Acm2_AxReturnPausePosition"></a>
 
 #### Acm2_AxReturnPausePosition
+<a name="Acm2_AxReturnPausePosition" />
 Get axis pause position.
 
 ```cpp
 U32 Acm2_AxReturnPausePosition(U32 AxID)
 ```
-<a name="Acm2_AxSetSvOn"></a>
 
 #### Acm2_AxSetSvOn
+<a name="Acm2_AxSetSvOn" />
 Set axis servo on/off.
 
 ```cpp
 U32 Acm2_AxSetSvOn(U32 AxID, DO_ONOFF OnOff)
 ```
-<a name="Acm2_DevSetAllSvOn"></a>
 
 #### Acm2_DevSetAllSvOn
+<a name="Acm2_DevSetAllSvOn" />
 Set all axes servo on.off.
 
 ```cpp
 U32 Acm2_DevSetAllSvOn(DO_ONOFF OnOff)
 ```
-<a name="Acm2_AxSetErcOn"></a>
 
 #### Acm2_AxSetErcOn
+<a name="Acm2_AxSetErcOn" />
 Set axis erc on/off.
 
 ```cpp
 U32 Acm2_AxSetErcOn(U32 AxID, DO_ONOFF OnOff)
 ```
-<a name="Acm2_AxResetAlm"></a>
 
 #### Acm2_AxResetAlm
+<a name="Acm2_AxResetAlm" />
 Reset axis alarm logic.
 
 ```cpp
 U32 Acm2_AxResetAlm(U32 AxID, DO_ONOFF OnOff)
 ```
-<a name="Acm2_AxMoveContinue"></a>
 
 #### Acm2_AxMoveContinue
+<a name="Acm2_AxMoveContinue" />
 Set aixs continue move.
 
 ```cpp
 U32 Acm2_AxMoveContinue(U32 AxID, MOTION_DIRECTION Direction)
 ```
-<a name="Acm2_AxMotionStop"></a>
 
 #### Acm2_AxMotionStop
+<a name="Acm2_AxMotionStop" />
 Force axis stop motion.
 
 ```cpp
@@ -816,73 +1206,73 @@ pos = c_double(0)
 pos_type = c_uint(POSITION_TYPE.POSITION_CMD.value)
 errCde = AdvMot.Acm2_AxGetPosition(ax_id, pos_type, byref(pos))
 ```
-<a name="Acm2_AxHome"></a>
 
 #### Acm2_AxHome
+<a name="Acm2_AxHome" />
 Set axis moving home with direction and home mode.
 
 ```cpp
 U32 Acm2_AxHomeEx(U32 AxID, U32 DirMode)
 ```
-<a name="Acm2_AxMoveGantryHome"></a>
 
 #### Acm2_AxMoveGantryHome
+<a name="Acm2_AxMoveGantryHome" />
 Set axis moving home with gantry.
 
 ```cpp
 U32 Acm2_AxMoveGantryHome(U32 AxID, HOME_MODE HomeMode, MOTION_DIRECTION Direction)
 ```
-<a name="Acm2_AxSetHomeSpeedProfile"></a>
 
 #### Acm2_AxSetHomeSpeedProfile
+<a name="Acm2_AxSetHomeSpeedProfile" />
 Set axis home speed config.
 
 ```cpp
 U32 Acm2_AxSetHomeSpeedProfile(U32 AxID, SPEED_PROFILE_PRM ProfileVel)
 ```
-<a name="Acm2_AxChangePos"></a>
 
 #### Acm2_AxChangePos
+<a name="Acm2_AxChangePos" />
 Set axis position.
 
 ```cpp
 U32 Acm2_AxChangePos(U32 AxID, F64 NewPosition)
 ```
-<a name="Acm2_AxChangeVel"></a>
 
 #### Acm2_AxChangeVel
+<a name="Acm2_AxChangeVel" />
 Set axis velocity.
 
 ```cpp
 U32 Acm2_AxChangeVel(U32 AxID, F64 NewVelocity, F64 NewAcc, F64 NewDec)
 ```
-<a name="Acm2_AxChangeVelByRate"></a>
 
 #### Acm2_AxChangeVelByRate
+<a name="Acm2_AxChangeVelByRate" />
 Set axis velocity by rate.
 
 ```cpp
 U32 Acm2_AxChangeVelByRate(U32 AxID, U32 Rate, F64 NewAcc, F64 NewDec)
 ```
-<a name="Acm2_AxMoveImpose"></a>
 
 #### Acm2_AxMoveImpose
+<a name="Acm2_AxMoveImpose" />
 Set axis impose.
 
 ```cpp
 U32 Acm2_AxMoveImpose(U32 AxID, F64 Position, F64 NewVelocity)
 ```
-<a name="Acm2_AxResetError"></a>
 
 #### Acm2_AxResetError
+<a name="Acm2_AxResetError" />
 Reset error of axis.
 
 ```cpp
 U32 Acm2_AxResetError(U32 AxID)
 ```
-<a name="Acm2_DevResetAllError"></a>
 
 #### Acm2_DevResetAllError
+<a name="Acm2_DevResetAllError" />
 Reset all device error.
 
 ```cpp
@@ -911,25 +1301,25 @@ pos = c_double(0)
 # Set axis 0 command position as 0
 errCde = AdvMot.Acm2_AxSetPosition(ax_id, pos_type, pos)
 ```
-<a name="Acm2_AxGetMotionIO"></a>
 
 #### Acm2_AxGetMotionIO
+<a name="Acm2_AxGetMotionIO" />
 Get axis motion IO status.
 
 ```cpp
 U32 Acm2_AxGetMotionIO(U32 AxID, MOTION_IO *Status)
 ```
-<a name="Acm2_AxSetPosition"></a>
 
 #### Acm2_AxSetPosition
+<a name="Acm2_AxSetPosition" />
 Set axis position.
 
 ```cpp
 U32 Acm2_AxSetPosition(U32 AxID, POSITION_TYPE PosType, F64 Position)
 ```
-<a name="Acm2_AxSetSpeedProfile"></a>
 
 #### Acm2_AxSetSpeedProfile
+<a name="Acm2_AxSetSpeedProfile" />
 Set axis speed information.
 
 ```cpp
@@ -960,9 +1350,9 @@ speed_info.JerkFac = c_double(0)
 # Set speed information
 errCde = AdvMot.Acm2_AxSetSpeedProfile(ax_id, speed_info)
 ```
-<a name="Acm2_AxGetVel"></a>
 
 #### Acm2_AxGetVel
+<a name="Acm2_AxGetVel" />
 Get axis current velocity.
 
 ```cpp
@@ -990,25 +1380,25 @@ vel_Type = c_uint(VELOCITY_TYPE.VELOCITY_CMD.value)
 # Get axis 0 current velocity
 errCde = AdvMot.Acm2_AxGetVel(ax_id, vel_Type, byref(get_vel))
 ```
-<a name="Acm2_AxEnableExternalMode"></a>
 
 #### Acm2_AxEnableExternalMode
+<a name="Acm2_AxEnableExternalMode" />
 Enable axis external mode.
 
 ```cpp
 U32 Acm2_AxEnableExternalMode(U32 AxID, EXT_DRIVE_MODE ExtDrvMode)
 ```
-<a name="Acm2_AxSoftJog"></a>
 
 #### Acm2_AxSoftJog
+<a name="Acm2_AxSoftJog" />
 Set axis jog.
 
 ```cpp
 U32 Acm2_AxSoftJog(U32 AxID, MOTION_DIRECTION Direction)
 ```
-<a name="Acm2_AxSetJogSpeedProfile"></a>
 
 #### Acm2_AxSetJogSpeedProfile
+<a name="Acm2_AxSetJogSpeedProfile" />
 Set axis jog speed information.
 
 ```cpp
@@ -1039,57 +1429,57 @@ jog_speed_info.VLTime = c_double(2000)
 # Set axis 0 jog speed information
 errCde = AdvMot.Acm2_AxSetJogSpeedProfile(ax_id, jog_speed_info)
 ```
-<a name="Acm2_AxMotionStart"></a>
 
 #### Acm2_AxMotionStart
+<a name="Acm2_AxMotionStart" />
 Start motion.
 
 ```cpp
 U32 Acm2_AxMotionStart(PU32 AxisArray, U32 ArrayElements)
 ```
-<a name="Acm2_AxPause"></a>
 
 #### Acm2_AxPause
+<a name="Acm2_AxPause" />
 Pause motion.
 
 ```cpp
 U32 Acm2_AxPause(U32 AxID)
 ```
-<a name="Acm2_AxResume"></a>
 
 #### Acm2_AxResume
+<a name="Acm2_AxResume" />
 Resume motion.
 
 ```cpp
 U32 Acm2_AxResume(U32 AxID)
 ```
-<a name="Acm2_AxResetPVTTable"></a>
 
 #### Acm2_AxResetPVTTable
+<a name="Acm2_AxResetPVTTable" />
 Reset axis PVT table.
 
 ```cpp
 U32 Acm2_AxResetPVTTable(U32 AxID)
 ```
-<a name="Acm2_AxLoadPVTTable"></a>
 
 #### Acm2_AxLoadPVTTable
+<a name="Acm2_AxLoadPVTTable" />
 Load axis PVT table.
 
 ```cpp
 U32 Acm2_AxLoadPVTTable(U32 AxID, PF64 Position, PF64 Velocity, PF64 Time, U32 ArrayElements)
 ```
-<a name="Acm2_AxLoadPVTTableContinuous"></a>
 
 #### Acm2_AxLoadPVTTableContinuous
+<a name="Acm2_AxLoadPVTTableContinuous" />
 Continuous loading PVT table.
 
 ```cpp
 U32 Acm2_AxLoadPVTTableContinuous(U32 AxID, PF64 Position, PF64 Velocity, PF64 JerkFactor, PF64 MaxVel, PF64 Acc, PF64 Dec, F64 TimeDelay, U32 ArrayElements)
 ```
-<a name="Acm2_AxMovePVT"></a>
 
 #### Acm2_AxMovePVT
+<a name="Acm2_AxMovePVT" />
 Move PVT motion.
 
 ```cpp
@@ -1147,33 +1537,33 @@ if (state.value != AXIS_STATE.STA_AX_READY.value):
 # Get axis 0 position
 errCde = AdvMot.Acm2_AxGetPosition(ax_id, pos_type, byref(get_pos))
 ```
-<a name="Acm2_AxCheckPTBuffer"></a>
 
 #### Acm2_AxCheckPTBuffer
+<a name="Acm2_AxCheckPTBuffer" />
 Check axis PT buffer.
 
 ```cpp
 U32 Acm2_AxCheckPTBuffer(U32 AxID, PU32 Freespace)
 ```
-<a name="Acm2_AxAddPTData"></a>
 
 #### Acm2_AxAddPTData
+<a name="Acm2_AxAddPTData" />
 Add axis PT data.
 
 ```cpp
 U32 Acm2_AxAddPTData(U32 AxID, F64 Position, F64 Time)
 ```
-<a name="Acm2_AxMovePT"></a>
 
 #### Acm2_AxMovePT
+<a name="Acm2_AxMovePT" />
 Move PT motion.
 
 ```cpp
 U32 Acm2_AxMovePT(U32 AxID)
 ```
-<a name="Acm2_AxResetPTData"></a>
 
 #### Acm2_AxResetPTData
+<a name="Acm2_AxResetPTData" />
 Reset axis PT data.
 
 ```cpp
@@ -1228,17 +1618,17 @@ while (state.value != AXIS_STATE.STA_AX_READY.value):
 # Get axis 0 position
 errCde = AdvMot.Acm2_AxGetPosition(ax_id, pos_type, byref(get_pos))
 ```
-<a name="Acm2_AxGearIn"></a>
 
 #### Acm2_AxGearIn
+<a name="Acm2_AxGearIn" />
 Set axis gear.
 
 ```cpp
 U32 Acm2_AxGearIn(U32 PrimaryAxisID, U32 FollowingAxisID, GEAR_IN_PRM GearInParameter)
 ```
-<a name="Acm2_AxGantryIn"></a>
 
 #### Acm2_AxGantryIn
+<a name="Acm2_AxGantryIn" />
 Set axis gantry.
 
 ```cpp
@@ -1295,17 +1685,17 @@ errCde = AdvMot.Acm2_AxGetPosition(follow_ax, pos_type, byref(get_pos_1))
 # Reset following axis
 errCde = AdvMot.Acm2_AxSyncOut(follow_ax)
 ```
-<a name="Acm2_AxPhaseAx"></a>
 
 #### Acm2_AxPhaseAx
+<a name="Acm2_AxPhaseAx" />
 Set axis phase.
 
 ```cpp
 U32 Acm2_AxPhaseAx(U32 AxID, PHASE_AXIS_PRM PhaseAxParameter)
 ```
-<a name="Acm2_AxSyncOut"></a>
 
 #### Acm2_AxSyncOut
+<a name="Acm2_AxSyncOut" />
 Lift the gantry.
 
 ```cpp
@@ -1365,41 +1755,41 @@ errCde = AdvMot.Acm2_AxGetPosition(follow_ax, pos_type, byref(get_pos_1))
 # Reset following axis
 errCde = AdvMot.Acm2_AxSyncOut(follow_ax)
 ```
-<a name="Acm2_GpGetPausePosition"></a>
 
 #### Acm2_GpGetPausePosition
+<a name="Acm2_GpGetPausePosition" />
 Get group pause position.
 
 ```cpp
 U32 Acm2_GpGetPausePosition(U32 GpID, PF64 PosArray)
 ```
-<a name="Acm2_GpCreate"></a>
 
 #### Acm2_GpCreate
+<a name="Acm2_GpCreate" />
 Create group.
 
 ```cpp
 U32 Acm2_GpCreate(U32 GpID, PU32 AxisArray, U32 ArrayElements)
 ```
-<a name="Acm2_GpGetAxesInGroup"></a>
 
 #### Acm2_GpGetAxesInGroup
+<a name="Acm2_GpGetAxesInGroup" />
 Check axes group.
 
 ```cpp
 U32 Acm2_GpGetAxesInGroup(U32 GpID, PU32 AxisArray, PU32 ArrayElements)
 ```
-<a name="Acm2_GpResetError"></a>
 
 #### Acm2_GpResetError
+<a name="Acm2_GpResetError" />
 Reset error of group.
 
 ```cpp
 U32 Acm2_GpResetError(U32 GpID)
 ```
-<a name="Acm2_GpLine"></a>
 
 #### Acm2_GpLine
+<a name="Acm2_GpLine" />
 Move group line.
 
 ```cpp
@@ -1461,9 +1851,9 @@ errCde = AdvMot.Acm2_AxGetPosition(gp_ax_arr[1], pos_type, byref(get_pos_1))
 # Reset all axes from group 0
 errCde = AdvMot.Acm2_GpCreate(gp_id, gp_arr, 0)
 ```
-<a name="Acm2_GpArc_Center"></a>
 
 #### Acm2_GpArc_Center
+<a name="Acm2_GpArc_Center" />
 Set group arc center.
 
 ```cpp
@@ -1532,9 +1922,9 @@ errCde = AdvMot.Acm2_AxGetPosition(gp_ax_arr[1], pos_type, byref(get_pos_1))
 # Reset all axes from group 0
 errCde = AdvMot.Acm2_GpCreate(gp_id, gp_arr, 0)
 ```
-<a name="Acm2_GpArc_3P"></a>
 
 #### Acm2_GpArc_3P
+<a name="Acm2_GpArc_3P" />
 Set group arc point.
 
 ```cpp
@@ -1604,9 +1994,9 @@ errCde = AdvMot.Acm2_AxGetPosition(gp_ax_arr[1], pos_type, byref(get_pos_1))
 # Reset all axes from group 0
 errCde = AdvMot.Acm2_GpCreate(gp_id, gp_arr, 0)
 ```
-<a name="Acm2_GpArc_Angle"></a>
 
 #### Acm2_GpArc_Angle
+<a name="Acm2_GpArc_Angle" />
 Set group arc angle.
 
 ```cpp
@@ -1670,9 +2060,9 @@ errCde = AdvMot.Acm2_AxGetPosition(gp_ax_arr[1], pos_type, byref(get_pos_1))
 # Reset all axes from group 0
 errCde = AdvMot.Acm2_GpCreate(gp_id, gp_arr, 0)
 ```
-<a name="Acm2_Gp3DArc_Center"></a>
 
 #### Acm2_Gp3DArc_Center
+<a name="Acm2_Gp3DArc_Center" />
 Set 3D group arc center.
 
 ```cpp
@@ -1745,9 +2135,9 @@ errCde = AdvMot.Acm2_AxGetPosition(gp_ax_arr[2], pos_type, byref(get_pos_2))
 # Reset all axes from group 0
 errCde = AdvMot.Acm2_GpCreate(gp_id, gp_arr, 0)
 ```
-<a name="Acm2_Gp3DArc_NormVec"></a>
 
 #### Acm2_Gp3DArc_NormVec
+<a name="Acm2_Gp3DArc_NormVec" />
 Set 3D group arc norm vector.
 
 ```cpp
@@ -1827,9 +2217,9 @@ errCde = AdvMot.Acm2_AxGetPosition(gp_ax_arr[2], pos_type, byref(get_pos_2))
 # Reset all axes from group 0
 errCde = AdvMot.Acm2_GpCreate(gp_id, gp_arr, 0)
 ```
-<a name="Acm2_Gp3DArc_3P"></a>
 
 #### Acm2_Gp3DArc_3P
+<a name="Acm2_Gp3DArc_3P" />
 Set arc movement with 3 points of circular.
 
 ```cpp
@@ -1906,9 +2296,9 @@ errCde = AdvMot.Acm2_AxGetPosition(gp_ax_arr[2], pos_type, byref(get_pos_2))
 # Reset all axes from group 0
 errCde = AdvMot.Acm2_GpCreate(gp_id, gp_arr, 0)
 ```
-<a name="Acm2_Gp3DArc_3PAngle"></a>
 
 #### Acm2_Gp3DArc_3PAngle
+<a name="Acm2_Gp3DArc_3PAngle" />
 Set 3D group arc points, angle.
 
 ```cpp
@@ -1985,9 +2375,9 @@ errCde = AdvMot.Acm2_AxGetPosition(gp_ax_arr[2], pos_type, byref(get_pos_2))
 # Reset all axes from group 0
 errCde = AdvMot.Acm2_GpCreate(gp_id, gp_arr, 0)
 ```
-<a name="Acm2_GpHelix_Center"></a>
 
 #### Acm2_GpHelix_Center
+<a name="Acm2_GpHelix_Center" />
 Set group helix center.
 
 ```cpp
@@ -2058,9 +2448,9 @@ errCde = AdvMot.Acm2_AxGetPosition(gp_ax_arr[2], pos_type, byref(get_pos_2))
 # Reset all axes from group 0
 errCde = AdvMot.Acm2_GpCreate(gp_id, gp_arr, 0)
 ```
-<a name="Acm2_GpHelix_3P"></a>
 
 #### Acm2_GpHelix_3P
+<a name="Acm2_GpHelix_3P" />
 Set group helix points.
 
 ```cpp
@@ -2130,9 +2520,9 @@ errCde = AdvMot.Acm2_AxGetPosition(gp_ax_arr[2], pos_type, byref(get_pos_2))
 # Reset all axes from group 0
 errCde = AdvMot.Acm2_GpCreate(gp_id, gp_arr, 0)
 ```
-<a name="Acm2_GpHelix_Angle"></a>
 
 #### Acm2_GpHelix_Angle
+<a name="Acm2_GpHelix_Angle" />
 Set group helix angle.
 
 ```cpp
@@ -2203,16 +2593,16 @@ errCde = AdvMot.Acm2_AxGetPosition(gp_ax_arr[2], pos_type, byref(get_pos_2))
 # Reset all axes from group 0
 errCde = AdvMot.Acm2_GpCreate(gp_id, gp_arr, 0)
 ```
-<a name="Acm2_GpResume"></a>
 
 #### Acm2_GpResume
+<a name="Acm2_GpResume" />
 
 ```cpp
 U32 Acm2_GpResume(U32 GpID)
 ```
-<a name="Acm2_GpPause"></a>
 
 #### Acm2_GpPause
+<a name="Acm2_GpPause" />
 Set group pause motion.
 
 ```cpp
@@ -2297,33 +2687,33 @@ errCde = AdvMot.Acm2_AxGetPosition(gp_ax_arr[2], pos_type, byref(get_pos_2))
 # Reset all axes from group 0
 errCde = AdvMot.Acm2_GpCreate(gp_id, gp_arr, 0)
 ```
-<a name="Acm2_GpMotionStop"></a>
 
 #### Acm2_GpMotionStop
+<a name="Acm2_GpMotionStop" />
 Stop group motion.
 
 ```cpp
 U32 Acm2_GpMotionStop(U32 GpID, MOTION_STOP_MODE StopMode, F64 NewDec)
 ```
-<a name="Acm2_GpChangeVel"></a>
 
 #### Acm2_GpChangeVel
+<a name="Acm2_GpChangeVel" />
 Change velocity of group.
 
 ```cpp
 U32 Acm2_GpChangeVel(U32 GpID, F64 NewVelocity, F64 NewAcc, F64 NewDec)
 ```
-<a name="Acm2_GpChangeVelByRate"></a>
 
 #### Acm2_GpChangeVelByRate
+<a name="Acm2_GpChangeVelByRate" />
 Change group velocity by rate.
 
 ```cpp
 U32 Acm2_GpChangeVelByRate(U32 GpID, U32 Rate, F64 NewAcc, F64 NewDec)
 ```
-<a name="Acm2_GpGetVel"></a>
 
 #### Acm2_GpGetVel
+<a name="Acm2_GpGetVel" />
 Get group velocity.
 
 ```cpp
@@ -2405,49 +2795,49 @@ errCde = AdvMot.Acm2_AxGetPosition(gp_ax_arr[2], pos_type, byref(get_pos_2))
 # Reset all axes from group 0
 errCde = AdvMot.Acm2_GpCreate(gp_id, gp_arr, 0)
 ```
-<a name="Acm2_GpSetSpeedProfile"></a>
 
 #### Acm2_GpSetSpeedProfile
+<a name="Acm2_GpSetSpeedProfile" />
 Get group speed information.
 
 ```cpp
 U32 Acm2_GpSetSpeedProfile(U32 GpID, SPEED_PROFILE_PRM ProfileVel)
 ```
-<a name="Acm2_GpGetState"></a>
 
 #### Acm2_GpGetState
+<a name="Acm2_GpGetState" />
 Get group status.
 
 ```cpp
 U32 Acm2_GpGetState(U32 GpID, PU32 State)
 ```
-<a name="Acm2_GpLoadPath"></a>
 
 #### Acm2_GpLoadPath
+<a name="Acm2_GpLoadPath" />
 Load path table group.
 
 ```cpp
 U32 Acm2_GpLoadPath(U32 GpID, PI8 FilePath, PU32 TotalCount)
 ```
-<a name="Acm2_GpAddPath"></a>
 
 #### Acm2_GpAddPath
+<a name="Acm2_GpAddPath" />
 Add path into group.
 
 ```cpp
 U32 Acm2_GpAddPath(U32 GpID, U32 MoveCmd, PATH_MOVE_MODE_CM2 MoveMode, F64 FH, F64 FL, F64 Acc, F64 Dec, PF64 EndPoint_DataArray, PF64 CenPoint_DataArray, PU32 ArrayElements)
 ```
-<a name="Acm2_GpMovePath"></a>
 
 #### Acm2_GpMovePath
+<a name="Acm2_GpMovePath" />
 Start move group after add path.
 
 ```cpp
 U32 Acm2_GpMovePath(U32 GpID)
 ```
-<a name="Acm2_GpResetPath"></a>
 
 #### Acm2_GpResetPath
+<a name="Acm2_GpResetPath" />
 Reset group path table.
 
 ```cpp
@@ -2542,10 +2932,10 @@ errCde = AdvMot.Acm2_GpResetPath(gp_id)
 # Reset all axes from group 0
 errCde = AdvMot.Acm2_GpCreate(gp_id, gp_arr, 0)
 ```
-<a name="Acm2_GpGetPathStatus"></a>
 
 #### Acm2_GpGetPathStatus
 Get group path status.
+<a name="Acm2_GpGetPathStatus" />
 
 ```cpp
 U32 Acm2_GpGetPathStatus(U32 GpID, PATH_STATUS *pathStatus)
@@ -2619,114 +3009,114 @@ errCde = AdvMot.Acm2_GpResetPath(gp_id)
 # Reset all axes from group 0
 errCde = AdvMot.Acm2_GpCreate(gp_id, gp_arr, 0)
 ```
-<a name="Acm2_GpMoveSelPath"></a>
 
 #### Acm2_GpMoveSelPath
+<a name="Acm2_GpMoveSelPath" />
 
 ```cpp
 U32 Acm2_GpMoveSelPath(U32 GpID, U32 StartIndex, U32 EndIndex, U32 Repeat)
 ```
-<a name="Acm2_GpGetPathIndexStatus"></a>
 
 #### Acm2_GpGetPathIndexStatus
+<a name="Acm2_GpGetPathIndexStatus" />
 Get group information by the index of path table.
 
 ```cpp
 U32 Acm2_GpGetPathIndexStatus(U32 GpID, U32 Index, PU32 CmdFunc, PU32 MoveMode, PF64 FH, PF64 FL, PF64 Acc, PF64 Dec, PF64 EndPoint_DataArray, PF64 CenPoint_DataArray, PU32 ArrayElements)
 ```
-<a name="Acm2_GpDelay"></a>
 
 #### Acm2_GpDelay
+<a name="Acm2_GpDelay" />
 Delay group.
 
 ```cpp
 U32 Acm2_GpDelay(U32 GpID, U32 DelayTime)
 ```
-<a name="Acm2_GpPathDO"></a>
 
 #### Acm2_GpPathDO
+<a name="Acm2_GpPathDO" />
 Set device do on/off between path.
 
 ```cpp
 U32 Acm2_GpPathDO(U32 GpID, PATH_DO_PRM  PathDOPrm)
 ```
-<a name="Acm2_GpPathWaitDI"></a>
 
 #### Acm2_GpPathWaitDI
+<a name="Acm2_GpPathWaitDI" />
 Wait DI status between path.
 
 ```cpp
 U32 Acm2_GpPathWaitDI(U32 GpID, PATH_DI_WAIT_PRM DIWaitPrm)
 ```
-<a name="Acm2_GpPathWaitForAxis"></a>
 
 #### Acm2_GpPathWaitForAxis
+<a name="Acm2_GpPathWaitForAxis" />
 Wait axis between path.
 
 ```cpp
 U32 Acm2_GpPathWaitForAxis(U32 GpID, PATH_AX_WAIT_PRM AxWaitPrm)
 ```
-<a name="Acm2_GpLookAheadPath"></a>
 
 #### Acm2_GpLookAheadPath
+<a name="Acm2_GpLookAheadPath" />
 
 ```cpp
 U32 Acm2_GpLookAheadPath(U32 GpID, U16 BufferSize, PI8 OutputFile)
 ```
-<a name="Acm2_GpLookAheadPathFile"></a>
 
 #### Acm2_GpLookAheadPathFile
+<a name="Acm2_GpLookAheadPathFile" />
 
 ```cpp
 U32 Acm2_GpLookAheadPathFile(U32 GpID, U16 BufferSize, PI8 InputPathFile, PI8 OutputFile, PU32 PathCount)
 ```
-<!-- <a name="Acm2_GpLoadAndMovePath"></a>
+<!-- <a name="Acm2_GpLoadAndMovePath" />
 
 #### Acm2_GpLoadAndMovePath -->
 
-<a name="Acm2_ChGetDIBit"></a>
 
 #### Acm2_ChGetDIBit
+<a name="Acm2_ChGetDIBit" />
 Get DI bit by channel.
 
 ```cpp
 U32 Acm2_ChGetDIBit(U32 DiChannel, PU32 BitData)
 ```
-<a name="Acm2_ChSetDOBitByRingNo"></a>
 
 #### Acm2_ChSetDOBitByRingNo
+<a name="Acm2_ChSetDOBitByRingNo" />
 Set DO bit by channel, and ring number.
 
 ```cpp
 U32 Acm2_ChSetDOBitByRingNo(U32 RingNo, U32 SlaveID, U32 DoChannel, U32 BitData)
 ```
-<a name="Acm2_ChGetDOBitByRingNo"></a>
 
 #### Acm2_ChGetDOBitByRingNo
+<a name="Acm2_ChGetDOBitByRingNo" />
 Get DO bit by ring number, and channel.
 
 ```cpp
 U32 Acm2_ChGetDOBitByRingNo(U32 RingNo, U32 SlaveID, U32 DoChannel, PU32 BitData)
 ```
-<a name="Acm2_ChGetDIBitByRingNo"></a>
 
 #### Acm2_ChGetDIBitByRingNo
+<a name="Acm2_ChGetDIBitByRingNo" />
 Get DI bit by ring number, and channel.
 
 ```cpp
 U32 Acm2_ChGetDIBitByRingNo(U32 RingNo, U32 SlaveID, U32 DiChannel, PU32 BitData)
 ```
-<a name="Acm2_ChSetDOByte"></a>
 
 #### Acm2_ChSetDOByte
+<a name="Acm2_ChSetDOByte" />
 Set DO channel byte.
 
 ```cpp
 U32 Acm2_ChSetDOByte(U32 StartPort, U32 NumPort, PU32 ByteDataArray)
 ```
-<a name="Acm2_ChGetDOByte"></a>
 
 #### Acm2_ChGetDOByte
+<a name="Acm2_ChGetDOByte" />
 Get DO channel byte.
 
 ```cpp
@@ -2774,41 +3164,41 @@ time.sleep(0.5)
 # Set DO byte of 5057SO (0~7)
 errCde = AdvMot.Acm2_ChSetDOByte(start_ch, port_num, set_value_arr_off)
 ```
-<a name="Acm2_ChGetDIByte"></a>
 
 #### Acm2_ChGetDIByte
+<a name="Acm2_ChGetDIByte" />
 Get DI channel byte.
 
 ```cpp
 U32 Acm2_ChGetDIByte(U32 StartPort, U32 NumPort, PU32 ByteDataArray)
 ```
-<a name="Acm2_ChSetDOByteByRingNo"></a>
 
 #### Acm2_ChSetDOByteByRingNo
+<a name="Acm2_ChSetDOByteByRingNo" />
 Set DO byte by ring number.
 
 ```cpp
 U32 Acm2_ChSetDOByteByRingNo(U32 RingNo, U32 SlaveID, U32 StartPort, U32 NumPort, PU32 ByteDataArray)
 ```
-<a name="Acm2_ChGetDOByteByRingNo"></a>
 
 #### Acm2_ChGetDOByteByRingNo
+<a name="Acm2_ChGetDOByteByRingNo" />
 Get DO byte by ring number.
 
 ```cpp
 U32 Acm2_ChGetDOByteByRingNo(U32 RingNo, U32 SlaveID, U32 StartPort, U32 NumPort, PU32 ByteDataArray)
 ```
-<a name="Acm2_ChGetDIByteByRingNo"></a>
 
 #### Acm2_ChGetDIByteByRingNo
+<a name="Acm2_ChGetDIByteByRingNo" />
 Get DI byte by ring number.
 
 ```cpp
 U32 Acm2_ChGetDIByteByRingNo(U32 RingNo, U32 SlaveID, U32 StartPort, U32 NumPort, PU32 ByteDataArray)
 ```
-<a name="Acm2_ChSetAOData"></a>
 
 #### Acm2_ChSetAOData
+<a name="Acm2_ChSetAOData" />
 Set AO data.
 
 ```cpp
@@ -2866,73 +3256,73 @@ assertAlmostEqual(ao_data.value, get_data_ao.value, delta=1.0)
 get_data_ai = c_double(0)
 errCde = AdvMot.Acm2_ChGetAIData(ao_ch, data_type, byref(get_data_ai))
 ```
-<a name="Acm2_ChGetAOData"></a>
 
 #### Acm2_ChGetAOData
+<a name="Acm2_ChGetAOData" />
 Get AO data.
 
 ```cpp
 U32 Acm2_ChGetAOData(U32 AoChannel, DAQ_DATA_TYPE Type, PF64 AoData)
 ```
-<a name="Acm2_ChSetAODataByRingNo"></a>
 
 #### Acm2_ChSetAODataByRingNo
+<a name="Acm2_ChSetAODataByRingNo" />
 Set AO data by ring number.
 
 ```cpp
 U32 Acm2_ChSetAODataByRingNo(U32 RingNo, U32 SlaveID, U32 AoChannel, DAQ_DATA_TYPE Type, F64 AoData)
 ```
-<a name="Acm2_ChGetAODataByRingNo"></a>
 
 #### Acm2_ChGetAODataByRingNo
+<a name="Acm2_ChGetAODataByRingNo" />
 Get AO data by ring number.
 
 ```cpp
 U32 Acm2_ChGetAODataByRingNo(U32 RingNo, U32 SlaveID, U32 AoChannel, DAQ_DATA_TYPE Type, PF64 AoData)
 ```
-<a name="Acm2_ChGetAIData"></a>
 
 #### Acm2_ChGetAIData
+<a name="Acm2_ChGetAIData" />
 Get AI data.
 
 ```cpp
 U32 Acm2_ChGetAIData(U32 AiChannel, DAQ_DATA_TYPE Type, PF64 AiData)
 ```
-<a name="Acm2_ChGetAIDataByRingNo"></a>
 
 #### Acm2_ChGetAIDataByRingNo
+<a name="Acm2_ChGetAIDataByRingNo" />
 Get AI data by ring number.
 
 ```cpp
 U32 Acm2_ChGetAIDataByRingNo(U32 RingNo, U32 SlaveID, U32 AiChannel, DAQ_DATA_TYPE Type, PF64 AiData)
 ```
-<a name="Acm2_ChGetCntData"></a>
 
 #### Acm2_ChGetCntData
+<a name="Acm2_ChGetCntData" />
 Get counter data.
 
 ```cpp
 U32 Acm2_ChGetCntData(U32 CntChannel, PF64 CounterData)
 ```
-<a name="Acm2_ChSetCntData"></a>
 
 #### Acm2_ChSetCntData
+<a name="Acm2_ChSetCntData" />
 Set counter data.
 
 ```cpp
 U32 Acm2_ChSetCntData(U32 CntChannel, F64 CounterData)
 ```
-<a name="Acm2_ChLinkCmpFIFO"></a>
 
 #### Acm2_ChLinkCmpFIFO
+<a name="Acm2_ChLinkCmpFIFO" />
 Set compare position.
 
 ```cpp
 U32 Acm2_ChLinkCmpFIFO(U32 ChID, PU32 AxisArray, U32 ArrayElement)
 ```
-<a name="Acm2_ChLinkCmpObject"></a>
 
 #### Acm2_ChLinkCmpObject
+<a name="Acm2_ChLinkCmpObject" />
 Link compare do with axis/counter.
 
 ```cpp
@@ -3009,57 +3399,57 @@ while get_cnt_data.value <= end_pos.value:
 # Disable compare
 errCde = AdvMot.Acm2_SetProperty(cmp_ch, c_uint32(PropertyID2.CFG_CH_DaqCmpDoEnable.value).value, c_double(COMPARE_ENABLE.CMP_DISABLE.value).value)
 ```
-<a name="Acm2_ChGetLinkedCmpObject"></a>
 
 #### Acm2_ChGetLinkedCmpObject
+<a name="Acm2_ChGetLinkedCmpObject" />
 Get compare do linked object.
 
 ```cpp
 U32 Acm2_ChGetLinkedCmpObject(U32 ChID, ADV_OBJ_TYPE *ObjType, PU32 ObjArray, PU32 ArrayElement)
 ```
-<a name="Acm2_ChEnableCmp"></a>
 
 #### Acm2_ChEnableCmp
+<a name="Acm2_ChEnableCmp" />
 Enable compare channel.
 
 ```cpp
 U32 Acm2_ChEnableCmp(U32 ChID, U32 Enable)
 ```
-<a name="Acm2_ChSetCmpOut"></a>
 
 #### Acm2_ChSetCmpOut
+<a name="Acm2_ChSetCmpOut" />
 Set compare channel on/off.
 
 ```cpp
 U32 Acm2_ChSetCmpOut(U32 ChID, DO_ONOFF OnOff)
 ```
-<a name="Acm2_ChSetCmpDoOut"></a>
 
 #### Acm2_ChSetCmpDoOut
+<a name="Acm2_ChSetCmpDoOut" />
 Set compare on/off.
 
 ```cpp
 U32 Acm2_ChSetCmpDoOut(U32 ChID, DO_ONOFF OnOff)
 ```
-<a name="Acm2_AxGetCmpData"></a>
 
 #### Acm2_AxGetCmpData
+<a name="Acm2_AxGetCmpData" />
 Get compared data by axis.
 
 ```cpp
 U32 Acm2_AxGetCmpData(U32 AxID, PF64 CmpData)
 ```
-<a name="Acm2_ChGetCmpData"></a>
 
 #### Acm2_ChGetCmpData
+<a name="Acm2_ChGetCmpData" />
 Get compared data by channel.
 
 ```cpp
 U32 Acm2_ChGetCmpData(U32 CmpChannel, PF64 CmpData, U32 ObjectArrayCount)
 ```
-<a name="Acm2_AxSetCmpTable"></a>
 
 #### Acm2_AxSetCmpTable
+<a name="Acm2_AxSetCmpTable" />
 Set compare table by axis.
 
 ```cpp
@@ -3131,25 +3521,25 @@ while get_cnt_data.value < end_pos.value:
 errCde = AdvMot.Acm2_SetProperty(cmp_ch, c_uint32(PropertyID2.CFG_CH_DaqCmpDoEnable.value).value, c_double(COMPARE_ENABLE.CMP_DISABLE.value).value)
 ```
 
-<a name="Acm2_AxSetCmpAuto"></a>
 
 #### Acm2_AxSetCmpAuto
+<a name="Acm2_AxSetCmpAuto" />
 Set auto compare by axis.
 
 ```cpp
 U32 Acm2_AxSetCmpAuto(U32 AxID, F64 StartPosition, F64 EndPosition, F64 Interval)
 ```
-<a name="Acm2_ChSetCmpAuto"></a>
 
 #### Acm2_ChSetCmpAuto
+<a name="Acm2_ChSetCmpAuto" />
 Set auto compare by channel.
 
 ```cpp
 U32 Acm2_ChSetCmpAuto(U32 CmpChannel, F64 StartPosition, F64 EndPosition, F64 Interval)
 ```
-<a name="Acm2_ChSetCmpBufferData"></a>
 
 #### Acm2_ChSetCmpBufferData
+<a name="Acm2_ChSetCmpBufferData" />
 Set compare buffer.
 
 ```cpp
@@ -3219,9 +3609,9 @@ while get_cnt_data.value < end_pos.value:
 errCde = AdvMot.Acm2_SetProperty(cmp_ch, c_uint32(PropertyID2.CFG_CH_DaqCmpDoEnable.value).value, c_double(COMPARE_ENABLE.CMP_DISABLE.value).value)
 ```
 
-<a name="Acm2_ChSetMultiCmpTable"></a>
 
 #### Acm2_ChSetMultiCmpTable
+<a name="Acm2_ChSetMultiCmpTable" />
 Set compare table.
 
 ```cpp
@@ -3337,86 +3727,86 @@ errCde = AdvMot.Acm2_SetProperty(cmp_ch, c_uint32(PropertyID2.CFG_CH_DaqLtcEnabl
 errCde = AdvMot.Acm2_SetProperty(ltc_ch, c_uint32(PropertyID2.CFG_CH_DaqCmpDoEnable.value).value,
                                         c_double(COMPARE_ENABLE.CMP_DISABLE.value).value)
 ```
-<a name="Acm2_ChSetMultiCmpBufferData"></a>
 
 #### Acm2_ChSetMultiCmpBufferData
+<a name="Acm2_ChSetMultiCmpBufferData" />
 Set multi compare buffer.
 
 ```cpp
 U32 Acm2_ChSetMultiCmpBufferData(U32 ChID, PF64 MultiCmpTable, U32 ObjectArrayCount, U32 DataArrayCount)
 ```
-<a name="Acm2_ChResetCmpData"></a>
 
 #### Acm2_ChResetCmpData
+<a name="Acm2_ChResetCmpData" />
 Reset compare data.
 
 ```cpp
 U32 Acm2_ChResetCmpData(U32 CmpChannel)
 ```
-<a name="Acm2_ChGetCmpBufferStatus"></a>
 
 #### Acm2_ChGetCmpBufferStatus
+<a name="Acm2_ChGetCmpBufferStatus" />
 Get compared buffer status.
 
 ```cpp
 U32	Acm2_ChGetCmpBufferStatus(U32 CmpChannel, PBUFFER_STATUS bufferstatus)
 ```
-<a name="Acm2_ChLinkLatchAxis"></a>
 
 #### Acm2_ChLinkLatchAxis
+<a name="Acm2_ChLinkLatchAxis" />
 Link latch to axis.
 ```cpp
 U32 Acm2_ChLinkLatchAxis(U32 ChID, PU32 AxisArray, U32 AxisCount)
 ```
-<a name="Acm2_ChLinkLatchObject"></a>
 
 #### Acm2_ChLinkLatchObject
+<a name="Acm2_ChLinkLatchObject" />
 Lift latch to object.
 ```cpp
 U32 Acm2_ChLinkLatchObject(U32 ChID, ADV_OBJ_TYPE ObjType, PU32 ObjArray, U32 ArrayElement)
 ```
-<a name="Acm2_ChGetLinkedLatchObject"></a>
 
 #### Acm2_ChGetLinkedLatchObject
+<a name="Acm2_ChGetLinkedLatchObject" />
 Get linked latch object.
 ```cpp
 U32 Acm2_ChGetLinkedLatchObject(U32 ChID, ADV_OBJ_TYPE *ObjType, PU32 ObjArray, PU32 ArrayElement)
 ```
-<a name="Acm2_ChTriggerLatch"></a>
 
 #### Acm2_ChTriggerLatch
+<a name="Acm2_ChTriggerLatch" />
 Trigger latch by channel.
 
 ```cpp
 U32 Acm2_ChTriggerLatch(U32 ChID)
 ```
-<a name="Acm2_AxReadLatchBuffer"></a>
 
 #### Acm2_AxReadLatchBuffer
+<a name="Acm2_AxReadLatchBuffer" />
 Read latch buffer.
 
 ```cpp
 U32	Acm2_AxReadLatchBuffer(U32 AxID, PF64 LatchDataArray, PU32 DataCnt)
 ```
-<a name="Acm2_ChReadLatchBuffer"></a>
 
 #### Acm2_ChReadLatchBuffer
+<a name="Acm2_ChReadLatchBuffer" />
 Read latch buffer by channel.
 
 ```cpp
 U32	Acm2_ChReadLatchBuffer(U32 LtcChannel, PF64 LatchDataArray, U32 ObjectArrayCount, PU32 DataArrayCount)
 ```
-<a name="Acm2_AxGetLatchBufferStatus"></a>
 
 #### Acm2_AxGetLatchBufferStatus
+<a name="Acm2_AxGetLatchBufferStatus" />
 Get latch buffer status.
 
 ```cpp
 U32	Acm2_AxGetLatchBufferStatus(U32 AxID, PU32 RemainCnt, PU32 SpaceCnt)
 ```
-<a name="Acm2_ChGetLatchBufferStatus"></a>
 
 #### Acm2_ChGetLatchBufferStatus
+<a name="Acm2_ChGetLatchBufferStatus" />
 Get latch buffer status by channel.
 
 ```cpp
@@ -3531,169 +3921,169 @@ errCde = AdvMot.Acm2_SetProperty(cmp_ch, c_uint32(PropertyID2.CFG_CH_DaqLtcEnabl
 errCde = AdvMot.Acm2_SetProperty(ltc_ch, c_uint32(PropertyID2.CFG_CH_DaqCmpDoEnable.value).value,
                                             c_double(COMPARE_ENABLE.CMP_DISABLE.value).value)
 ```
-<a name="Acm2_AxResetLatchBuffer"></a>
 
 #### Acm2_AxResetLatchBuffer
+<a name="Acm2_AxResetLatchBuffer" />
 Reset latch buffer.
 
 ```cpp
 U32	Acm2_AxResetLatchBuffer(U32 AxID)
 ```
-<a name="Acm2_ChResetLatchBuffer"></a>
 
 #### Acm2_ChResetLatchBuffer
+<a name="Acm2_ChResetLatchBuffer" />
 Reset latch buffer by channel.
 
 ```cpp
 U32	Acm2_ChResetLatchBuffer(U32 LtcChannel)
 ```
-<a name="Acm2_ChLinkPWMTable"></a>
 
 #### Acm2_ChLinkPWMTable
+<a name="Acm2_ChLinkPWMTable" />
 Link PWM with object.
 
 ```cpp
 U32 Acm2_ChLinkPWMTable(U32 ChID, ADV_OBJ_TYPE ObjType, U32 ObjectID)
 ```
-<a name="Acm2_ChGetLinkedPWMTable"></a>
 
 #### Acm2_ChGetLinkedPWMTable
+<a name="Acm2_ChGetLinkedPWMTable" />
 Get linked PWM Acm2_ChSetPWMTabletable by channel.
 
 ```cpp
 U32 Acm2_ChGetLinkedPWMTable(U32 ChID, ADV_OBJ_TYPE *ObjType, PU32 ObjArray, PU32 ArrayElement)
 ```
-<a name="Acm2_ChSetPWMTable"></a>
 
 #### Acm2_ChSetPWMTable
+<a name="Acm2_ChSetPWMTable" />
 Set PWM table by channel.
 
 ```cpp
 U32 Acm2_ChSetPWMTable(U32 ChID, PF64 VelocityArray, PF64 PWMArray, U32 ArrayElements)
 ```
-<a name="Acm2_ChLoadPWMTableFile"></a>
 
 #### Acm2_ChLoadPWMTableFile
+<a name="Acm2_ChLoadPWMTableFile" />
 Loal PWM table file.
 
 ```cpp
 U32 Acm2_ChLoadPWMTableFile(U32 ChID, PI8 FilePath, PU32 PointsCount)
 ```
-<a name="Acm2_ChGetPWMTableStatus"></a>
 
 #### Acm2_ChGetPWMTableStatus
+<a name="Acm2_ChGetPWMTableStatus" />
 Get PWM table status.
 
 ```cpp
 U32	Acm2_ChGetPWMTableStatus(U32 ChID, PWM_TABLE_STATUS *PWMStatus)
 ```
-<a name="Acm2_ChGetExtDriveData"></a>
 
 #### Acm2_ChGetExtDriveData
+<a name="Acm2_ChGetExtDriveData" />
 Get external drive data by channel.
 
 ```cpp
 U32 Acm2_ChGetExtDriveData(U32 ExtChannel, PF64 CounterData)
 ```
-<a name="Acm2_ChSetExtDriveData"></a>
 
 #### Acm2_ChSetExtDriveData
+<a name="Acm2_ChSetExtDriveData" />
 Set external drive data by channel.
 
 ```cpp
 U32 Acm2_ChSetExtDriveData(U32 ExtChannel, F64 CounterData)
 ```
-<a name="Acm2_ChLinkExtDriveObject"></a>
 
 #### Acm2_ChLinkExtDriveObject
+<a name="Acm2_ChLinkExtDriveObject" />
 Link external drive object.
 
 ```cpp
 U32 Acm2_ChLinkExtDriveObject(U32 ChID, ADV_OBJ_TYPE ObjType, U32 ObjectID)
 ```
-<a name="Acm2_ChGetLinkedExtDriveObject"></a>
 
 #### Acm2_ChGetLinkedExtDriveObject
+<a name="Acm2_ChGetLinkedExtDriveObject" />
 Get linked external drive object.
 
 ```cpp
 U32 Acm2_ChGetLinkedExtDriveObject(U32 ChID, ADV_OBJ_TYPE *ObjType, PU32 ObjArray, PU32 ArrayElement)
 ```
-<a name="Acm2_DevMDaqConfig"></a>
 
 #### Acm2_DevMDaqConfig
+<a name="Acm2_DevMDaqConfig" />
 Set MDAQ config.
 
 ```cpp
 U32 Acm2_DevMDaqConfig(U32 ChannelID, U32 Period, U32 AxisNo, U32 Method, U32 ChanType, U32 Count)
 ```
-<a name="Acm2_DevMDaqGetConfig"></a>
 
 #### Acm2_DevMDaqGetConfig
+<a name="Acm2_DevMDaqGetConfig" />
 Get MDAQ config.
 
 ```cpp
 U32 Acm2_DevMDaqGetConfig(U32 ChannelID, PU32 Period, PU32 AxisNo, PU32 Method, PU32 ChanType, PU32 Count)
 ```
-<a name="Acm2_DevMDaqStart"></a>
 
 #### Acm2_DevMDaqStart
+<a name="Acm2_DevMDaqStart" />
 Start MDAQ.
 
 ```cpp
 U32 Acm2_DevMDaqStart(U32 DevID)
 ```
-<a name="Acm2_DevMDaqStop"></a>
 
 #### Acm2_DevMDaqStop
+<a name="Acm2_DevMDaqStop" />
 Stop MDAQ.
 
 ```cpp
 U32 Acm2_DevMDaqStop(U32 DevID)
 ```
-<a name="Acm2_DevMDaqReset"></a>
 
 #### Acm2_DevMDaqReset
+<a name="Acm2_DevMDaqReset" />
 Reset MDAQ.
 
 ```cpp
 U32 Acm2_DevMDaqReset(U32 ChannelID)
 ```
-<a name="Acm2_DevMDaqGetStatus"></a>
 
 #### Acm2_DevMDaqGetStatus
+<a name="Acm2_DevMDaqGetStatus" />
 Get MDAQ status.
 
 ```cpp
 U32 Acm2_DevMDaqGetStatus(U32 ChannelID, PU32 CurrentCnt, PU32 Status)
 ```
-<a name="Acm2_DevMDaqGetData"></a>
 
 #### Acm2_DevMDaqGetData
+<a name="Acm2_DevMDaqGetData" />
 Get MDAQ data.
 
 ```cpp
 U32 Acm2_DevMDaqGetData(U32 ChannelID, U32 StartIndex, U32 MaxCount, PF64 DataBuffer)
 ```
-<a name="Acm2_GetDSPFrmWareDwnLoadRate"></a>
 
 #### Acm2_GetDSPFrmWareDwnLoadRate
+<a name="Acm2_GetDSPFrmWareDwnLoadRate" />
 Get FW download rate.
 
 ```cpp
 U32 Acm2_GetDSPFrmWareDwnLoadRate(U32 DevID, PF64 Percentage)
 ```
-<a name="Acm2_DevLoadENI"></a>
 
 #### Acm2_DevLoadENI
+<a name="Acm2_DevLoadENI" />
 Download ENI file.
 
 ```cpp
 U32 Acm2_DevLoadENI(U32 RingNo, PI8 ENIFile)
 ```
-<a name="Acm2_DevConnect"></a>
 
 #### Acm2_DevConnect
+<a name="Acm2_DevConnect" />
 Connect subdevices.
 
 ```cpp
@@ -3738,9 +4128,9 @@ while (get_sub_dev_state0.value != SUB_DEV_STATE.EC_SLAVE_STATE_OP.value) or (ge
     errCde = AdvMot.Acm2_DevGetSubDeviceStates(ring_no, ecat_type, sub_dev1, byref(get_sub_dev_state1))
     time.sleep(0.5)
 ```
-<a name="Acm2_DevDisConnect"></a>
 
 #### Acm2_DevDisConnect
+<a name="Acm2_DevDisConnect" />
 Disconnect subdevices
 
 ```cpp
@@ -3770,17 +4160,17 @@ ring_no1 = c_uint32(1)
 errCde = AdvMot.Acm2_DevDisConnect(ring_no0)
 errCde = AdvMot.Acm2_DevDisConnect(ring_no1)
 ```
-<a name="Acm2_DevGetSubDevicesID"></a>
 
 #### Acm2_DevGetSubDevicesID
+<a name="Acm2_DevGetSubDevicesID" />
 Get subdevices id.
 
 ```cpp
 U32 Acm2_DevGetSubDevicesID(U32 RingNo, ECAT_ID_TYPE IDType, PU32 SubDeviceIDArray, PU32 SubDeviceCnt)
 ```
-<a name="Acm2_DevGetMDeviceInfo"></a>
 
 #### Acm2_DevGetMDeviceInfo
+<a name="Acm2_DevGetMDeviceInfo" />
 Get main device information.
 
 ```cpp
@@ -3809,9 +4199,9 @@ main_dev_info = ADVAPI_MDEVICE_INFO()
 errCde = AdvMot.Acm2_DevGetMDeviceInfo(ring_no, byref(main_dev_info))
 print('slave_count:{0}'.format(main_dev_info.slave_count))
 ```
-<a name="Acm2_DevGetSubDeviceInfo"></a>
 
 #### Acm2_DevGetSubDeviceInfo
+<a name="Acm2_DevGetSubDeviceInfo" />
 Get subdevice information.
 
 ```cpp
@@ -3857,33 +4247,33 @@ for i range(id_cnt.value):
     sub_dev_info = ADVAPI_SUBDEVICE_INFO_CM2()
     errCde = AdvMot.Acm2_DevGetSubDeviceInfo(ring_no, c_uint(ECAT_ID_TYPE.SUBDEVICE_POS.value), i, byref(sub_dev_info))
 ```
-<a name="Acm2_DevGetSubDeviceFwVersion"></a>
 
 #### Acm2_DevGetSubDeviceFwVersion
+<a name="Acm2_DevGetSubDeviceFwVersion" />
 Get subdevice fw information.
 
 ```cpp
 U32 Acm2_DevGetSubDeviceFwVersion(U32 RingNo, ECAT_ID_TYPE IDType, U32 SubDeviceID, char *VersionInfo)
 ```
-<a name="Acm2_DevSetSubDeviceID"></a>
 
 #### Acm2_DevSetSubDeviceID
+<a name="Acm2_DevSetSubDeviceID" />
 Set subdevice id.
 
 ```cpp
 U32 Acm2_DevSetSubDeviceID(U32 RingNo, ECAT_ID_TYPE IDType, U32 SubDeviceID, U32 SubDeviceNewID)
 ```
-<a name="Acm2_DevSetSubDeviceStates"></a>
 
 #### Acm2_DevSetSubDeviceStates
+<a name="Acm2_DevSetSubDeviceStates" />
 Set subdevice status.
 
 ```cpp
 U32 Acm2_DevSetSubDeviceStates(U32 RingNo, ECAT_ID_TYPE IDType, U32 SubDeviceID, U32 SubDeviceState)
 ```
-<a name="Acm2_DevGetSubDeviceStates"></a>
 
 #### Acm2_DevGetSubDeviceStates
+<a name="Acm2_DevGetSubDeviceStates" />
 Get subdevice states.
 
 ```cpp
@@ -3932,33 +4322,33 @@ while (get_sub_dev_state0.value != SUB_DEV_STATE.EC_SLAVE_STATE_OP.value) or (ge
     errCde = AdvMot.Acm2_DevGetSubDeviceStates(ring_no, ecat_type, sub_dev1, byref(get_sub_dev_state1))
     time.sleep(0.5)
 ```
-<a name="Acm2_DevWriteSDO"></a>
 
 #### Acm2_DevWriteSDO
+<a name="Acm2_DevWriteSDO" />
 Write data by SDO.
 
 ```cpp
 U32 Acm2_DevWriteSDO(U32 RingNo, ECAT_ID_TYPE IDType, U32 SubDeviceID, U32 Index, U32 SubIndex, U32 Type, U32 DataSize, VOID *pValue)
 ```
-<a name="Acm2_DevReadSDO"></a>
 
 #### Acm2_DevReadSDO
+<a name="Acm2_DevReadSDO" />
 Read data by SDO.
 
 ```cpp
 U32 Acm2_DevReadSDO(U32 RingNo, ECAT_ID_TYPE IDType, U32 SubDeviceID, U32 Index, U32 SubIndex, U32 Type, U32 DataSize, VOID *pValue)
 ```
-<a name="Acm2_DevWritePDO"></a>
 
 #### Acm2_DevWritePDO
+<a name="Acm2_DevWritePDO" />
 Write data by PDO.
 
 ```cpp
 U32 Acm2_DevWritePDO(U32 RingNo, ECAT_ID_TYPE IDType, U32 SubDeviceID, U32 Index, U32 SubIndex, U32 Type, U32 DataSize, VOID *pValue)
 ```
-<a name="Acm2_DevReadPDO"></a>
 
 #### Acm2_DevReadPDO
+<a name="Acm2_DevReadPDO" />
 Read data by PDO.
 
 ```cpp
@@ -4005,528 +4395,111 @@ errCde = AdvMot.Acm2_DevWritePDO(ring_no, id_type, sub_dev_pos, pdo_idx, pdo_sub
 # Get DO(0) value by PDO
 errCde = AdvMot.Acm2_DevReadPDO(ring_no, id_type, sub_dev_pos, pdo_idx, pdo_sub_idx, pdo_type, pdo_data_size, byref(get_value))
 ```
-<a name="Acm2_DevWriteReg"></a>
 
 #### Acm2_DevWriteReg
+<a name="Acm2_DevWriteReg" />
 Write data by reg.
 
 ```cpp
 U32 Acm2_DevWriteReg(U32 RingNo, ECAT_ID_TYPE IDType, U32 SubDeviceID, U32 Address, U32 Type, U32 DataSize, VOID *pValue)
 ```
-<a name="Acm2_DevReadReg"></a>
 
 #### Acm2_DevReadReg
+<a name="Acm2_DevReadReg" />
 Read data by reg.
 
 ```cpp
 U32 Acm2_DevReadReg(U32 RingNo, ECAT_ID_TYPE IDType, U32 SubDeviceID, U32 Address, U32 Type, U32 DataSize, VOID *pValue)
 ```
-<a name="Acm2_DevReadSubDeviceCommErrCnt"></a>
 
 #### Acm2_DevReadSubDeviceCommErrCnt
+<a name="Acm2_DevReadSubDeviceCommErrCnt" />
 Read subdevice communication error counter.
 
 ```cpp
 U32 Acm2_DevReadSubDeviceCommErrCnt(U32 RingNo, PU32 ErrCntArray, PU32 ArrayElements)
 ```
-<a name="Acm2_Ax1DCompensateTable"></a>
 
 #### Acm2_Ax1DCompensateTable
+<a name="Acm2_Ax1DCompensateTable" />
 Set compensate table with one axis.
 
 ```cpp
 U32 Acm2_Ax1DCompensateTable(U32 AxID, F64 OriginPos, F64 Pitch, PF64 OffsetData, U32 OffsetElements, U32 Direction)
 ```
-<a name="Acm2_Ax2DCompensateTable"></a>
 
 #### Acm2_Ax2DCompensateTable
+<a name="Acm2_Ax2DCompensateTable" />
 Set compensate table 2D.
 
 ```cpp
 U32 Acm2_Ax2DCompensateTable(U32 AxID, U32 RelAxID, F64 OriginPosX, F64 OriginPosY, F64 PitchX, F64 PitchY, PF64 OffsetDataX, PF64 OffsetDataY, U32 OffsetElementsX, U32 OffsetElementsY)
 ```
-<a name="Acm2_AxZAxisCompensateTable"></a>
 
 #### Acm2_AxZAxisCompensateTable
+<a name="Acm2_AxZAxisCompensateTable" />
 Set compensate table Z axis.
 
 ```cpp
 U32 Acm2_AxZAxisCompensateTable(U32 AxID, U32 RelAxID, U32 ZAxID, F64 OriginPosX, F64 OriginPosY, F64 PitchX, F64 PitchY, PF64 OffsetDataZ, U32 OffsetElementsX, U32 OffsetElementsY)
 ```
-<a name="Acm2_AxGetCompensatePosition"></a>
 
 #### Acm2_AxGetCompensatePosition
+<a name="Acm2_AxGetCompensatePosition" />
 Get compensate position by axis.
 
 ```cpp
 U32 Acm2_AxGetCompensatePosition(U32 AxID, PF64 Position)
 ```
-<a name="Acm2_DevOscChannelDataStart"></a>
 
 #### Acm2_DevOscChannelDataStart
+<a name="Acm2_DevOscChannelDataStart" />
 Start Osc. channel data.
 
 ```cpp
 U32 Acm2_DevOscChannelDataStart(U32 DevID)
 ```
-<a name="Acm2_DevOscChannelDataStop"></a>
 
 #### Acm2_DevOscChannelDataStop
+<a name="Acm2_DevOscChannelDataStop" />
 Stop Osc. channel data.
 
 ```cpp
 U32 Acm2_DevOscChannelDataStop(U32 DevID)
 ```
-<a name="Acm2_DevGetOscChannelDataConfig"></a>
 
 #### Acm2_DevGetOscChannelDataConfig
+<a name="Acm2_DevGetOscChannelDataConfig" />
 Get config of Osc. channel.
 
 ```cpp
 U32 Acm2_DevGetOscChannelDataConfig(U32 DevID, U16 ChannelID, POSC_PROFILE_PRM oscflg)
 ```
-<a name="Acm2_DevSetOscChannelDataConfig"></a>
 
 #### Acm2_DevSetOscChannelDataConfig
+<a name="Acm2_DevSetOscChannelDataConfig" />
 Set config of Osc. channel.
 
 ```cpp
 U32 Acm2_DevSetOscChannelDataConfig(U32 DevID, U16 ChannelID, OSC_PROFILE_PRM oscflg)
 ```
-<a name="Acm2_DevGetOscChannelData"></a>
 
 #### Acm2_DevGetOscChannelData
+<a name="Acm2_DevGetOscChannelData" />
 Get Osc. channel data.
 
 ```cpp
 U32 Acm2_DevGetOscChannelData(U32 DevID, U16 ChannelID, U32 DataIndex, PU32 MaxCount, PF64 DataBuffer)
 ```
-<a name="Acm2_DevGetOscChannelStatus"></a>
 
 #### Acm2_DevGetOscChannelStatus
+<a name="Acm2_DevGetOscChannelStatus" />
 Get Osc. channel status.
 
 ```cpp
 U32  Acm2_DevGetOscChannelStatus(U32 DevID, PU32 Status)
 ```
 
----
-### AdvCmnAPI_CM (Common Motion API 1.0)
-* Device
-    + <a href="#Acm_GetAvailableDevs"><code>Acm_GetAvailableDevs</code></a>
-    + <a href="#Acm_GetErrorMessage"><code>Acm_GetErrorMessage</code></a>
-    + <a href="#Acm_DevOpen"><code>Acm_DevOpen</code></a>
-    + <a href="#Acm_DevReOpen"><code>Acm_DevReOpen</code></a>
-    + <a href="#Acm_DevClose"><code>Acm_DevClose</code></a>
-    + <a href="#Acm_GetLastError"><code>Acm_GetLastError</code></a>
-    + <a href="#Acm_GetProperty"><code>Acm_GetProperty</code></a>
-    + <a href="#Acm_SetProperty"><code>Acm_SetProperty</code></a>
-    + <a href="#Acm_GetU32Property"><code>Acm_GetU32Property</code></a>
-    + <a href="#Acm_GetI32Property"><code>Acm_GetI32Property</code></a>
-    + <a href="#Acm_GetF64Property"><code>Acm_GetF64Property</code></a>
-    + <a href="#Acm_GetStringProperty"><code>Acm_GetStringProperty</code></a>
-    + <a href="#Acm_SetU32Property"><code>Acm_SetU32Property</code></a>
-    + <a href="#Acm_SetI32Property"><code>Acm_SetI32Property</code></a>
-    + <a href="#Acm_SetF64Property"><code>Acm_SetF64Property</code></a>
-    + <a href="#Acm_SetStringProperty"><code>Acm_SetStringProperty</code></a>
-    + <a href="#Acm_GetMultiProperty"><code>Acm_GetMultiProperty</code></a>
-    + <a href="#Acm_SetMultiU32Property"><code>Acm_SetMultiU32Property</code></a>
-    + <a href="#Acm_SetMultiI32Property"><code>Acm_SetMultiI32Property</code></a>
-    + <a href="#Acm_SetMultiF64Property"><code>Acm_SetMultiF64Property</code></a>
-    + <a href="#Acm_GetChannelProperty"><code>Acm_GetChannelProperty</code></a>
-    + <a href="#Acm_SetChannelProperty"><code>Acm_SetChannelProperty</code></a>
-    + <a href="#Acm_GetMultiChannelProperty"><code>Acm_GetMultiChannelProperty</code></a>
-    + <a href="#Acm_SetMultiChannelProperty"><code>Acm_SetMultiChannelProperty</code></a>
-    + <a href="#Acm_DevEnableEvent"><code>Acm_DevEnableEvent</code></a>
-    + <a href="#Acm_DevCheckEvent"><code>Acm_DevCheckEvent</code></a>
-    + <a href="#Acm_EnableMotionEvent"><code>Acm_EnableMotionEvent</code></a>
-    + <a href="#Acm_CheckMotionEvent"><code>Acm_CheckMotionEvent</code></a>
-    + <a href="#Acm_CancelCheckEvent"><code>Acm_CancelCheckEvent</code></a>
-    + <a href="#Acm_DevEnableEvent_All"><code>Acm_DevEnableEvent_All</code></a>
-    + <a href="#Acm_DevCheckEvent_All"><code>Acm_DevCheckEvent_All</code></a>
-    + <a href="#Acm_DevLoadConfig"><code>Acm_DevLoadConfig</code></a>
-    + <a href="#Acm_DevSlaveFwDownload"><code>Acm_DevSlaveFwDownload</code></a>
-    + <a href="#Acm_DevWriteDPMData"><code>Acm_DevWriteDPMData</code></a>
-    + <a href="#Acm_DevWriteMultiMailBox"><code>Acm_DevWriteMultiMailBox</code></a>
-    + <a href="#Acm_WriteRingBuffer"><code>Acm_WriteRingBuffer</code></a>
-    + <a href="#Acm_ReadRingBuffer"><code>Acm_ReadRingBuffer</code></a>
-    + <a href="#Acm_DevGetComStatus"><code>Acm_DevGetComStatus</code></a>
-    + <a href="#Acm_DevGetErrorTable"><code>Acm_DevGetErrorTable</code></a>
-    + <a href="#Acm_DevGetIOInfo"><code>Acm_DevGetIOInfo</code></a>
-    + <a href="#Acm_CheckVersion"><code>Acm_CheckVersion</code></a>
-    + <a href="#Acm_DevMultiTrigSetPWMTableOnTime"><code>Acm_DevMultiTrigSetPWMTableOnTime</code></a>
-    + <a href="#Acm_DevMultiTrigSetCmpDO"><code>Acm_DevMultiTrigSetCmpDO</code></a>
-    + <a href="#Acm_DevMultiTrigForceCmpOut"><code>Acm_DevMultiTrigForceCmpOut</code></a>
-    + <a href="#Acm_DevMutiTrigSetCmpDO"><code>Acm_DevMutiTrigSetCmpDO</code></a>
-    + <a href="#Acm_DevMutiTrigForceCmpOut"><code>Acm_DevMutiTrigForceCmpOut</code></a>
-    + <a href="#Acm_MasStartRing"><code>Acm_MasStartRing</code></a>
-    + <a href="#Acm_MasStopRing"><code>Acm_MasStopRing</code></a>
-    + <a href="#Acm_MasGetComStatus"><code>Acm_MasGetComStatus</code></a>
-    + <a href="#Acm_MasGetComCyclicTime"><code>Acm_MasGetComCyclicTime</code></a>
-    + <a href="#Acm_MasGetDataCyclicTime"><code>Acm_MasGetDataCyclicTime</code></a>
-    + <a href="#Acm_MasGetActiveTable"><code>Acm_MasGetActiveTable</code></a>
-    + <a href="#Acm_MasGetErrorTable"><code>Acm_MasGetErrorTable</code></a>
-    + <a href="#Acm_MasGetSlaveInfo"><code>Acm_MasGetSlaveInfo</code></a>
-    + <a href="#Acm_MasLogComStatus"><code>Acm_MasLogComStatus</code></a>
-    + <a href="#Acm_DevDownloadScanData"><code>Acm_DevDownloadScanData</code></a>
-    + <a href="#Acm_DevMDaqConfig"><code>Acm_DevMDaqConfig</code></a>
-    + <a href="#Acm_DevMDaqStart"><code>Acm_DevMDaqStart</code></a>
-    + <a href="#Acm_DevMDaqStop"><code>Acm_DevMDaqStop</code></a>
-    + <a href="#Acm_DevMDaqReset"><code>Acm_DevMDaqReset</code></a>
-    + <a href="#Acm_DevMDaqGetStatus"><code>Acm_DevMDaqGetStatus</code></a>
-    + <a href="#Acm_DevMDaqGetData"><code>Acm_DevMDaqGetData</code></a>
-    + <a href="#Acm_DevMDaqGetConfig"><code>Acm_DevMDaqGetConfig</code></a>
-    + <a href="#Acm_RegCallBackFunc"><code>Acm_RegCallBackFunc</code></a>
-    + <a href="#Acm_EnableEventCallBack"><code>Acm_EnableEventCallBack</code></a>
-    + <a href="#Acm_RegCallBackFuncForOneEvent"><code>Acm_RegCallBackFuncForOneEvent</code></a>
-    + <a href="#Acm_DevEnableMotionEvent"><code>Acm_DevEnableMotionEvent</code></a>
-    + <a href="#Acm_ServoSetCom"><code>Acm_ServoSetCom</code></a>
-    + <a href="#Acm_ServoGetAbsPosition"><code>Acm_ServoGetAbsPosition</code></a>
-    + <a href="#Acm_AxSetCmdPosi_Pulse"><code>Acm_AxSetCmdPosi_Pulse</code></a>
-    + <a href="#Acm_AxSpecialDiSetBit"><code>Acm_AxSpecialDiSetBit</code></a>
-    + <a href="#Acm_DevEnableLTC"><code>Acm_DevEnableLTC</code></a>
-    + <a href="#Acm_DevLTCSaftyDist"><code>Acm_DevLTCSaftyDist</code></a>
-    + <a href="#Acm_DevEnableCmp"><code>Acm_DevEnableCmp</code></a>
-    + <a href="#Acm_DevLtcLinkCmp"><code>Acm_DevLtcLinkCmp</code></a>
-    + <a href="#Acm_DevSetCmp"><code>Acm_DevSetCmp</code></a>
-    + <a href="#Acm_DevSetCmpDO"><code>Acm_DevSetCmpDO</code></a>
-    + <a href="#Acm_DevSetCmpData"><code>Acm_DevSetCmpData</code></a>
-    + <a href="#Acm_DevSetCmpAuto"><code>Acm_DevSetCmpAuto</code></a>
-    + <a href="#Acm_DevGetCmpData"><code>Acm_DevGetCmpData</code></a>
-    + <a href="#Acm_DevEnableCmpFIFO"><code>Acm_DevEnableCmpFIFO</code></a>
-    + <a href="#Acm_DevGetCmpFIFOCount"><code>Acm_DevGetCmpFIFOCount</code></a>
-    + <a href="#Acm_DevGetCmpCounter"><code>Acm_DevGetCmpCounter</code></a>
-    + <a href="#Acm_DevResetCmpFIFO"><code>Acm_DevResetCmpFIFO</code></a>
-    + <a href="#Acm_DevSetLTCInEdge"><code>Acm_DevSetLTCInEdge</code></a>
-    + <a href="#Acm_DevGetLTCData"><code>Acm_DevGetLTCData</code></a>
-    + <a href="#Acm_DevGetLTCFlag"><code>Acm_DevGetLTCFlag</code></a>
-    + <a href="#Acm_DevResetLTC"><code>Acm_DevResetLTC</code></a>
-    + <a href="#Acm_DevGetCmpFlag"><code>Acm_DevGetCmpFlag</code></a>
-    + <a href="#Acm_DevResetCmpFlag"><code>Acm_DevResetCmpFlag</code></a>
-    + <a href="#Acm_DevGetLtcLinkCmpStatus"><code>Acm_DevGetLtcLinkCmpStatus</code></a>
-    + <a href="#Acm_DevResetCmpData"><code>Acm_DevResetCmpData</code></a>
-    + <a href="#Acm_DevGetLTCInEdge"><code>Acm_DevGetLTCInEdge</code></a>
-    + <a href="#Acm_DevGetLTCInPol"><code>Acm_DevGetLTCInPol</code></a>
-    + <a href="#Acm_DevGetLTCSaftyDist"><code>Acm_DevGetLTCSaftyDist</code></a>
-    + <a href="#Acm_DevGetLTCInSource"><code>Acm_DevGetLTCInSource</code></a>
-    + <a href="#Acm_DevSetLTCInSource"><code>Acm_DevSetLTCInSource</code></a>
-    + <a href="#Acm_DevGetCmp"><code>Acm_DevGetCmp</code></a>
-    + <a href="#Acm_DevReadLatchBuffer"><code>Acm_DevReadLatchBuffer</code></a>
-    + <a href="#Acm_DevGetLatchBufferStatus"><code>Acm_DevGetLatchBufferStatus</code></a>
-    + <a href="#Acm_DevResetLatchBuffer"><code>Acm_DevResetLatchBuffer</code></a>
-    + <a href="#Acm_DevSetLTCInAxisID"><code>Acm_DevSetLTCInAxisID</code></a>
-    + <a href="#Acm_DevGetLTCInAxisID"><code>Acm_DevGetLTCInAxisID</code></a>
-    + <a href="#Acm_DevSetCmpAxisID"><code>Acm_DevSetCmpAxisID</code></a>
-    + <a href="#Acm_DevGetCmpAxisID"><code>Acm_DevGetCmpAxisID</code></a>
-    + <a href="#Acm_GetDevNum"><code>Acm_GetDevNum</code></a>
-    + <a href="#Acm_DevSaveMapFile"><code>Acm_DevSaveMapFile</code></a>
-    + <a href="#Acm_DevLoadMapFile"><code>Acm_DevLoadMapFile</code></a>
-    + <a href="#Acm_DevUpLoadMapInfo"><code>Acm_DevUpLoadMapInfo</code></a>
-    + <a href="#Acm_DevDownLoadMapInfo"><code>Acm_DevDownLoadMapInfo</code></a>
-    + <a href="#Acm_DevSetSlaveStates"><code>Acm_DevSetSlaveStates</code></a>
-    + <a href="#Acm_DevGetSlaveStates"><code>Acm_DevGetSlaveStates</code></a>
-    + <a href="#Acm_DevGetSlaveTxPDO"><code>Acm_DevGetSlaveTxPDO</code></a>
-    + <a href="#Acm_DevGetSlaveRxPDO"><code>Acm_DevGetSlaveRxPDO</code></a>
-    + <a href="#Acm_DevWriteSDOComplete"><code>Acm_DevWriteSDOComplete</code></a>
-    + <a href="#Acm_DevWriteSDOData"><code>Acm_DevWriteSDOData</code></a>
-    + <a href="#Acm_DevReadSDOData"><code>Acm_DevReadSDOData</code></a>
-    + <a href="#Acm_DevWriteRegData"><code>Acm_DevWriteRegData</code></a>
-    + <a href="#Acm_DevReadRegData"><code>Acm_DevReadRegData</code></a>
-    + <a href="#Acm_DevReadEmgMessage"><code>Acm_DevReadEmgMessage</code></a>
-    + <a href="#Acm_DevReadSlvCommErrCnt"><code>Acm_DevReadSlvCommErrCnt</code></a>
-    + <a href="#Acm_DaqLinkPDO"><code>Acm_DaqLinkPDO</code></a>
-    + <a href="#Acm_AxMoveTorque"><code>Acm_AxMoveTorque</code></a>
-    + <a href="#Acm_AxGetActTorque"><code>Acm_AxGetActTorque</code></a>
-    + <a href="#Acm_Ax2DCompensateInAx"><code>Acm_Ax2DCompensateInAx</code></a>
-    + <a href="#Acm_Ax1DCompensateTable"><code>Acm_Ax1DCompensateTable</code></a>
-    + <a href="#Acm_DevZAxisCompensateTable"><code>Acm_DevZAxisCompensateTable</code></a>
-    + <a href="#Acm_Dev2DCompensateTable"><code>Acm_Dev2DCompensateTable</code></a>
-    + <a href="#Acm_DevZAxisCompensateTableEx"><code>Acm_DevZAxisCompensateTableEx</code></a>
-    + <a href="#Acm_Dev2DCompensateTableEx"><code>Acm_Dev2DCompensateTableEx</code></a>
-    + <a href="#Acm_AxGetCompensatePosition"><code>Acm_AxGetCompensatePosition</code></a>
-    + <a href="#Acm_DevMultiTrigInitial"><code>Acm_DevMultiTrigInitial</code></a>
-    + <a href="#Acm_EnableOneDevEventCallBack"><code>Acm_EnableOneDevEventCallBack</code></a>
-    + <a href="#Acm_AxGetRawData"><code>Acm_AxGetRawData</code></a>
-    + <a href="#Acm_AxSetRawData"><code>Acm_AxSetRawData</code></a>
-    + <a href="#Acm_AxReturnPausePosition"><code>Acm_AxReturnPausePosition</code></a>
-    + <a href="#Acm_AxAddOnAx"><code>Acm_AxAddOnAx</code></a>
-    + <a href="#Acm_AxAddRemove"><code>Acm_AxAddRemove</code></a>
-    + <a href="#Acm_AxGetAddOnNum"><code>Acm_AxGetAddOnNum</code></a>
-    + <a href="#Acm_AxSetCompensateDistance"><code>Acm_AxSetCompensateDistance</code></a>
-    + <a href="#Acm_AxGetCompensateDistance"><code>Acm_AxGetCompensateDistance</code></a>
-* Axis
-    + <a href="#Acm_AxOpen"><code>Acm_AxOpen</code></a>
-    + <a href="#Acm_AxOpenbyID"><code>Acm_AxOpenbyID</code></a>
-    + <a href="#Acm_AxClose"><code>Acm_AxClose</code></a>
-    + <a href="#Acm_AxSetSvOn"><code>Acm_AxSetSvOn</code></a>
-    + <a href="#Acm_AxResetAlm"><code>Acm_AxResetAlm</code></a>
-    + <a href="#Acm_AxMoveRel"><code>Acm_AxMoveRel</code></a>
-    + <a href="#Acm_AxMoveRel_T"><code>Acm_AxMoveRel_T</code></a>
-    + <a href="#Acm_AxMoveRel_SD"><code>Acm_AxMoveRel_SD</code></a>
-    + <a href="#Acm_AxMoveRel_EC"><code>Acm_AxMoveRel_EC</code></a>
-    + <a href="#Acm_AxMoveAbs"><code>Acm_AxMoveAbs</code></a>
-    + <a href="#Acm_AxMoveAbs_T"><code>Acm_AxMoveAbs_T</code></a>
-    + <a href="#Acm_AxMoveAbs_SD"><code>Acm_AxMoveAbs_SD</code></a>
-    + <a href="#Acm_AxMoveAbs_EC"><code>Acm_AxMoveAbs_EC</code></a>
-    + <a href="#Acm_AxMoveVel"><code>Acm_AxMoveVel</code></a>
-    + <a href="#Acm_AxStopDec"><code>Acm_AxStopDec</code></a>
-    + <a href="#Acm_AxStopDecEx"><code>Acm_AxStopDecEx</code></a>
-    + <a href="#Acm_AxStopEmg"><code>Acm_AxStopEmg</code></a>
-    + <a href="#Acm_AxMoveImpose"><code>Acm_AxMoveImpose</code></a>
-    + <a href="#Acm_AxHomeEx"><code>Acm_AxHomeEx</code></a>
-    + <a href="#Acm_AxHome"><code>Acm_AxHome</code></a>
-    + <a href="#Acm_AxMoveHome"><code>Acm_AxMoveHome</code></a>
-    + <a href="#Acm_AxMoveGantryHome"><code>Acm_AxMoveGantryHome</code></a>
-    + <a href="#Acm_AxChangeVel"><code>Acm_AxChangeVel</code></a>
-    + <a href="#Acm_AxChangePos"><code>Acm_AxChangePos</code></a>
-    + <a href="#Acm_AxChangeVelByRate"><code>Acm_AxChangeVelByRate</code></a>
-    + <a href="#Acm_AxChangeVelExByRate"><code>Acm_AxChangeVelExByRate</code></a>
-    + <a href="#Acm_AxResetError"><code>Acm_AxResetError</code></a>
-    + <a href="#Acm_AxGetState"><code>Acm_AxGetState</code></a>
-    + <a href="#Acm_AxGetMotionIO"><code>Acm_AxGetMotionIO</code></a>
-    + <a href="#Acm_AxGetMotionStatus"><code>Acm_AxGetMotionStatus</code></a>
-    + <a href="#Acm_AxGetCmdPosition"><code>Acm_AxGetCmdPosition</code></a>
-    + <a href="#Acm_AxGetMachPosition"><code>Acm_AxGetMachPosition</code></a>
-    + <a href="#Acm_AxSetCmdPosition"><code>Acm_AxSetCmdPosition</code></a>
-    + <a href="#Acm_AxGetActualPosition"><code>Acm_AxGetActualPosition</code></a>
-    + <a href="#Acm_AxSetActualPosition"><code>Acm_AxSetActualPosition</code></a>
-    + <a href="#Acm_AxGetCmdVelocity"><code>Acm_AxGetCmdVelocity</code></a>
-    + <a href="#Acm_AxGetActVelocity"><code>Acm_AxGetActVelocity</code></a>
-    + <a href="#Acm_AxGetLagCounter"><code>Acm_AxGetLagCounter</code></a>
-    + <a href="#Acm_AxSetExtDrive"><code>Acm_AxSetExtDrive</code></a>
-    + <a href="#Acm_AxDoSetBit"><code>Acm_AxDoSetBit</code></a>
-    + <a href="#Acm_AxDiSetBit"><code>Acm_AxDiSetBit</code></a>
-    + <a href="#Acm_AxDoGetBit"><code>Acm_AxDoGetBit</code></a>
-    + <a href="#Acm_AxDiGetBit"><code>Acm_AxDiGetBit</code></a>
-    + <a href="#Acm_AxDoSetByte"><code>Acm_AxDoSetByte</code></a>
-    + <a href="#Acm_AxDoGetByte"><code>Acm_AxDoGetByte</code></a>
-    + <a href="#Acm_AxDiGetByte"><code>Acm_AxDiGetByte</code></a>
-    + <a href="#Acm_AxSimStartSuspendVel"><code>Acm_AxSimStartSuspendVel</code></a>
-    + <a href="#Acm_AxSimStartSuspendRel"><code>Acm_AxSimStartSuspendRel</code></a>
-    + <a href="#Acm_AxSimStartSuspendAbs"><code>Acm_AxSimStartSuspendAbs</code></a>
-    + <a href="#Acm_AxSimStart"><code>Acm_AxSimStart</code></a>
-    + <a href="#Acm_AxSimStop"><code>Acm_AxSimStop</code></a>
-    + <a href="#Acm_AxGetLatchData"><code>Acm_AxGetLatchData</code></a>
-    + <a href="#Acm_AxStartSoftLatch"><code>Acm_AxStartSoftLatch</code></a>
-    + <a href="#Acm_AxResetLatch"><code>Acm_AxResetLatch</code></a>
-    + <a href="#Acm_AxGetLatchFlag"><code>Acm_AxGetLatchFlag</code></a>
-    + <a href="#Acm_AxTriggerLatch"><code>Acm_AxTriggerLatch</code></a>
-    + <a href="#Acm_AxReadLatchBuffer"><code>Acm_AxReadLatchBuffer</code></a>
-    + <a href="#Acm_AxResetLatchBuffer"><code>Acm_AxResetLatchBuffer</code></a>
-    + <a href="#Acm_AxGetLatchBufferStatus"><code>Acm_AxGetLatchBufferStatus</code></a>
-    + <a href="#Acm_AxGearInAx"><code>Acm_AxGearInAx</code></a>
-    + <a href="#Acm_AxTangentInGp"><code>Acm_AxTangentInGp</code></a>
-    + <a href="#Acm_AxGantryInAx"><code>Acm_AxGantryInAx</code></a>
-    + <a href="#Acm_AxPhaseAx"><code>Acm_AxPhaseAx</code></a>
-    + <a href="#Acm_AxSetChannelCmpSetting"><code>Acm_AxSetChannelCmpSetting</code></a>
-    + <a href="#Acm_AxGetChannelCmpSetting"><code>Acm_AxGetChannelCmpSetting</code></a>
-    + <a href="#Acm_AxResetChannelCmp"><code>Acm_AxResetChannelCmp</code></a>
-    + <a href="#Acm_AxAddChannelCmpDatas"><code>Acm_AxAddChannelCmpDatas</code></a>
-    + <a href="#Acm_AxGetChannelCmpData"><code>Acm_AxGetChannelCmpData</code></a>
-    + <a href="#Acm_AxLoadChannelNextData"><code>Acm_AxLoadChannelNextData</code></a>
-    + <a href="#Acm_AxGetCmpbufferRemainCount"><code>Acm_AxGetCmpbufferRemainCount</code></a>
-    + <a href="#Acm_AxSetCmpAuto"><code>Acm_AxSetCmpAuto</code></a>
-    + <a href="#Acm_AxGetCmpData"><code>Acm_AxGetCmpData</code></a>
-    + <a href="#Acm_AxSetCmpData"><code>Acm_AxSetCmpData</code></a>
-    + <a href="#Acm_AxChangeCmpIndex"><code>Acm_AxChangeCmpIndex</code></a>
-    + <a href="#Acm_AxSetCmpBufferData"><code>Acm_AxSetCmpBufferData</code></a>
-    + <a href="#Acm_AxResetCmpData"><code>Acm_AxResetCmpData</code></a>
-    + <a href="#Acm_AxGetCmpBufferStatus"><code>Acm_AxGetCmpBufferStatus</code></a>
-    + <a href="#Acm_AxResetMPGOffset"><code>Acm_AxResetMPGOffset</code></a>
-    + <a href="#Acm_AxMovePTPBufferRel"><code>Acm_AxMovePTPBufferRel</code></a>
-    + <a href="#Acm_AxMovePTPBufferAbs"><code>Acm_AxMovePTPBufferAbs</code></a>
-    + <a href="#Acm_AxEnableCompensation"><code>Acm_AxEnableCompensation</code></a>
-    + <a href="#Acm_AxGetCompensationValue"><code>Acm_AxGetCompensationValue</code></a>
-    + <a href="#Acm_AxSetCompenPara"><code>Acm_AxSetCompenPara</code></a>
-    + <a href="#Acm_AxDIStartMoveAbs"><code>Acm_AxDIStartMoveAbs</code></a>
-    + <a href="#Acm_AxDIStartMoveRel"><code>Acm_AxDIStartMoveRel</code></a>
-    + <a href="#Acm_AxDIStartMoveVel"><code>Acm_AxDIStartMoveVel</code></a>
-    + <a href="#Acm_AxDisableDIStart"><code>Acm_AxDisableDIStart</code></a>
-    + <a href="#Acm_AxSetPWMTableOnTime"><code>Acm_AxSetPWMTableOnTime</code></a>
-    + <a href="#Acm_AxGetINxStopStatus"><code>Acm_AxGetINxStopStatus</code></a>
-    + <a href="#Acm_AxResetINxStopStatus"><code>Acm_AxResetINxStopStatus</code></a>
-    + <a href="#Acm_AxJog"><code>Acm_AxJog</code></a>
-    + <a href="#Acm_AxSetCmpDO"><code>Acm_AxSetCmpDO</code></a>
-    + <a href="#Acm_AxDownloadTorqueTable"><code>Acm_AxDownloadTorqueTable</code></a>
-    + <a href="#Acm_AxLoadTorqueTableFile"><code>Acm_AxLoadTorqueTableFile</code></a>
-    + <a href="#Acm_AxResetPVTTable"><code>Acm_AxResetPVTTable</code></a>
-    + <a href="#Acm_AxLoadPVTTable"><code>Acm_AxLoadPVTTable</code></a>
-    + <a href="#Acm_AxCalculatePVTTableContinuous"><code>Acm_AxCalculatePVTTableContinuous</code></a>
-    + <a href="#Acm_AxLoadPVTTableContinuous"><code>Acm_AxLoadPVTTableContinuous</code></a>
-    + <a href="#Acm_AxStartPVT"><code>Acm_AxStartPVT</code></a>
-    + <a href="#Acm_AxStartAllPVT"><code>Acm_AxStartAllPVT</code></a>
-    + <a href="#Acm_AxCheckPTBuffer"><code>Acm_AxCheckPTBuffer</code></a>
-    + <a href="#Acm_AxAddPTData"><code>Acm_AxAddPTData</code></a>
-    + <a href="#Acm_AxStartPT"><code>Acm_AxStartPT</code></a>
-    + <a href="#Acm_AxStartAllPT"><code>Acm_AxStartAllPT</code></a>
-    + <a href="#Acm_AxResetPTData"><code>Acm_AxResetPTData</code></a>
-    + <a href="#Acm_AxAddPVAData"><code>Acm_AxAddPVAData</code></a>
-* Group
-    + <a href="#Acm_GpOpen"><code>Acm_GpOpen</code></a>
-    + <a href="#Acm_GpAddAxis"><code>Acm_GpAddAxis</code></a>
-    + <a href="#Acm_GpRemAxis"><code>Acm_GpRemAxis</code></a>
-    + <a href="#Acm_GpClose"><code>Acm_GpClose</code></a>
-    + <a href="#Acm_GpGetState"><code>Acm_GpGetState</code></a>
-    + <a href="#Acm_GpResetError"><code>Acm_GpResetError</code></a>
-    + <a href="#Acm_GpIpoMask"><code>Acm_GpIpoMask</code></a>
-    + <a href="#Acm_GpMoveLinearRel"><code>Acm_GpMoveLinearRel</code></a>
-    + <a href="#Acm_GpMoveLinearAbs"><code>Acm_GpMoveLinearAbs</code></a>
-    + <a href="#Acm_GpMoveDirectRel"><code>Acm_GpMoveDirectRel</code></a>
-    + <a href="#Acm_GpMoveDirectAbs"><code>Acm_GpMoveDirectAbs</code></a>
-    + <a href="#Acm_GpMoveCircularRel"><code>Acm_GpMoveCircularRel</code></a>
-    + <a href="#Acm_GpMoveCircularAbs"><code>Acm_GpMoveCircularAbs</code></a>
-    + <a href="#Acm_GpMoveCircularRel_3P"><code>Acm_GpMoveCircularRel_3P</code></a>
-    + <a href="#Acm_GpMoveCircularAbs_3P"><code>Acm_GpMoveCircularAbs_3P</code></a>
-    + <a href="#Acm_GpMoveCircularRel_Angle"><code>Acm_GpMoveCircularRel_Angle</code></a>
-    + <a href="#Acm_GpMoveCircularAbs_Angle"><code>Acm_GpMoveCircularAbs_Angle</code></a>
-    + <a href="#Acm_GpMoveArcRel_Angle"><code>Acm_GpMoveArcRel_Angle</code></a>
-    + <a href="#Acm_GpMoveArcAbs_Angle"><code>Acm_GpMoveArcAbs_Angle</code></a>
-    + <a href="#Acm_GpMove3DArcAbs"><code>Acm_GpMove3DArcAbs</code></a>
-    + <a href="#Acm_GpMove3DArcRel"><code>Acm_GpMove3DArcRel</code></a>
-    + <a href="#Acm_GpMove3DArcAbs_V"><code>Acm_GpMove3DArcAbs_V</code></a>
-    + <a href="#Acm_GpMove3DArcRel_V"><code>Acm_GpMove3DArcRel_V</code></a>
-    + <a href="#Acm_GpMove3DArcAbs_3P"><code>Acm_GpMove3DArcAbs_3P</code></a>
-    + <a href="#Acm_GpMove3DArcRel_3P"><code>Acm_GpMove3DArcRel_3P</code></a>
-    + <a href="#Acm_GpMove3DArcAbs_3PAngle"><code>Acm_GpMove3DArcAbs_3PAngle</code></a>
-    + <a href="#Acm_GpMove3DArcRel_3PAngle"><code>Acm_GpMove3DArcRel_3PAngle</code></a>
-    + <a href="#Acm_GpMoveHelixAbs"><code>Acm_GpMoveHelixAbs</code></a>
-    + <a href="#Acm_GpMoveHelixRel"><code>Acm_GpMoveHelixRel</code></a>
-    + <a href="#Acm_GpMoveHelixAbs_3P"><code>Acm_GpMoveHelixAbs_3P</code></a>
-    + <a href="#Acm_GpMove3DArcRel_3PAngle"><code>Acm_GpMove3DArcRel_3PAngle</code></a>
-    + <a href="#Acm_GpMoveHelixAbs"><code>Acm_GpMoveHelixAbs</code></a>
-    + <a href="#Acm_GpMoveHelixRel"><code>Acm_GpMoveHelixRel</code></a>
-    + <a href="#Acm_GpMoveHelixAbs_3P"><code>Acm_GpMoveHelixAbs_3P</code></a>
-    + <a href="#Acm_GpMoveHelixRel_3P"><code>Acm_GpMoveHelixRel_3P</code></a>
-    + <a href="#Acm_GpMoveHelixRel_Angle"><code>Acm_GpMoveHelixRel_Angle</code></a>
-    + <a href="#Acm_GpMoveHelixAbs_Angle"><code>Acm_GpMoveHelixAbs_Angle</code></a>
-    + <a href="#Acm_GpMoveEllipticalRel"><code>Acm_GpMoveEllipticalRel</code></a>
-    + <a href="#Acm_GpMoveEllipticalAbs"><code>Acm_GpMoveEllipticalAbs</code></a>
-    + <a href="#Acm_GpLoadPath"><code>Acm_GpLoadPath</code></a>
-    + <a href="#Acm_GpUnloadPath"><code>Acm_GpUnloadPath</code></a>
-    + <a href="#Acm_GpMovePath"><code>Acm_GpMovePath</code></a>
-    + <a href="#Acm_GpMoveAllPath"><code>Acm_GpMoveAllPath</code></a>
-    + <a href="#Acm_GpAddPath"><code>Acm_GpAddPath</code></a>
-    + <a href="#Acm_GpAddPath2"><code>Acm_GpAddPath2</code></a>
-    + <a href="#Acm_GpLookAheadPath"><code>Acm_GpLookAheadPath</code></a>
-    + <a href="#Acm_GpResetPath"><code>Acm_GpResetPath</code></a>
-    + <a href="#Acm_GpGetPathStatus"><code>Acm_GpGetPathStatus</code></a>
-    + <a href="#Acm_GpMoveSelPath"><code>Acm_GpMoveSelPath</code></a>
-    + <a href="#Acm_GpGetPathIndexStatus"><code>Acm_GpGetPathIndexStatus</code></a>
-    + <a href="#Acm_GpAddBSplinePath"><code>Acm_GpAddBSplinePath</code></a>
-    + <a href="#Acm_GpAddCSplinePath"><code>Acm_GpAddCSplinePath</code></a>
-    + <a href="#Acm_GpResumeMotion"><code>Acm_GpResumeMotion</code></a>
-    + <a href="#Acm_GpPauseMotion"><code>Acm_GpPauseMotion</code></a>
-    + <a href="#Acm_GpStopDec"><code>Acm_GpStopDec</code></a>
-    + <a href="#Acm_GpStopDecEx"><code>Acm_GpStopDecEx</code></a>
-    + <a href="#Acm_GpStopEmg"><code>Acm_GpStopEmg</code></a>
-    + <a href="#Acm_GpChangeVel"><code>Acm_GpChangeVel</code></a>
-    + <a href="#Acm_GpChangeVelByRate"><code>Acm_GpChangeVelByRate</code></a>
-    + <a href="#Acm_GpGetCmdVel"><code>Acm_GpGetCmdVel</code></a>
-    + <a href="#Acm_GpGetINxStopStatus"><code>Acm_GpGetINxStopStatus</code></a>
-    + <a href="#Acm_GpResetINxStopStatus"><code>Acm_GpResetINxStopStatus</code></a>
-    + <a href="#Acm_GpGetPausePosition"><code>Acm_GpGetPausePosition</code></a>
-    + <a href="#Acm_GpSetRawData"><code>Acm_GpSetRawData</code></a>
-    + <a href="#Acm_GpGetRawData"><code>Acm_GpGetRawData</code></a>
-* DIO
-    + <a href="#Acm_DaqDiGetByte"><code>Acm_DaqDiGetByte</code></a>
-    + <a href="#Acm_DaqDiGetBit"><code>Acm_DaqDiGetBit</code></a>
-    + <a href="#Acm_DaqDoSetByte"><code>Acm_DaqDoSetByte</code></a>
-    + <a href="#Acm_DaqDoSetBit"><code>Acm_DaqDoSetBit</code></a>
-    + <a href="#Acm_DaqDiSetBit"><code>Acm_DaqDiSetBit</code></a>
-    + <a href="#Acm_DaqDoGetByte"><code>Acm_DaqDoGetByte</code></a>
-    + <a href="#Acm_DaqDoGetBit"><code>Acm_DaqDoGetBit</code></a>
-    + <a href="#Acm_DaqDiGetBytes"><code>Acm_DaqDiGetBytes</code></a>
-    + <a href="#Acm_DaqDoSetBytes"><code>Acm_DaqDoSetBytes</code></a>
-    + <a href="#Acm_DaqDoGetBytes"><code>Acm_DaqDoGetBytes</code></a>
-    + <a href="#Acm_DaqDiGetByteEx"><code>Acm_DaqDiGetByteEx</code></a>
-    + <a href="#Acm_DaqDiGetBitEx"><code>Acm_DaqDiGetBitEx</code></a>
-    + <a href="#Acm_DaqDoSetByteEx"><code>Acm_DaqDoSetByteEx</code></a>
-    + <a href="#Acm_DaqDoGetByteEx"><code>Acm_DaqDoGetByteEx</code></a>
-    + <a href="#Acm_DaqDoGetBitEx"><code>Acm_DaqDoGetBitEx</code></a>
-* AIO
-    + <a href="#Acm_DaqAiGetRawData"><code>Acm_DaqAiGetRawData</code></a>
-    + <a href="#Acm_DaqAiGetEngData"><code>Acm_DaqAiGetEngData</code></a>
-    + <a href="#Acm_DaqAiGetVoltData"><code>Acm_DaqAiGetVoltData</code></a>
-    + <a href="#Acm_DaqAiGetCurrData"><code>Acm_DaqAiGetCurrData</code></a>
-    + <a href="#Acm_DaqAiZeroCalibration"><code>Acm_DaqAiZeroCalibration</code></a>
-    + <a href="#Acm_DaqAiSpanCalibration"><code>Acm_DaqAiSpanCalibration</code></a>
-    + <a href="#Acm_DaqAiGetChannelStatus"><code>Acm_DaqAiGetChannelStatus</code></a>
-    + <a href="#Acm_DaqAoSetRawData"><code>Acm_DaqAoSetRawData</code></a>
-    + <a href="#Acm_DaqAoSetEngData"><code>Acm_DaqAoSetEngData</code></a>
-    + <a href="#Acm_DaqAoSetVoltData"><code>Acm_DaqAoSetVoltData</code></a>
-    + <a href="#Acm_DaqAoSetCurrData"><code>Acm_DaqAoSetCurrData</code></a>
-    + <a href="#Acm_DaqAoGetRawData"><code>Acm_DaqAoGetRawData</code></a>
-    + <a href="#Acm_DaqAoGetEngData"><code>Acm_DaqAoGetEngData</code></a>
-    + <a href="#Acm_DaqAoGetVoltData"><code>Acm_DaqAoGetVoltData</code></a>
-    + <a href="#Acm_DaqAoGetCurrData"><code>Acm_DaqAoGetCurrData</code></a>
-    + <a href="#Acm_DaqAoSetCaliType"><code>Acm_DaqAoSetCaliType</code></a>
-    + <a href="#Acm_DaqAoSetCaliValue"><code>Acm_DaqAoSetCaliValue</code></a>
-    + <a href="#Acm_DaqAoCaliDone"><code>Acm_DaqAoCaliDone</code></a>
-    + <a href="#Acm_DaqAoCaliDefault"><code>Acm_DaqAoCaliDefault</code></a>
-    + <a href="#Acm_DaqAoGetChannelStatus"><code>Acm_DaqAoGetChannelStatus</code></a>
-    + <a href="#Acm_DaqSetScaledProperty"><code>Acm_DaqSetScaledProperty</code></a>
-    + <a href="#Acm_DaqAiGetRawDataEx"><code>Acm_DaqAiGetRawDataEx</code></a>
-    + <a href="#Acm_DaqAiGetEngDataEx"><code>Acm_DaqAiGetEngDataEx</code></a>
-    + <a href="#Acm_DaqAiGetVoltDataEx"><code>Acm_DaqAiGetVoltDataEx</code></a>
-    + <a href="#Acm_DaqAiGetCurrDataEx"><code>Acm_DaqAiGetCurrDataEx</code></a>
-    + <a href="#Acm_DaqAiGetChannelStatusEx"><code>Acm_DaqAiGetChannelStatusEx</code></a>
-    + <a href="#Acm_DaqAoSetRawDataEx"><code>Acm_DaqAoSetRawDataEx</code></a>
-    + <a href="#Acm_DaqAoSetEngDataEx"><code>Acm_DaqAoSetEngDataEx</code></a>
-    + <a href="#Acm_DaqAoSetVoltDataEx"><code>Acm_DaqAoSetVoltDataEx</code></a>
-    + <a href="#Acm_DaqAoSetCurrDataEx"><code>Acm_DaqAoSetCurrDataEx</code></a>
-    + <a href="#Acm_DaqAoGetRawDataEx"><code>Acm_DaqAoGetRawDataEx</code></a>
-    + <a href="#Acm_DaqAoGetEngDataEx"><code>Acm_DaqAoGetEngDataEx</code></a>
-    + <a href="#Acm_DaqAoGetVoltDataEx"><code>Acm_DaqAoGetVoltDataEx</code></a>
-    + <a href="#Acm_DaqAoGetCurrDataEx"><code>Acm_DaqAoGetCurrDataEx</code></a>
-    + <a href="#Acm_DaqGetIOLinkStatus"><code>Acm_DaqGetIOLinkStatus</code></a>
-    + <a href="#Acm_DaqCntTriggerCmp"><code>Acm_DaqCntTriggerCmp</code></a>
-    + <a href="#Acm_DaqCntResetLatch"><code>Acm_DaqCntResetLatch</code></a>
-    + <a href="#Acm_DaqCntResetCmp"><code>Acm_DaqCntResetCmp</code></a>
-    + <a href="#Acm_DaqCntResetCnt"><code>Acm_DaqCntResetCnt</code></a>
-    + <a href="#Acm_DaqCntGetCounterData"><code>Acm_DaqCntGetCounterData</code></a>
-    + <a href="#Acm_DaqCntSetCounterData"><code>Acm_DaqCntSetCounterData</code></a>
-    + <a href="#Acm_DaqCntGetCounterFrequency"><code>Acm_DaqCntGetCounterFrequency</code></a>
-    + <a href="#Acm_DaqCntGetExtDriveData"><code>Acm_DaqCntGetExtDriveData</code></a>
-    + <a href="#Acm_DaqCntSetExtDriveData"><code>Acm_DaqCntSetExtDriveData</code></a>
-    + <a href="#Acm_DaqCntGetLatchData"><code>Acm_DaqCntGetLatchData</code></a>
-    + <a href="#Acm_DaqCntGetCmpData"><code>Acm_DaqCntGetCmpData</code></a>
-    + <a href="#Acm_DaqCntSetCmpData"><code>Acm_DaqCntSetCmpData</code></a>
-    + <a href="#Acm_DaqCntSetCmpTable"><code>Acm_DaqCntSetCmpTable</code></a>
-    + <a href="#Acm_DaqCntSetCmpAuto"><code>Acm_DaqCntSetCmpAuto</code></a>
-    + <a href="#Acm_DaqCntGetLatchBufferStatus"><code>Acm_DaqCntGetLatchBufferStatus</code></a>
-    + <a href="#Acm_DaqCntReadLatchBuffer"><code>Acm_DaqCntReadLatchBuffer</code></a>
-    + <a href="#Acm_DaqCntTriggerCmpEx"><code>Acm_DaqCntTriggerCmpEx</code></a>
-    + <a href="#Acm_DaqCntTriggerLatchEx"><code>Acm_DaqCntTriggerLatchEx</code></a>
-    + <a href="#Acm_DaqCntResetLatchEx"><code>Acm_DaqCntResetLatchEx</code></a>
-    + <a href="#Acm_DaqCntResetCmpEx"><code>Acm_DaqCntResetCmpEx</code></a>
-    + <a href="#Acm_DaqCntResetCntEx"><code>Acm_DaqCntResetCntEx</code></a>
-    + <a href="#Acm_DaqCntGetCounterDataEx"><code>Acm_DaqCntGetCounterDataEx</code></a>
-    + <a href="#Acm_DaqCntSetCounterDataEx"><code>Acm_DaqCntSetCounterDataEx</code></a>
-    + <a href="#Acm_DaqCntGetCounterFrequencyEx"><code>Acm_DaqCntGetCounterFrequencyEx</code></a>
-    + <a href="#Acm_DaqCntGetExtDriveDataEx"><code>Acm_DaqCntGetExtDriveDataEx</code></a>
-    + <a href="#Acm_DaqCntSetExtDriveDataEx"><code>Acm_DaqCntSetExtDriveDataEx</code></a>
-    + <a href="#Acm_DaqCntGetLatchDataEx"><code>Acm_DaqCntGetLatchDataEx</code></a>
-    + <a href="#Acm_DaqCntGetCmpDataEx"><code>Acm_DaqCntGetCmpDataEx</code></a>
-    + <a href="#Acm_DaqCntSetCmpDataEx"><code>Acm_DaqCntSetCmpDataEx</code></a>
-    + <a href="#Acm_DaqCntSetCmpTableEx"><code>Acm_DaqCntSetCmpTableEx</code></a>
-    + <a href="#Acm_DaqCntSetCmpAutoEx"><code>Acm_DaqCntSetCmpAutoEx</code></a>
-    + <a href="#Acm_DaqCntGetLatchBufferStatusEx"><code>Acm_DaqCntGetLatchBufferStatusEx</code></a>
-    + <a href="#Acm_DaqCntReadLatchBufferEx"><code>Acm_DaqCntReadLatchBufferEx</code></a>
-    + <a href="#Acm_AxPWMOut"><code>Acm_AxPWMOut</code></a>
-    + <a href="#Acm_AxGetPWMOutState"><code>Acm_AxGetPWMOutState</code></a>
-* EtherCAT
-    + <a href="#Acm_DevECATOpen"><code>Acm_DevECATOpen</code></a>
-    + <a href="#Acm_DevReadMailBox"><code>Acm_DevReadMailBox</code></a>
-    + <a href="#Acm_DevReadMultiMailBox"><code>Acm_DevReadMultiMailBox</code></a>
-    + <a href="#Acm_DevWriteMailBox"><code>Acm_DevWriteMailBox</code></a>
-    + <a href="#Acm_LoadENI"><code>Acm_LoadENI</code></a>
-    + <a href="#Acm_DevGetMasInfo"><code>Acm_DevGetMasInfo</code></a>
-    + <a href="#Acm_DevGetMasStates"><code>Acm_DevGetMasStates</code></a>
-    + <a href="#Acm_DevGetSlaveInfo"><code>Acm_DevGetSlaveInfo</code></a>
-    + <a href="#Acm_DevGetModuleInfo"><code>Acm_DevGetModuleInfo</code></a>
-    + <a href="#Acm_DevGetSlaveDataCnt"><code>Acm_DevGetSlaveDataCnt</code></a>
-    + <a href="#Acm_DevGetSlaveFwVersion"><code>Acm_DevGetSlaveFwVersion</code></a>
-    + <a href="#Acm_DevSetSlaveID"><code>Acm_DevSetSlaveID</code></a>
 ---
 #### Acm_GetAvailableDevs
 <a name="Acm_GetAvailableDevs" />

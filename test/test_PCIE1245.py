@@ -34,8 +34,17 @@ class TestPCIE1245(unittest.TestCase):
         self.axisStart = 0
         self.devId = c_uint32(0)
         self.gpid = c_uint32(0)
+        self.cmpCnt = c_uint32(2)
+        self.ltcCnt = c_uint32(2)
         self.gpArr = [c_uint32(self.axisStart), c_uint32(self.axisStart + 1)]
         self.transGpArr = (c_uint32 * len(self.gpArr))(*self.gpArr)
+    # Call once by test case
+    @classmethod
+    def setUpClass(cls):
+        cls.exceptedPos = c_double(0)
+        cls.cmpCh = c_uint32(0)
+        cls.axisID = c_uint32(0)
+        cls.ltcCh = c_uint32(0)
     
     def tearDown(self):
         self.errCde = c_uint32(ErrorCode2.SUCCESS.value)
@@ -127,9 +136,25 @@ class TestPCIE1245(unittest.TestCase):
         self.errCde = self.AdvMot.Acm2_GetMultiProperty(self.devId, transEMGLogic, getValueBuffer, len(emgLogicArr), errBuffer)
         self.assertEqual(self.exceptedErr.value, self.errCde, '{0} failed.'.format(self._testMethodName))
         print('EMG:{EMG:<3}'.format(EMG=getValueBuffer[0]))
-    
+
+    def SetAxisPulseMode(self):
+        pulseProperty = [c_uint32(PropertyID2.CFG_AxPulseInMode.value), c_uint32(PropertyID2.CFG_AxPulseOutMode.value)]
+        transProperty = (c_uint32 * len(pulseProperty))(*pulseProperty)
+        pulseInMode = [c_double(PULSE_IN_MODE.I_CW_CCW.value), c_double(PULSE_OUT_MODE.O_CW_CCW.value)]
+        transPulse = (c_double * len(pulseInMode))(*pulseInMode)
+        errBuffer = (c_uint32 * len(pulseProperty))()
+        getValueBuffer = (c_double * len(pulseProperty))()
+        for i in range(self.axisStart, (self.axisStart + self.axCnt.value)):
+            self.errCde = self.AdvMot.Acm2_SetMultiProperty(i, transProperty, transPulse, len(pulseProperty), errBuffer)
+            self.assertEqual(self.exceptedErr.value, self.errCde, '{0} failed.'.format(self._testMethodName))
+            self.errCde = self.AdvMot.Acm2_GetMultiProperty(i, transProperty, getValueBuffer, len(pulseProperty), errBuffer)
+            self.assertEqual(self.exceptedErr.value, self.errCde, '{0} failed.'.format(self._testMethodName))
+            for j in range(len(pulseProperty)):
+                self.assertEqual(pulseInMode[j].value, getValueBuffer[j], '{0} failed.'.format(self._testMethodName))
+
     def ResetStatusAndCounter(self):
-        pos_type = c_uint(POSITION_TYPE.POSITION_CMD.value)
+        pos_type_cmd = c_uint(POSITION_TYPE.POSITION_CMD.value)
+        pos_type_act = c_uint(POSITION_TYPE.POSITION_ACT.value)
         pos = c_double(0)
         state_type = c_uint(AXIS_STATUS_TYPE.AXIS_STATE.value)
         # Check axis status
@@ -146,13 +171,18 @@ class TestPCIE1245(unittest.TestCase):
         self.assertEqual(self.exceptedErr.value, self.errCde)
         # Set axis command position as 0
         for j in range(self.axisStart, (self.axisStart + self.axCnt.value)):
-            self.errCde = self.AdvMot.Acm2_AxSetPosition(j, pos_type, pos)
+            self.errCde = self.AdvMot.Acm2_AxSetPosition(j, pos_type_cmd, pos)
             self.assertEqual(self.exceptedErr.value, self.errCde, '{0} failed.'.format(self._testMethodName))
+            self.errCde = self.AdvMot.Acm2_AxSetPosition(j, pos_type_act, pos)
+            self.assertEqual(self.exceptedErr.value, self.errCde, '{0} failed.'.format(self._testMethodName))
+            self.stateArr[j - self.axisStart].value = c_uint32(16).value
 
     def test_AxPTP(self):
         abs_mode = c_uint(ABS_MODE.MOVE_REL.value)
-        distance = c_double(1000)
+        distance = c_double(10000)
+        self.exceptedPos.value = distance.value
         for i in range(self.axisStart, (self.axisStart + self.axCnt.value)):
+            self.errCde = self.AdvMot.Acm2_AxSetSvOn(i, c_uint(DO_ONOFF.DO_ON.value))
             self.errCde = self.AdvMot.Acm2_AxPTP(i, abs_mode, distance)
             self.assertEqual(self.exceptedErr.value, self.errCde, '{0} failed.'.format(self._testMethodName))
 
@@ -172,30 +202,34 @@ class TestPCIE1245(unittest.TestCase):
 
     def test_GetAxState(self):
         state_type = c_uint(AXIS_STATUS_TYPE.AXIS_STATE.value)
-        for i in range(self.axisStart, (self.axisStart + self.axCnt.value)):
-            self.AdvMot.Acm2_AxGetState(i, state_type, byref(self.stateArr[i]))
-            if (self.stateArr[i].value != AXIS_STATE.STA_AX_READY.value):
-                print('axis[{0}]Not Ready'.format(i))
+        self.AdvMot.Acm2_AxGetState(self.axisID, state_type, byref(self.stateArr[self.axisID.value]))
+        if (self.stateArr[self.axisID.value].value != AXIS_STATE.STA_AX_READY.value):
+            print('axis[{0}]Not Ready'.format(self.axisID.value))
 
     def test_AxGetPosition(self):
-        pos_type = c_uint(POSITION_TYPE.POSITION_CMD.value)
-        pos = c_double(0)
+        pos_type_cmd = c_uint(POSITION_TYPE.POSITION_CMD.value)
+        pos_type_act = c_uint(POSITION_TYPE.POSITION_ACT.value)
         # Check status
         for i in range(self.axisStart, (self.axisStart + self.axCnt.value)):
-            while self.state.value != AXIS_STATE.STA_AX_READY.value:
-                time.sleep(1)
+            pos_cmd = c_double(0)
+            pos_act = c_double(0)
+            self.axisID.value = i
+            while self.stateArr[self.axisID.value].value != AXIS_STATE.STA_AX_READY.value:
+                time.sleep(2)
                 self.test_GetAxState()
-            self.errCde = self.AdvMot.Acm2_AxGetPosition(i, pos_type, byref(pos))
-            excepted_pos = c_double(1000)
+            self.errCde = self.AdvMot.Acm2_AxGetPosition(i, pos_type_cmd, byref(pos_cmd))
             self.assertEqual(self.exceptedErr.value, self.errCde)
-            self.assertEqual(excepted_pos.value, pos.value, '{0} failed.'.format(self._testMethodName))
+            self.errCde = self.AdvMot.Acm2_AxGetPosition(i, pos_type_act, byref(pos_act))
+            self.assertEqual(self.exceptedErr.value, self.errCde)
+            self.assertEqual(self.exceptedPos.value, pos_cmd.value, '[AX:{1}]{0} failed.'.format(self._testMethodName, i))
+            self.assertEqual(self.exceptedPos.value, pos_act.value, '[AX:{1}]{0} failed.'.format(self._testMethodName, i))
 
     def test_SetAxSpeedInfoAndCheck(self):
         speed_info = SPEED_PROFILE_PRM()
-        speed_info.FH = c_double(3000)
-        speed_info.FL = c_double(1500)
-        speed_info.Acc = c_double(11000)
-        speed_info.Dec = c_double(9900)
+        speed_info.FH = c_double(1000)
+        speed_info.FL = c_double(1000)
+        speed_info.Acc = c_double(2000)
+        speed_info.Dec = c_double(2000)
         speed_info.JerkFac = c_double(0)
         # Set speed information
         for i in range(self.axisStart, (self.axisStart + self.axCnt.value)):
@@ -229,6 +263,7 @@ class TestPCIE1245(unittest.TestCase):
         |30000   |8000|4000|
         '''
         pos_arr = [c_double(0), c_double(5000), c_double(15000), c_double(30000)]
+        self.exceptedPos.value = c_double(30000).value
         posArr = (c_double * len(pos_arr))(*pos_arr)
         vel_arr = [c_double(0), c_double(4000), c_double(5000), c_double(8000)]
         velArr = (c_double * len(vel_arr))(*vel_arr)
@@ -241,15 +276,6 @@ class TestPCIE1245(unittest.TestCase):
             # Set PVT
             self.errCde = self.AdvMot.Acm2_AxMovePVT(i)
             self.assertEqual(self.exceptedErr.value, self.errCde)
-        for i in range(self.axisStart, (self.axisStart + self.axCnt.value)):
-            pos_type = c_uint(POSITION_TYPE.POSITION_CMD.value)
-            get_pos = c_double(0)
-            while self.stateArr[i].value != AXIS_STATE.STA_AX_READY.value:
-                time.sleep(1)
-                self.test_GetAxState()
-            self.errCde = self.AdvMot.Acm2_AxGetPosition(i, pos_type, byref(get_pos))
-            self.assertEqual(self.exceptedErr.value, self.errCde)
-            self.assertEqual(c_double(30000).value, get_pos.value, '{0} failed.'.format(self._testMethodName))
 
     def test_PTTable(self):
         # Reset PT table
@@ -265,6 +291,7 @@ class TestPCIE1245(unittest.TestCase):
         |30000   |5000|
         '''
         pos_arr = [c_double(0), c_double(5000), c_double(15000), c_double(30000)]
+        self.exceptedPos.value = c_double(30000).value
         time_arr = [c_double(0), c_double(2000), c_double(3000), c_double(5000)]
         # Set PT table
         for i in range(len(pos_arr)):
@@ -275,18 +302,6 @@ class TestPCIE1245(unittest.TestCase):
         for i in range(self.axisStart, (self.axisStart + self.axCnt.value)):
             self.errCde = self.AdvMot.Acm2_AxMovePT(i)
             self.assertEqual(self.exceptedErr.value, self.errCde)
-
-        # Check status
-        for i in range(self.axisStart, (self.axisStart + self.axCnt.value)):
-            pos_type = c_uint(POSITION_TYPE.POSITION_CMD.value)
-            get_pos = c_double(0)
-            while self.stateArr[i].value != AXIS_STATE.STA_AX_READY.value:
-                time.sleep(1)
-                self.test_GetAxState()
-            # Get axis 0 position
-            self.errCde = self.AdvMot.Acm2_AxGetPosition(i, pos_type, byref(get_pos))
-            self.assertEqual(self.exceptedErr.value, self.errCde)
-            self.assertEqual(c_double(30000).value, get_pos.value, '{0} failed.'.format(self._testMethodName))
 
     def Gear(self):
         primary_ax = c_uint32(self.axisStart)
@@ -389,6 +404,16 @@ class TestPCIE1245(unittest.TestCase):
         remove_all_axes = c_uint32(0)
         self.errCde = self.AdvMot.Acm2_GpCreate(self.gpid, self.transGpArr, remove_all_axes)
         self.assertEqual(self.exceptedErr.value, self.errCde, '{0} failed.'.format(self._testMethodName))
+
+    def SetGpSpeed(self):
+        speed_val = SPEED_PROFILE_PRM()
+        speed_val.FH = c_double(1000)
+        speed_val.FL = c_double(1000)
+        speed_val.Acc = c_double(1000)
+        speed_val.Dec = c_double(1000)
+        speed_val.JerkFac = c_double(0)
+        self.errCde = self.AdvMot.Acm2_GpSetSpeedProfile(self.gpid, speed_val)
+        self.assertEqual(self.exceptedErr.value, self.errCde, '{0} failed. err=0x{1:x}'.format(self._testMethodName, self.errCde))
 
     def GpLine(self):
         # Set group move as relative
@@ -1223,6 +1248,282 @@ class TestPCIE1245(unittest.TestCase):
         # Remove callback function, disable event
         self.errCde = self.AdvMot.Acm2_EnableCallBackFuncForOneEvent(ax_id, c_int(ADV_EVENT_SUBSCRIBE.EVENT_DISABLE.value), EmptyFunction)
         self.assertEqual(self.exceptedErr.value, self.errCde)
+# CMP
+    def EnableCMP(self):
+        self.errCde = self.AdvMot.Acm2_ChEnableCmp(self.cmpCh, c_uint32(COMPARE_ENABLE.CMP_ENABLE.value))
+        self.assertEqual(self.exceptedErr.value, self.errCde, '{0} failed. err=0x{1:x}'.format(self._testMethodName, self.errCde))
+
+    def DisableCMP(self):
+        self.errCde = self.AdvMot.Acm2_ChEnableCmp(self.cmpCh, c_uint32(COMPARE_ENABLE.CMP_DISABLE.value))
+        self.assertEqual(self.exceptedErr.value, self.errCde, '{0} failed. err=0x{1:x}'.format(self._testMethodName, self.errCde))
+
+    def SetCMPToggle(self):
+        cmp_ppt_arr = [c_uint32(PropertyID2.CFG_CH_DaqCmpDoOutputMode.value),
+                       c_uint32(PropertyID2.CFG_CH_DaqCmpDoLogic.value),
+                       c_uint32(PropertyID2.CFG_AxCmpSrc.value),
+                       c_uint32(PropertyID2.CFG_CH_DaqCmpDoPulseWidthEx.value)]
+        set_val_arr = [c_double(COMPARE_OUTPUT_MODE.CMP_TOGGLE.value),
+                       c_double(COMPARE_LOGIC.CP_ACT_HIGH.value),
+                       c_double(COMPARE_SOURCE.SRC_COMMAND_POSITION.value),
+                       c_double(2000)]
+        for i in range(self.cmpCnt.value):
+            self.cmpCh.value = i
+            for idx in range(len(cmp_ppt_arr)):
+                get_val= c_double(0)
+                if idx == 2:
+                    self.errCde = self.AdvMot.Acm2_SetProperty(0, cmp_ppt_arr[idx], set_val_arr[idx])
+                    self.assertEqual(self.exceptedErr.value, self.errCde, '[ch={2}, idx={3}]{0} failed. err=0x{1:x}'.format(
+                    self._testMethodName, self.errCde, i, idx))
+                    self.errCde = self.AdvMot.Acm2_GetProperty(0, cmp_ppt_arr[idx], byref(get_val))
+                    self.assertEqual(self.exceptedErr.value, self.errCde, '{0} failed. err=0x{1:x}'.format(self._testMethodName, self.errCde))
+                    self.assertEqual(set_val_arr[idx].value, get_val.value, '{0} failed. err=0x{1:x}'.format(self._testMethodName, i, idx))
+                else:
+                    self.errCde = self.AdvMot.Acm2_SetProperty(i, cmp_ppt_arr[idx], set_val_arr[idx])
+                    self.assertEqual(self.exceptedErr.value, self.errCde, '[ch={2}, idx={3}]{0} failed. err=0x{1:x}'.format(
+                    self._testMethodName, self.errCde, i, idx))
+                    self.errCde = self.AdvMot.Acm2_GetProperty(0, cmp_ppt_arr[idx], byref(get_val))
+                    self.assertEqual(self.exceptedErr.value, self.errCde, '{0} failed. err=0x{1:x}'.format(self._testMethodName, self.errCde))
+                    self.assertEqual(set_val_arr[idx].value, get_val.value, '{0} failed. err=0x{1:x}'.format(self._testMethodName, i, idx))
+
+    def SetCMPPulseWidth(self):
+        cmp_ppt_arr = [c_uint32(PropertyID2.CFG_CH_DaqCmpDoOutputMode.value),
+                       c_uint32(PropertyID2.CFG_CH_DaqCmpDoLogic.value),
+                       c_uint32(PropertyID2.CFG_AxCmpSrc.value),
+                       c_uint32(PropertyID2.CFG_CH_DaqCmpDoPulseWidthEx.value)]
+        set_val_arr = [c_double(COMPARE_OUTPUT_MODE.CMP_PULSE.value),
+                       c_double(COMPARE_LOGIC.CP_ACT_HIGH.value),
+                       c_double(COMPARE_SOURCE.SRC_COMMAND_POSITION.value),
+                       c_double(10000)]
+        for i in range(self.cmpCnt.value):
+            self.cmpCh.value = i
+            for idx in range(len(cmp_ppt_arr)):
+                get_val= c_double(0)
+                if idx == 2:
+                    self.errCde = self.AdvMot.Acm2_SetProperty(0, cmp_ppt_arr[idx], set_val_arr[idx])
+                    self.assertEqual(self.exceptedErr.value, self.errCde, '[ch={2}, idx={3}]{0} failed. err=0x{1:x}'.format(
+                    self._testMethodName, self.errCde, i, idx))
+                    self.errCde = self.AdvMot.Acm2_GetProperty(0, cmp_ppt_arr[idx], byref(get_val))
+                    self.assertEqual(self.exceptedErr.value, self.errCde, '{0} failed. err=0x{1:x}'.format(self._testMethodName, self.errCde))
+                    self.assertEqual(set_val_arr[idx].value, get_val.value, '{0} failed. err=0x{1:x}'.format(self._testMethodName, i, idx))
+                else:
+                    self.errCde = self.AdvMot.Acm2_SetProperty(i, cmp_ppt_arr[idx], set_val_arr[idx])
+                    self.assertEqual(self.exceptedErr.value, self.errCde, '[ch={2}, idx={3}]{0} failed. err=0x{1:x}'.format(
+                    self._testMethodName, self.errCde, i, idx))
+                    self.errCde = self.AdvMot.Acm2_GetProperty(0, cmp_ppt_arr[idx], byref(get_val))
+                    self.assertEqual(self.exceptedErr.value, self.errCde, '{0} failed. err=0x{1:x}'.format(self._testMethodName, self.errCde))
+                    self.assertEqual(set_val_arr[idx].value, get_val.value, '{0} failed. err=0x{1:x}'.format(self._testMethodName, i, idx))
+
+    def CMPUnLinkAll(self):
+        empty_arr = (c_uint32 * 0)()
+        for ch in range(self.cmpCnt.value):
+            self.errCde = self.AdvMot.Acm2_ChLinkCmpFIFO(ch, empty_arr, 0)
+            self.assertEqual(self.exceptedErr.value, self.errCde, '{0} failed. err=0x{1:x}'.format(self._testMethodName, self.errCde))
+
+    def SetTableToCompare(self):
+        cmp_table = [c_double(1000), c_double(2000), c_double(3000), c_double(4000), c_double(5000), c_double(6000)]
+        trans_cmp_table = (c_double * len(cmp_table))(*cmp_table)
+        linked_axis_arr = [c_uint32(0)]
+        trans_linked_ax = (c_uint32 * len(linked_axis_arr))(*linked_axis_arr)
+        for ch in range(self.cmpCnt.value):
+            self.cmpCh.value = ch
+            getCMPData = c_double(0)
+            self.errCde = self.AdvMot.Acm2_ChLinkCmpFIFO(ch, trans_linked_ax, len(linked_axis_arr))
+            self.assertEqual(self.exceptedErr.value, self.errCde, '{0} failed. err=0x{1:x}'.format(self._testMethodName, self.errCde))
+            self.DisableCMP()
+            self.errCde = self.AdvMot.Acm2_AxSetCmpTable(linked_axis_arr[0], trans_cmp_table, len(trans_cmp_table))
+            self.assertEqual(self.exceptedErr.value, self.errCde, '{0} failed. err=0x{1:x}'.format(self._testMethodName, self.errCde))
+            self.errCde = self.AdvMot.Acm2_AxGetCmpData(linked_axis_arr[0], byref(getCMPData))
+            self.assertEqual(self.exceptedErr.value, self.errCde, '{0} failed. err=0x{1:x}'.format(self._testMethodName, self.errCde))
+            self.EnableCMP()
+            self.test_AxPTP()
+            self.test_AxGetPosition()
+            self.ResetStatusAndCounter()
+            self.CMPUnLinkAll()
+
+    def SetAutoCompare(self):
+        start = c_double(1000)
+        end = c_double(6000)
+        interval = c_double(1000)
+        linked_axis_arr = [c_uint32(0)]
+        trans_linked_ax = (c_uint32 * len(linked_axis_arr))(*linked_axis_arr)
+        for ch in range(self.cmpCnt.value):
+            self.cmpCh.value = ch
+            self.CMPUnLinkAll()
+            getCMPData = c_double(0)
+            self.errCde = self.AdvMot.Acm2_ChLinkCmpFIFO(ch, trans_linked_ax, len(linked_axis_arr))
+            self.assertEqual(self.exceptedErr.value, self.errCde, '{0} failed. err=0x{1:x}'.format(self._testMethodName, self.errCde))
+            self.DisableCMP()
+            self.errCde = self.AdvMot.Acm2_AxSetCmpAuto(linked_axis_arr[0], start, end, interval)
+            self.assertEqual(self.exceptedErr.value, self.errCde, '{0} failed. err=0x{1:x}'.format(self._testMethodName, self.errCde))
+            self.errCde = self.AdvMot.Acm2_AxGetCmpData(linked_axis_arr[0], byref(getCMPData))
+            self.assertEqual(self.exceptedErr.value, self.errCde, '{0} failed. err=0x{1:x}'.format(self._testMethodName, self.errCde))
+            self.EnableCMP()
+            self.test_AxPTP()
+            self.test_AxGetPosition()
+            self.ResetStatusAndCounter()
+            self.CMPUnLinkAll()
+
+    def SetMultiCMPTable(self):
+        cmp_table = [c_double(1000), c_double(2000), c_double(3000), c_double(4000), c_double(5000), c_double(6000)]
+        trans_cmp_table = (c_double * len(cmp_table))(*cmp_table)
+        for ch in range(self.cmpCnt.value):
+            self.cmpCh.value = ch
+            self.CMPUnLinkAll()
+            getCMPData = c_double(0)
+            self.errCde = self.AdvMot.Acm2_ChLinkCmpFIFO(ch, self.transGpArr, len(self.gpArr))
+            self.assertEqual(self.exceptedErr.value, self.errCde, '{0} failed. err=0x{1:x}'.format(self._testMethodName, self.errCde))
+            self.DisableCMP()
+            for ax in range(len(self.gpArr)):
+                self.errCde = self.AdvMot.Acm2_AxSetCmpTable(self.gpArr[ax], trans_cmp_table, len(trans_cmp_table))
+                self.assertEqual(self.exceptedErr.value, self.errCde, '{0} failed. err=0x{1:x}'.format(self._testMethodName, self.errCde))
+                self.errCde = self.AdvMot.Acm2_AxGetCmpData(self.gpArr[ax], byref(getCMPData))
+                self.assertEqual(self.exceptedErr.value, self.errCde, '{0} failed. err=0x{1:x}'.format(self._testMethodName, self.errCde))
+                print('CMP Data:{0}'.format(getCMPData.value))
+            self.EnableCMP()
+            self.CreateGroupAndCheck()
+            self.SetGpSpeed()
+            self.GpLine()
+            self.ResetGroup()
+            self.ResetStatusAndCounter()
+            self.CMPUnLinkAll()
+
+    def SetMultiCMPAuto(self):
+        start = c_double(1000)
+        end = c_double(6000)
+        interval = c_double(1000)
+        for ch in range(self.cmpCnt.value):
+            self.cmpCh.value = ch
+            self.CMPUnLinkAll()
+            getCMPData = c_double(0)
+            self.errCde = self.AdvMot.Acm2_ChLinkCmpFIFO(ch, self.transGpArr, len(self.gpArr))
+            self.assertEqual(self.exceptedErr.value, self.errCde, '{0} failed. err=0x{1:x}'.format(self._testMethodName, self.errCde))
+            self.DisableCMP()
+            for ax in range(len(self.gpArr)):
+                self.errCde = self.AdvMot.Acm2_AxSetCmpAuto(self.gpArr[ax], start, end, interval)
+                self.assertEqual(self.exceptedErr.value, self.errCde, '{0} failed. err=0x{1:x}'.format(self._testMethodName, self.errCde))
+                self.errCde = self.AdvMot.Acm2_AxGetCmpData(self.gpArr[ax], byref(getCMPData))
+                self.assertEqual(self.exceptedErr.value, self.errCde, '{0} failed. err=0x{1:x}'.format(self._testMethodName, self.errCde))
+            self.EnableCMP()
+            self.CreateGroupAndCheck()
+            self.SetGpSpeed()
+            self.GpLine()
+            self.ResetGroup()
+            self.ResetStatusAndCounter()
+            self.CMPUnLinkAll()
+# LTC
+    def LTCUnLinkAll(self):
+        empty_arr = (c_uint32 * 0)()
+        for ch in range(self.ltcCnt.value):
+            self.errCde = self.AdvMot.Acm2_ChLinkLatchAxis(ch, empty_arr, 0)
+            self.assertEqual(self.exceptedErr.value, self.errCde, '{0} failed. err=0x{1:x}'.format(self._testMethodName, self.errCde))
+
+    def SetLTC(self, trig_sel):
+        ltc_ppt_arr = [c_uint32(PropertyID2.CFG_CH_DaqLtcLogic.value),
+                       c_uint32(PropertyID2.CFG_CH_DaqLtcTrigSel.value),
+                       c_uint32(PropertyID2.CFG_AxLatchBufMinDist.value),
+                       c_uint32(PropertyID2.CFG_AxLatchBufEventNum.value)]
+        set_ltc_val = [c_double(COMPARE_LOGIC.CP_ACT_LOW.value),
+                       c_double(trig_sel),
+                       c_double(0),
+                       c_double(8)]
+        for idx in range(len(ltc_ppt_arr)):
+            get_val = c_double(0)
+            self.errCde = self.AdvMot.Acm2_SetProperty(self.ltcCh, ltc_ppt_arr[idx], set_ltc_val[idx])
+            self.assertEqual(self.exceptedErr.value, self.errCde, '[ch={2}, idx={3}]{0} failed. err=0x{1:x}'.format(
+            self._testMethodName, self.errCde, self.ltcCh.value, idx))
+            self.errCde = self.AdvMot.Acm2_GetProperty(self.ltcCh, ltc_ppt_arr[idx], byref(get_val))
+            self.assertEqual(self.exceptedErr.value, self.errCde, '{0} failed. err=0x{1:x}'.format(self._testMethodName, self.errCde))
+            self.assertEqual(set_ltc_val[idx].value, get_val.value, '{0} failed. err=0x{1:x}'.format(self._testMethodName, self.ltcCh.value, idx))
+
+    def LTCRising(self):
+        linked_axis_arr = [c_uint32(0)]
+        trans_linked_ax = (c_uint32 * len(linked_axis_arr))(*linked_axis_arr)
+        for ch in range(self.ltcCnt.value):
+            self.ltcCh.value = ch
+            self.errCde = self.AdvMot.Acm2_AxResetLatchBuffer(linked_axis_arr[0])
+            self.assertEqual(self.exceptedErr.value, self.errCde, '{0} failed. err=0x{1:x}'.format(self._testMethodName, self.errCde))
+            self.LTCUnLinkAll()
+            self.SetCMPToggle()
+            remainCnt = c_uint32(0)
+            spaceCnt = c_uint32(0)
+            data_buffer = (c_double * 64)()
+            dataCnt = c_uint32(64)
+            self.errCde = self.AdvMot.Acm2_ChLinkLatchAxis(ch, trans_linked_ax, len(linked_axis_arr))
+            self.assertEqual(self.exceptedErr.value, self.errCde, '{0} failed. err=0x{1:x}'.format(self._testMethodName, self.errCde))
+            # Link before set latch property
+            self.SetLTC(LATCH_BUF_EDGE.LATCH_BUF_RISING_EDGE.value)
+            self.SetAutoCompare()
+            self.errCde = self.AdvMot.Acm2_AxGetLatchBufferStatus(linked_axis_arr[0], byref(remainCnt), byref(spaceCnt))
+            self.assertEqual(self.exceptedErr.value, self.errCde, '{0} failed. err=0x{1:x}'.format(self._testMethodName, self.errCde))
+            self.errCde = self.AdvMot.Acm2_AxReadLatchBuffer(linked_axis_arr[0], data_buffer, byref(dataCnt))
+            self.assertEqual(self.exceptedErr.value, self.errCde, '{0} failed. err=0x{1:x}'.format(self._testMethodName, self.errCde))
+            print('\n--- Latch data ---')
+            print('Remain:{0}, space:{1}, dataCnt:{2}'.format(remainCnt.value, spaceCnt.value, dataCnt.value))
+            for i in range(dataCnt.value):
+                print('Ch {2}, Data[{0}]:{1}'.format(i, data_buffer[i], ch))
+            print('\n')
+            self.errCde = self.AdvMot.Acm2_ChResetLatchBuffer(ch)
+            self.assertEqual(self.exceptedErr.value, self.errCde, '{0} failed. err=0x{1:x}'.format(self._testMethodName, self.errCde))
+
+    def LTCFalling(self):
+        linked_axis_arr = [c_uint32(0)]
+        trans_linked_ax = (c_uint32 * len(linked_axis_arr))(*linked_axis_arr)
+        for ch in range(self.ltcCnt.value):
+            self.ltcCh.value = ch
+            self.errCde = self.AdvMot.Acm2_AxResetLatchBuffer(linked_axis_arr[0])
+            self.assertEqual(self.exceptedErr.value, self.errCde, '{0} failed. err=0x{1:x}'.format(self._testMethodName, self.errCde))
+            self.LTCUnLinkAll()
+            self.SetCMPToggle()
+            remainCnt = c_uint32(0)
+            spaceCnt = c_uint32(0)
+            data_buffer = (c_double * 64)()
+            dataCnt = c_uint32(64)
+            self.errCde = self.AdvMot.Acm2_ChLinkLatchAxis(ch, trans_linked_ax, len(linked_axis_arr))
+            self.assertEqual(self.exceptedErr.value, self.errCde, '{0} failed. err=0x{1:x}'.format(self._testMethodName, self.errCde))
+            # Link before set latch property
+            self.SetLTC(LATCH_BUF_EDGE.LATCH_BUF_FALLING_EDGE.value)
+            self.SetAutoCompare()
+            self.errCde = self.AdvMot.Acm2_AxGetLatchBufferStatus(linked_axis_arr[0], byref(remainCnt), byref(spaceCnt))
+            self.assertEqual(self.exceptedErr.value, self.errCde, '{0} failed. err=0x{1:x}'.format(self._testMethodName, self.errCde))
+            self.errCde = self.AdvMot.Acm2_AxReadLatchBuffer(linked_axis_arr[0], data_buffer, byref(dataCnt))
+            self.assertEqual(self.exceptedErr.value, self.errCde, '{0} failed. err=0x{1:x}'.format(self._testMethodName, self.errCde))
+            print('\n--- Latch data ---')
+            print('Remain:{0}, space:{1}, dataCnt:{2}'.format(remainCnt.value, spaceCnt.value, dataCnt.value))
+            for i in range(dataCnt.value):
+                print('Ch {2}, Data[{0}]:{1}'.format(i, data_buffer[i], ch))
+            print('\n')
+            self.errCde = self.AdvMot.Acm2_ChResetLatchBuffer(ch)
+            self.assertEqual(self.exceptedErr.value, self.errCde, '{0} failed. err=0x{1:x}'.format(self._testMethodName, self.errCde))
+
+    def LTCBoth(self):
+        linked_axis_arr = [c_uint32(0)]
+        trans_linked_ax = (c_uint32 * len(linked_axis_arr))(*linked_axis_arr)
+        for ch in range(self.ltcCnt.value):
+            self.ltcCh.value = ch
+            self.errCde = self.AdvMot.Acm2_AxResetLatchBuffer(linked_axis_arr[0])
+            self.assertEqual(self.exceptedErr.value, self.errCde, '{0} failed. err=0x{1:x}'.format(self._testMethodName, self.errCde))
+            self.LTCUnLinkAll()
+            self.SetCMPToggle()
+            remainCnt = c_uint32(0)
+            spaceCnt = c_uint32(0)
+            data_buffer = (c_double * 64)()
+            dataCnt = c_uint32(64)
+            self.errCde = self.AdvMot.Acm2_ChLinkLatchAxis(ch, trans_linked_ax, len(linked_axis_arr))
+            self.assertEqual(self.exceptedErr.value, self.errCde, '{0} failed. err=0x{1:x}'.format(self._testMethodName, self.errCde))
+            # Link before set latch property
+            self.SetLTC(LATCH_BUF_EDGE.LATCH_BUF_BOTH_EDGE.value)
+            self.SetAutoCompare()
+            self.errCde = self.AdvMot.Acm2_AxGetLatchBufferStatus(linked_axis_arr[0], byref(remainCnt), byref(spaceCnt))
+            self.assertEqual(self.exceptedErr.value, self.errCde, '{0} failed. err=0x{1:x}'.format(self._testMethodName, self.errCde))
+            self.errCde = self.AdvMot.Acm2_AxReadLatchBuffer(linked_axis_arr[0], data_buffer, byref(dataCnt))
+            self.assertEqual(self.exceptedErr.value, self.errCde, '{0} failed. err=0x{1:x}'.format(self._testMethodName, self.errCde))
+            print('\n--- Latch data ---')
+            print('Remain:{0}, space:{1}, dataCnt:{2}'.format(remainCnt.value, spaceCnt.value, dataCnt.value))
+            for i in range(dataCnt.value):
+                print('Ch {2}, Data[{0}]:{1}'.format(i, data_buffer[i], ch))
+            print('\n')
+            self.errCde = self.AdvMot.Acm2_ChResetLatchBuffer(ch)
+            self.assertEqual(self.exceptedErr.value, self.errCde, '{0} failed. err=0x{1:x}'.format(self._testMethodName, self.errCde))
 
 def JustGetAvailableDevices():
     tests = ['GetAvailableDevs']
@@ -1237,7 +1538,7 @@ def GetAllAxesStatus():
     suite = unittest.TestSuite(map(TestPCIE1245, tests))
     return suite
 def ResetAllAxesALMLogic():
-    tests = ['GetAvailableDevs', 'DevInitialize', 'ResetAxIO', 'AxGetMotionState', 'ResetStatusAndCounter']
+    tests = ['GetAvailableDevs', 'DevInitialize', 'ResetAxIO', 'SetAxisPulseMode', 'AxGetMotionState', 'ResetStatusAndCounter']
     suite = unittest.TestSuite(map(TestPCIE1245, tests))
     return suite
 def AxisPTPAndCheck():
@@ -1249,11 +1550,11 @@ def AxisSetSpeedAndCheck():
     suite = unittest.TestSuite(map(TestPCIE1245, tests))
     return suite
 def AxisPVTTable():
-    tests = ['GetAvailableDevs', 'DevInitialize', 'ResetStatusAndCounter', 'test_PVTTable']
+    tests = ['GetAvailableDevs', 'DevInitialize', 'ResetStatusAndCounter', 'test_PVTTable', 'test_AxGetPosition']
     suite = unittest.TestSuite(map(TestPCIE1245, tests))
     return suite
 def AxisPTTable():
-    tests = ['GetAvailableDevs', 'DevInitialize', 'ResetStatusAndCounter', 'test_PTTable']
+    tests = ['GetAvailableDevs', 'DevInitialize', 'ResetStatusAndCounter', 'test_PTTable', 'test_AxGetPosition']
     suite = unittest.TestSuite(map(TestPCIE1245, tests))
     return suite
 def AxisContiMoveAndStop():
@@ -1351,14 +1652,70 @@ def GroupAddPathAndMove():
              'GpAddPath', 'ResetGroup', 'ResetAllError']
     suite = unittest.TestSuite(map(TestPCIE1245, tests))
     return suite
-
+def CompareTableToggle():
+    tests = ['GetAvailableDevs', 'DevInitialize', 'ResetAxIO', 'SetAxisPulseMode', 'ResetAllError', 'ResetStatusAndCounter',
+             'SetCMPToggle', 'SetTableToCompare']
+    suite = unittest.TestSuite(map(TestPCIE1245, tests))
+    return suite
+def CompareTablePulse():
+    tests = ['GetAvailableDevs', 'DevInitialize', 'ResetAxIO', 'SetAxisPulseMode', 'ResetAllError', 'ResetStatusAndCounter',
+             'SetCMPPulseWidth', 'SetTableToCompare']
+    suite = unittest.TestSuite(map(TestPCIE1245, tests))
+    return suite
+def CompareAutoToggle():
+    tests = ['GetAvailableDevs', 'DevInitialize', 'ResetAxIO', 'SetAxisPulseMode', 'ResetAllError', 'ResetStatusAndCounter',
+             'SetCMPToggle', 'SetAutoCompare']
+    suite = unittest.TestSuite(map(TestPCIE1245, tests))
+    return suite
+def CompareAutoPulse():
+    tests = ['GetAvailableDevs', 'DevInitialize', 'ResetAxIO', 'SetAxisPulseMode', 'ResetAllError', 'ResetStatusAndCounter',
+             'SetCMPPulseWidth', 'SetAutoCompare']
+    suite = unittest.TestSuite(map(TestPCIE1245, tests))
+    return suite
+def MultiCompareTableToggle():
+    tests = ['GetAvailableDevs', 'DevInitialize', 'ResetAxIO', 'SetAxisPulseMode', 'ResetAllError', 'ResetStatusAndCounter',
+             'SetCMPToggle', 'SetMultiCMPTable']
+    suite = unittest.TestSuite(map(TestPCIE1245, tests))
+    return suite
+def MultiCompareTablePulse():
+    tests = ['GetAvailableDevs', 'DevInitialize', 'ResetAxIO', 'SetAxisPulseMode', 'ResetAllError', 'ResetStatusAndCounter',
+             'SetCMPPulseWidth', 'SetMultiCMPTable']
+    suite = unittest.TestSuite(map(TestPCIE1245, tests))
+    return suite
+def MultiCompareAutoToggle():
+    tests = ['GetAvailableDevs', 'DevInitialize', 'ResetAxIO', 'SetAxisPulseMode', 'ResetAllError', 'ResetStatusAndCounter',
+             'SetCMPToggle', 'SetMultiCMPAuto']
+    suite = unittest.TestSuite(map(TestPCIE1245, tests))
+    return suite
+def MultiCompareAutoPulse():
+    tests = ['GetAvailableDevs', 'DevInitialize', 'ResetAxIO', 'SetAxisPulseMode', 'ResetAllError', 'ResetStatusAndCounter',
+             'SetCMPPulseWidth', 'SetMultiCMPAuto']
+    suite = unittest.TestSuite(map(TestPCIE1245, tests))
+    return suite
+def LatchRaising1AxisWithCMPAuto():
+    tests = ['GetAvailableDevs', 'DevInitialize', 'ResetAxIO', 'SetAxisPulseMode', 'ResetAllError', 'ResetStatusAndCounter',
+             'LTCRising']
+    suite = unittest.TestSuite(map(TestPCIE1245, tests))
+    return suite
+def LatchFalling1AxisWithCMPAuto():
+    tests = ['GetAvailableDevs', 'DevInitialize', 'ResetAxIO', 'SetAxisPulseMode', 'ResetAllError', 'ResetStatusAndCounter',
+             'LTCFalling']
+    suite = unittest.TestSuite(map(TestPCIE1245, tests))
+    return suite
+def LatchBoth1AxisWithCMPAuto():
+    tests = ['GetAvailableDevs', 'DevInitialize', 'ResetAxIO', 'SetAxisPulseMode', 'ResetAllError', 'ResetStatusAndCounter',
+             'LTCBoth']
+    suite = unittest.TestSuite(map(TestPCIE1245, tests))
+    return suite
 if __name__ == '__main__':
     runner = unittest.TextTestRunner()
+    # Initialize
     get_available_devs = runner.run(JustGetAvailableDevices())
     initialize = runner.run(InitialDevice())
     get_all_axes_status = runner.run(GetAllAxesStatus())
     reset_all_axes_alm_logic = runner.run(ResetAllAxesALMLogic())
     axis_set_speed_and_check = runner.run(AxisSetSpeedAndCheck())
+    # Axis
     axis_ptp_and_check = runner.run(AxisPTPAndCheck())
     axis_pvt_table = runner.run(AxisPVTTable())
     axis_pt_table = runner.run(AxisPTTable())
@@ -1366,6 +1723,7 @@ if __name__ == '__main__':
     axis_gear_0_1 = runner.run(AxisGear0And1())
     axis_gantry_0_1 = runner.run(AxisGantry0And1())
     axis_motion_done_event = runner.run(AxisMotionDoneEvent())
+    # Group
     create_gp_and_check = runner.run(CreateGroupAndCheck())
     group_line = runner.run(GroupLine())
     group_2DArc = runner.run(Group2DArc())
@@ -1381,3 +1739,18 @@ if __name__ == '__main__':
     group_lineStopAndResume = runner.run(GroupLineStopAndResume())
     group_stop = runner.run(GroupStop())
     group_add_path_move = runner.run(GroupAddPathAndMove())
+    # Compare
+    cmp_table_toggle = runner.run(CompareTableToggle())
+    cmp_table_pulse = runner.run(CompareTablePulse())
+    cmp_auto_toggle = runner.run(CompareAutoToggle())
+    cmp_auto_pulse = runner.run(CompareAutoPulse())
+    # Multi-Compare
+    multi_cmp_table_toggle = runner.run(MultiCompareTableToggle())
+    multi_cmp_table_pulse = runner.run(MultiCompareTablePulse())
+    multi_cmp_auto_toggle = runner.run(MultiCompareAutoToggle())
+    multi_cmp_auto_pulse = runner.run(MultiCompareAutoPulse())
+    # Latch
+    # Only support single axis to latch
+    ltc_raising_1axis = runner.run(LatchRaising1AxisWithCMPAuto())
+    ltc_falling_1axis = runner.run(LatchFalling1AxisWithCMPAuto())
+    ltc_both_1axis = runner.run(LatchBoth1AxisWithCMPAuto())    

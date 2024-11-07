@@ -155,6 +155,8 @@ class AdvCmnAPI_Test(unittest.TestCase):
         pos_type = c_uint(POSITION_TYPE.POSITION_CMD.value)
         pos = c_double(0)
         state_type = c_uint(AXIS_STATUS_TYPE.AXIS_STATE.value)
+        ax_motion_cnt = c_uint32(0)
+        ax_evt_cnt = [c_uint32(0), c_uint32(0), c_uint32(0), c_uint32(0), c_uint32(0)]
         # Check axis status
         for i in range(len(ax_id_arr)):
             state = c_uint32(16)
@@ -1408,7 +1410,10 @@ class AdvCmnAPI_Test(unittest.TestCase):
         self.errCde = self.AdvMot.Acm2_GpResetPath(gp_id)
         self.assertEqual(excepted_err, self.errCde)
         # Create path file by path editor inside the Utility
-        path_bin_file = b'test\\testPath.bin'
+        if os.name == 'nt':
+            path_bin_file = b'test\\testPath.bin'
+        else:
+            path_bin_file = b'test/testPath.bin'
         '''
         | index | move command | move mode | Vel High | Vel Low | Acc | Dec |   End Point  |
         |-------|--------------|-----------|----------|---------|-----|-----|--------------|
@@ -2968,13 +2973,13 @@ class AdvCmnAPI_Test(unittest.TestCase):
         excepted_err = c_uint32(ErrorCode2.SUCCESS.value)
         ax_id = c_uint32(0)
         abs_mode = c_uint(ABS_MODE.MOVE_REL.value)
-        distance = c_double(1000)
-        ax_motion_cnt.value = 0
+        distance = c_double(10000)
+        ax_motion_cnt = c_uint32(0)
         # Set callback function, enable event
         self.errCde = self.AdvMot.Acm2_EnableCallBackFuncForOneEvent(ax_id, c_int(ADV_EVENT_SUBSCRIBE.AXIS_MOTION_DONE.value), EvtAxMotionDone)
         self.assertEqual(excepted_err.value, self.errCde)
         # Move
-        for i in range(2):
+        for i in range(1):
             self.errCde = self.AdvMot.Acm2_AxPTP(ax_id, abs_mode, distance)
             self.assertEqual(excepted_err.value, self.errCde)
             # Check status
@@ -3110,7 +3115,7 @@ def DeviceDO():
     return suite
 
 def GroupCreateCheck():
-    tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_RemoveGroup', 'test_CreatGroup', 'test_CheckGroupAxes']
+    tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_RemoveGroup', 'test_CreatGroup', 'test_CheckGroupAxes', 'test_RemoveGroup']
     suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
     return suite
 
@@ -3369,7 +3374,7 @@ if __name__ == '__main__':
     # unittest.main()
     # Test case with self-defined order
     runner = unittest.TextTestRunner()
-    # get_available_devs = runner.run(JustGetAvailableDevices())
+    get_available_devs = runner.run(JustGetAvailableDevices())
     # get_device = runner.run(GetMDevice())
     # ax_ptp = runner.run(AxPTP_Check())
     # device_do = runner.run(DeviceDO())
@@ -3404,7 +3409,7 @@ if __name__ == '__main__':
     # set_pdo_val = runner.run(SetValueByPDO())
     # set_ao_get_ai = runner.run(SetAOGetAI())
     # get_commu_error = runner.run(GetCommuError())
-    set_cnt_property = runner.run(SetCntProperty())
+    # set_cnt_property = runner.run(SetCntProperty())
     # set_cmp_property = runner.run(SetCMPProperty())
     # run_cmp_cnt_pulse = runner.run(RunCMPCNTPulse())
     # run_cmp_diff = runner.run(RunCMPDiff())

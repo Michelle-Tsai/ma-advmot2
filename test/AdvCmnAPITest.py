@@ -3377,7 +3377,7 @@ if __name__ == '__main__':
     get_available_devs = runner.run(JustGetAvailableDevices())
     # get_device = runner.run(GetMDevice())
     # ax_ptp = runner.run(AxPTP_Check())
-    # device_do = runner.run(DeviceDO())
+    device_do = runner.run(DeviceDO())
     # gp_create = runner.run(GroupCreateCheck())
     # get_all_error = runner.run(GetAllError())
     # ax_move_continue = runner.run(AxMoveContinue())

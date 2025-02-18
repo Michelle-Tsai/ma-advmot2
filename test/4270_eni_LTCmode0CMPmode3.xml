@@ -1,0 +1,1075 @@
+<?xml version="1.0" encoding="utf-8"?>
+<EtherCATConfig xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Config>
+    <Master>
+      <Info>
+        <Name>Motion Ring of PCIE-1203M-64AE (M15)%500%0%0</Name>
+        <Destination>010105010000</Destination>
+        <Source>000C290BC37A</Source>
+        <EtherType>A488</EtherType>
+      </Info>
+    </Master>
+    <Slave>
+      <Info>
+        <Name>AMAX-4270 EtherCAT 4-CH Trigger and Latch Module</Name>
+        <PhysAddr>5</PhysAddr>
+        <AutoIncAddr>0</AutoIncAddr>
+        <Physics>YY</Physics>
+        <VendorId>5118</VendorId>
+        <ProductCode>213616</ProductCode>
+        <RevisionNo>6</RevisionNo>
+        <SerialNo>0</SerialNo>
+        <ProductRevision>Advantech Co., Ltd.%AMAX-4200_v1.1.xml</ProductRevision>
+      </Info>
+      <ProcessData>
+        <Send>
+          <BitStart>0</BitStart>
+          <BitLength xsi:type="xsd:int">1152</BitLength>
+        </Send>
+        <Recv>
+          <BitStart>0</BitStart>
+          <BitLength xsi:type="xsd:int">1152</BitLength>
+        </Recv>
+        <Sm0>
+          <Type>MBoxOut</Type>
+          <DefaultSize>128</DefaultSize>
+          <StartAddress>4096</StartAddress>
+          <ControlByte>38</ControlByte>
+          <Enable>true</Enable>
+        </Sm0>
+        <Sm1>
+          <Type>MBoxIn</Type>
+          <DefaultSize>128</DefaultSize>
+          <StartAddress>4224</StartAddress>
+          <ControlByte>34</ControlByte>
+          <Enable>true</Enable>
+        </Sm1>
+        <Sm2>
+          <Type>Outputs</Type>
+          <DefaultSize>0</DefaultSize>
+          <StartAddress>4352</StartAddress>
+          <ControlByte>100</ControlByte>
+          <Enable>false</Enable>
+          <Pdo>5632</Pdo>
+          <Pdo>5664</Pdo>
+          <Pdo>5696</Pdo>
+          <Pdo>5728</Pdo>
+          <Pdo>5633</Pdo>
+          <Pdo>5665</Pdo>
+          <Pdo>5697</Pdo>
+          <Pdo>5729</Pdo>
+          <Pdo>5642</Pdo>
+          <Pdo>5673</Pdo>
+          <Pdo>5705</Pdo>
+        </Sm2>
+        <Sm3>
+          <Type>Inputs</Type>
+          <DefaultSize>0</DefaultSize>
+          <StartAddress>6400</StartAddress>
+          <ControlByte>32</ControlByte>
+          <Enable>false</Enable>
+          <Pdo>6656</Pdo>
+          <Pdo>6688</Pdo>
+          <Pdo>6720</Pdo>
+          <Pdo>6752</Pdo>
+          <Pdo>6657</Pdo>
+          <Pdo>6689</Pdo>
+          <Pdo>6721</Pdo>
+          <Pdo>6753</Pdo>
+          <Pdo>6666</Pdo>
+          <Pdo>6697</Pdo>
+          <Pdo>6729</Pdo>
+        </Sm3>
+        <RxPdo Fixed="true" Mandatory="true" Sm="2">
+          <Index>#x1600</Index>
+          <Name>Encoder 0 Control</Name>
+          <Entry>
+            <Index>#x7000</Index>
+            <SubIndex>#x03</SubIndex>
+            <BitLen>1</BitLen>
+            <Name>ENC0_Set_Counter_Enable</Name>
+            <DataType>BOOL</DataType>
+          </Entry>
+          <Entry>
+            <Index>#x0000</Index>
+            <SubIndex>#x00</SubIndex>
+            <BitLen>7</BitLen>
+            <Name />
+            <DataType />
+          </Entry>
+          <Entry>
+            <Index>#x7000</Index>
+            <SubIndex>#x11</SubIndex>
+            <BitLen>32</BitLen>
+            <Name>ENC0_Set_Counter</Name>
+            <DataType>DINT</DataType>
+          </Entry>
+        </RxPdo>
+        <RxPdo Fixed="true" Mandatory="true" Sm="2">
+          <Index>#x1620</Index>
+          <Name>Encoder 1 Control</Name>
+          <Entry>
+            <Index>#x7100</Index>
+            <SubIndex>#x03</SubIndex>
+            <BitLen>1</BitLen>
+            <Name>ENC1_Set_Counter_Enable</Name>
+            <DataType>BOOL</DataType>
+          </Entry>
+          <Entry>
+            <Index>#x0000</Index>
+            <SubIndex>#x00</SubIndex>
+            <BitLen>7</BitLen>
+            <Name />
+            <DataType />
+          </Entry>
+          <Entry>
+            <Index>#x7100</Index>
+            <SubIndex>#x11</SubIndex>
+            <BitLen>32</BitLen>
+            <Name>ENC1_Set_Counter</Name>
+            <DataType>DINT</DataType>
+          </Entry>
+        </RxPdo>
+        <RxPdo Fixed="true" Mandatory="true" Sm="2">
+          <Index>#x1640</Index>
+          <Name>Encoder 2 Control</Name>
+          <Entry>
+            <Index>#x7200</Index>
+            <SubIndex>#x03</SubIndex>
+            <BitLen>1</BitLen>
+            <Name>ENC2_Set_Counter_Enable</Name>
+            <DataType>BOOL</DataType>
+          </Entry>
+          <Entry>
+            <Index>#x0000</Index>
+            <SubIndex>#x00</SubIndex>
+            <BitLen>7</BitLen>
+            <Name />
+            <DataType />
+          </Entry>
+          <Entry>
+            <Index>#x7200</Index>
+            <SubIndex>#x11</SubIndex>
+            <BitLen>32</BitLen>
+            <Name>ENC2_Set_Counter</Name>
+            <DataType>DINT</DataType>
+          </Entry>
+        </RxPdo>
+        <RxPdo Fixed="true" Mandatory="true" Sm="2">
+          <Index>#x1660</Index>
+          <Name>Encoder 3 Control</Name>
+          <Entry>
+            <Index>#x7300</Index>
+            <SubIndex>#x03</SubIndex>
+            <BitLen>1</BitLen>
+            <Name>ENC3_Set_Counter_Enable</Name>
+            <DataType>BOOL</DataType>
+          </Entry>
+          <Entry>
+            <Index>#x0000</Index>
+            <SubIndex>#x00</SubIndex>
+            <BitLen>7</BitLen>
+            <Name />
+            <DataType />
+          </Entry>
+          <Entry>
+            <Index>#x7300</Index>
+            <SubIndex>#x11</SubIndex>
+            <BitLen>32</BitLen>
+            <Name>ENC3_Set_Counter</Name>
+            <DataType>DINT</DataType>
+          </Entry>
+        </RxPdo>
+        <RxPdo Fixed="true" Mandatory="false" Sm="2">
+          <Index>#x1601</Index>
+          <Name>Latch 0 Single Channel Control</Name>
+          <Entry>
+            <Index>#x700A</Index>
+            <SubIndex>#x11</SubIndex>
+            <BitLen>32</BitLen>
+            <Name>LTC0_Controldword_0</Name>
+            <DataType>UDINT</DataType>
+          </Entry>
+        </RxPdo>
+        <RxPdo Fixed="true" Mandatory="false" Sm="2">
+          <Index>#x1621</Index>
+          <Name>Latch 1 Single Channel Control</Name>
+          <Entry>
+            <Index>#x710A</Index>
+            <SubIndex>#x11</SubIndex>
+            <BitLen>32</BitLen>
+            <Name>LTC1_Controldword_0</Name>
+            <DataType>UDINT</DataType>
+          </Entry>
+        </RxPdo>
+        <RxPdo Fixed="true" Mandatory="false" Sm="2">
+          <Index>#x1641</Index>
+          <Name>Latch 2 Single Channel Control</Name>
+          <Entry>
+            <Index>#x720A</Index>
+            <SubIndex>#x11</SubIndex>
+            <BitLen>32</BitLen>
+            <Name>LTC2_Controldword_0</Name>
+            <DataType>UDINT</DataType>
+          </Entry>
+        </RxPdo>
+        <RxPdo Fixed="true" Mandatory="false" Sm="2">
+          <Index>#x1661</Index>
+          <Name>Latch 3 Single Channel Control</Name>
+          <Entry>
+            <Index>#x730A</Index>
+            <SubIndex>#x11</SubIndex>
+            <BitLen>32</BitLen>
+            <Name>LTC3_Controldword_0</Name>
+            <DataType>UDINT</DataType>
+          </Entry>
+        </RxPdo>
+        <RxPdo Fixed="true" Mandatory="false" Sm="2">
+          <Index>#x160A</Index>
+          <Name>Compare 0 Multi Channel Control</Name>
+          <Entry>
+            <Index>#x7014</Index>
+            <SubIndex>#x11</SubIndex>
+            <BitLen>32</BitLen>
+            <Name>CMP0_Controldword_0</Name>
+            <DataType>UDINT</DataType>
+          </Entry>
+          <Entry>
+            <Index>#x7018</Index>
+            <SubIndex>#x01</SubIndex>
+            <BitLen>32</BitLen>
+            <Name>CMP0_Multi_Channel_Index0_0</Name>
+            <DataType>DINT</DataType>
+          </Entry>
+          <Entry>
+            <Index>#x7018</Index>
+            <SubIndex>#x02</SubIndex>
+            <BitLen>32</BitLen>
+            <Name>CMP0_Multi_Channel_Index0_1</Name>
+            <DataType>DINT</DataType>
+          </Entry>
+          <Entry>
+            <Index>#x7018</Index>
+            <SubIndex>#x03</SubIndex>
+            <BitLen>32</BitLen>
+            <Name>CMP0_Multi_Channel_Index0_2</Name>
+            <DataType>DINT</DataType>
+          </Entry>
+          <Entry>
+            <Index>#x7018</Index>
+            <SubIndex>#x04</SubIndex>
+            <BitLen>32</BitLen>
+            <Name>CMP0_Multi_Channel_Index0_3</Name>
+            <DataType>DINT</DataType>
+          </Entry>
+          <Entry>
+            <Index>#x7018</Index>
+            <SubIndex>#x05</SubIndex>
+            <BitLen>32</BitLen>
+            <Name>CMP0_Multi_Channel_Index0_4</Name>
+            <DataType>DINT</DataType>
+          </Entry>
+          <Entry>
+            <Index>#x7018</Index>
+            <SubIndex>#x06</SubIndex>
+            <BitLen>32</BitLen>
+            <Name>CMP0_Multi_Channel_Index0_5</Name>
+            <DataType>DINT</DataType>
+          </Entry>
+          <Entry>
+            <Index>#x7019</Index>
+            <SubIndex>#x01</SubIndex>
+            <BitLen>32</BitLen>
+            <Name>CMP0_Multi_Channel_Index1_0</Name>
+            <DataType>DINT</DataType>
+          </Entry>
+          <Entry>
+            <Index>#x7019</Index>
+            <SubIndex>#x02</SubIndex>
+            <BitLen>32</BitLen>
+            <Name>CMP0_Multi_Channel_Index1_1</Name>
+            <DataType>DINT</DataType>
+          </Entry>
+          <Entry>
+            <Index>#x7019</Index>
+            <SubIndex>#x03</SubIndex>
+            <BitLen>32</BitLen>
+            <Name>CMP0_Multi_Channel_Index1_2</Name>
+            <DataType>DINT</DataType>
+          </Entry>
+          <Entry>
+            <Index>#x7019</Index>
+            <SubIndex>#x04</SubIndex>
+            <BitLen>32</BitLen>
+            <Name>CMP0_Multi_Channel_Index1_3</Name>
+            <DataType>DINT</DataType>
+          </Entry>
+          <Entry>
+            <Index>#x7019</Index>
+            <SubIndex>#x05</SubIndex>
+            <BitLen>32</BitLen>
+            <Name>CMP0_Multi_Channel_Index1_4</Name>
+            <DataType>DINT</DataType>
+          </Entry>
+          <Entry>
+            <Index>#x7019</Index>
+            <SubIndex>#x06</SubIndex>
+            <BitLen>32</BitLen>
+            <Name>CMP0_Multi_Channel_Index1_5</Name>
+            <DataType>DINT</DataType>
+          </Entry>
+        </RxPdo>
+        <RxPdo Fixed="true" Mandatory="false" Sm="2">
+          <Index>#x1629</Index>
+          <Name>Compare 1 Single Channel Control</Name>
+          <Entry>
+            <Index>#x7114</Index>
+            <SubIndex>#x11</SubIndex>
+            <BitLen>32</BitLen>
+            <Name>CMP1_Controldword_0</Name>
+            <DataType>UDINT</DataType>
+          </Entry>
+          <Entry>
+            <Index>#x7118</Index>
+            <SubIndex>#x01</SubIndex>
+            <BitLen>32</BitLen>
+            <Name>CMP1_Multi_Channel_Index0_0</Name>
+            <DataType>DINT</DataType>
+          </Entry>
+          <Entry>
+            <Index>#x7118</Index>
+            <SubIndex>#x02</SubIndex>
+            <BitLen>32</BitLen>
+            <Name>CMP1_Multi_Channel_Index0_1</Name>
+            <DataType>DINT</DataType>
+          </Entry>
+          <Entry>
+            <Index>#x7118</Index>
+            <SubIndex>#x03</SubIndex>
+            <BitLen>32</BitLen>
+            <Name>CMP1_Multi_Channel_Index0_2</Name>
+            <DataType>DINT</DataType>
+          </Entry>
+          <Entry>
+            <Index>#x7118</Index>
+            <SubIndex>#x04</SubIndex>
+            <BitLen>32</BitLen>
+            <Name>CMP1_Multi_Channel_Index0_3</Name>
+            <DataType>DINT</DataType>
+          </Entry>
+          <Entry>
+            <Index>#x7118</Index>
+            <SubIndex>#x05</SubIndex>
+            <BitLen>32</BitLen>
+            <Name>CMP1_Multi_Channel_Index0_4</Name>
+            <DataType>DINT</DataType>
+          </Entry>
+          <Entry>
+            <Index>#x7118</Index>
+            <SubIndex>#x06</SubIndex>
+            <BitLen>32</BitLen>
+            <Name>CMP1_Multi_Channel_Index0_5</Name>
+            <DataType>DINT</DataType>
+          </Entry>
+        </RxPdo>
+        <RxPdo Fixed="true" Mandatory="false" Sm="2">
+          <Index>#x1649</Index>
+          <Name>Compare 2 Single Channel Control</Name>
+          <Entry>
+            <Index>#x7214</Index>
+            <SubIndex>#x11</SubIndex>
+            <BitLen>32</BitLen>
+            <Name>CMP2_Controldword_0</Name>
+            <DataType>UDINT</DataType>
+          </Entry>
+          <Entry>
+            <Index>#x7218</Index>
+            <SubIndex>#x01</SubIndex>
+            <BitLen>32</BitLen>
+            <Name>CMP2_Multi_Channel_Index0_0</Name>
+            <DataType>DINT</DataType>
+          </Entry>
+          <Entry>
+            <Index>#x7218</Index>
+            <SubIndex>#x02</SubIndex>
+            <BitLen>32</BitLen>
+            <Name>CMP2_Multi_Channel_Index0_1</Name>
+            <DataType>DINT</DataType>
+          </Entry>
+          <Entry>
+            <Index>#x7218</Index>
+            <SubIndex>#x03</SubIndex>
+            <BitLen>32</BitLen>
+            <Name>CMP2_Multi_Channel_Index0_2</Name>
+            <DataType>DINT</DataType>
+          </Entry>
+          <Entry>
+            <Index>#x7218</Index>
+            <SubIndex>#x04</SubIndex>
+            <BitLen>32</BitLen>
+            <Name>CMP2_Multi_Channel_Index0_3</Name>
+            <DataType>DINT</DataType>
+          </Entry>
+          <Entry>
+            <Index>#x7218</Index>
+            <SubIndex>#x05</SubIndex>
+            <BitLen>32</BitLen>
+            <Name>CMP2_Multi_Channel_Index0_4</Name>
+            <DataType>DINT</DataType>
+          </Entry>
+          <Entry>
+            <Index>#x7218</Index>
+            <SubIndex>#x06</SubIndex>
+            <BitLen>32</BitLen>
+            <Name>CMP2_Multi_Channel_Index0_5</Name>
+            <DataType>DINT</DataType>
+          </Entry>
+        </RxPdo>
+        <TxPdo Fixed="true" Mandatory="true" Sm="3">
+          <Index>#x1A00</Index>
+          <Name>Encoder 0 Status</Name>
+          <Entry>
+            <Index>#x6000</Index>
+            <SubIndex>#x03</SubIndex>
+            <BitLen>1</BitLen>
+            <Name>ENC0_Set_Counter_Done</Name>
+            <DataType>BOOL</DataType>
+          </Entry>
+          <Entry>
+            <Index>#x0000</Index>
+            <SubIndex>#x00</SubIndex>
+            <BitLen>7</BitLen>
+            <Name />
+            <DataType />
+          </Entry>
+          <Entry>
+            <Index>#x6000</Index>
+            <SubIndex>#x11</SubIndex>
+            <BitLen>32</BitLen>
+            <Name>ENC0_Encoder_Value</Name>
+            <DataType>DINT</DataType>
+          </Entry>
+        </TxPdo>
+        <TxPdo Fixed="true" Mandatory="true" Sm="3">
+          <Index>#x1A20</Index>
+          <Name>Encoder 1 Status</Name>
+          <Entry>
+            <Index>#x6100</Index>
+            <SubIndex>#x03</SubIndex>
+            <BitLen>1</BitLen>
+            <Name>ENC1_Set_Counter_Done</Name>
+            <DataType>BOOL</DataType>
+          </Entry>
+          <Entry>
+            <Index>#x0000</Index>
+            <SubIndex>#x00</SubIndex>
+            <BitLen>7</BitLen>
+            <Name />
+            <DataType />
+          </Entry>
+          <Entry>
+            <Index>#x6100</Index>
+            <SubIndex>#x11</SubIndex>
+            <BitLen>32</BitLen>
+            <Name>ENC1_Encoder_Value</Name>
+            <DataType>DINT</DataType>
+          </Entry>
+        </TxPdo>
+        <TxPdo Fixed="true" Mandatory="true" Sm="3">
+          <Index>#x1A40</Index>
+          <Name>Encoder 2 Status</Name>
+          <Entry>
+            <Index>#x6200</Index>
+            <SubIndex>#x03</SubIndex>
+            <BitLen>1</BitLen>
+            <Name>ENC2_Set_Counter_Done</Name>
+            <DataType>BOOL</DataType>
+          </Entry>
+          <Entry>
+            <Index>#x0000</Index>
+            <SubIndex>#x00</SubIndex>
+            <BitLen>7</BitLen>
+            <Name />
+            <DataType />
+          </Entry>
+          <Entry>
+            <Index>#x6200</Index>
+            <SubIndex>#x11</SubIndex>
+            <BitLen>32</BitLen>
+            <Name>ENC2_Encoder_Value</Name>
+            <DataType>DINT</DataType>
+          </Entry>
+        </TxPdo>
+        <TxPdo Fixed="true" Mandatory="true" Sm="3">
+          <Index>#x1A60</Index>
+          <Name>Encoder 3 Status</Name>
+          <Entry>
+            <Index>#x6300</Index>
+            <SubIndex>#x03</SubIndex>
+            <BitLen>1</BitLen>
+            <Name>ENC3_Set_Counter_Done</Name>
+            <DataType>BOOL</DataType>
+          </Entry>
+          <Entry>
+            <Index>#x0000</Index>
+            <SubIndex>#x00</SubIndex>
+            <BitLen>7</BitLen>
+            <Name />
+            <DataType />
+          </Entry>
+          <Entry>
+            <Index>#x6300</Index>
+            <SubIndex>#x11</SubIndex>
+            <BitLen>32</BitLen>
+            <Name>ENC3_Encoder_Value</Name>
+            <DataType>DINT</DataType>
+          </Entry>
+        </TxPdo>
+        <TxPdo Fixed="true" Mandatory="false" Sm="3">
+          <Index>#x1A01</Index>
+          <Name>Latch 0 Single Channel Status</Name>
+          <Entry>
+            <Index>#x600A</Index>
+            <SubIndex>#x11</SubIndex>
+            <BitLen>32</BitLen>
+            <Name>LTC0_Statusdword_0</Name>
+            <DataType>UDINT</DataType>
+          </Entry>
+          <Entry>
+            <Index>#x600C</Index>
+            <SubIndex>#x01</SubIndex>
+            <BitLen>32</BitLen>
+            <Name>LTC0_Single_Channel_Index_0</Name>
+            <DataType>DINT</DataType>
+          </Entry>
+          <Entry>
+            <Index>#x600C</Index>
+            <SubIndex>#x02</SubIndex>
+            <BitLen>32</BitLen>
+            <Name>LTC0_Single_Channel_Index_1</Name>
+            <DataType>DINT</DataType>
+          </Entry>
+          <Entry>
+            <Index>#x600C</Index>
+            <SubIndex>#x03</SubIndex>
+            <BitLen>32</BitLen>
+            <Name>LTC0_Single_Channel_Index_2</Name>
+            <DataType>DINT</DataType>
+          </Entry>
+          <Entry>
+            <Index>#x600C</Index>
+            <SubIndex>#x04</SubIndex>
+            <BitLen>32</BitLen>
+            <Name>LTC0_Single_Channel_Index_3</Name>
+            <DataType>DINT</DataType>
+          </Entry>
+          <Entry>
+            <Index>#x600C</Index>
+            <SubIndex>#x05</SubIndex>
+            <BitLen>32</BitLen>
+            <Name>LTC0_Single_Channel_Index_4</Name>
+            <DataType>DINT</DataType>
+          </Entry>
+          <Entry>
+            <Index>#x600C</Index>
+            <SubIndex>#x06</SubIndex>
+            <BitLen>32</BitLen>
+            <Name>LTC0_Single_Channel_Index_5</Name>
+            <DataType>DINT</DataType>
+          </Entry>
+        </TxPdo>
+        <TxPdo Fixed="true" Mandatory="false" Sm="3">
+          <Index>#x1A21</Index>
+          <Name>Latch 1 Single Channel Status</Name>
+          <Entry>
+            <Index>#x610A</Index>
+            <SubIndex>#x11</SubIndex>
+            <BitLen>32</BitLen>
+            <Name>LTC1_Statusdword_0</Name>
+            <DataType>UDINT</DataType>
+          </Entry>
+          <Entry>
+            <Index>#x610C</Index>
+            <SubIndex>#x01</SubIndex>
+            <BitLen>32</BitLen>
+            <Name>LTC1_Single_Channel_Index_0</Name>
+            <DataType>DINT</DataType>
+          </Entry>
+          <Entry>
+            <Index>#x610C</Index>
+            <SubIndex>#x02</SubIndex>
+            <BitLen>32</BitLen>
+            <Name>LTC1_Single_Channel_Index_1</Name>
+            <DataType>DINT</DataType>
+          </Entry>
+          <Entry>
+            <Index>#x610C</Index>
+            <SubIndex>#x03</SubIndex>
+            <BitLen>32</BitLen>
+            <Name>LTC1_Single_Channel_Index_2</Name>
+            <DataType>DINT</DataType>
+          </Entry>
+          <Entry>
+            <Index>#x610C</Index>
+            <SubIndex>#x04</SubIndex>
+            <BitLen>32</BitLen>
+            <Name>LTC1_Single_Channel_Index_3</Name>
+            <DataType>DINT</DataType>
+          </Entry>
+          <Entry>
+            <Index>#x610C</Index>
+            <SubIndex>#x05</SubIndex>
+            <BitLen>32</BitLen>
+            <Name>LTC1_Single_Channel_Index_4</Name>
+            <DataType>DINT</DataType>
+          </Entry>
+          <Entry>
+            <Index>#x610C</Index>
+            <SubIndex>#x06</SubIndex>
+            <BitLen>32</BitLen>
+            <Name>LTC1_Single_Channel_Index_5</Name>
+            <DataType>DINT</DataType>
+          </Entry>
+        </TxPdo>
+        <TxPdo Fixed="true" Mandatory="false" Sm="3">
+          <Index>#x1A41</Index>
+          <Name>Latch 2 Single Channel Status</Name>
+          <Entry>
+            <Index>#x620A</Index>
+            <SubIndex>#x11</SubIndex>
+            <BitLen>32</BitLen>
+            <Name>LTC2_Statusdword_0</Name>
+            <DataType>UDINT</DataType>
+          </Entry>
+          <Entry>
+            <Index>#x620C</Index>
+            <SubIndex>#x01</SubIndex>
+            <BitLen>32</BitLen>
+            <Name>LTC2_Single_Channel_Index_0</Name>
+            <DataType>DINT</DataType>
+          </Entry>
+          <Entry>
+            <Index>#x620C</Index>
+            <SubIndex>#x02</SubIndex>
+            <BitLen>32</BitLen>
+            <Name>LTC2_Single_Channel_Index_1</Name>
+            <DataType>DINT</DataType>
+          </Entry>
+          <Entry>
+            <Index>#x620C</Index>
+            <SubIndex>#x03</SubIndex>
+            <BitLen>32</BitLen>
+            <Name>LTC2_Single_Channel_Index_2</Name>
+            <DataType>DINT</DataType>
+          </Entry>
+          <Entry>
+            <Index>#x620C</Index>
+            <SubIndex>#x04</SubIndex>
+            <BitLen>32</BitLen>
+            <Name>LTC2_Single_Channel_Index_3</Name>
+            <DataType>DINT</DataType>
+          </Entry>
+          <Entry>
+            <Index>#x620C</Index>
+            <SubIndex>#x05</SubIndex>
+            <BitLen>32</BitLen>
+            <Name>LTC2_Single_Channel_Index_4</Name>
+            <DataType>DINT</DataType>
+          </Entry>
+          <Entry>
+            <Index>#x620C</Index>
+            <SubIndex>#x06</SubIndex>
+            <BitLen>32</BitLen>
+            <Name>LTC2_Single_Channel_Index_5</Name>
+            <DataType>DINT</DataType>
+          </Entry>
+        </TxPdo>
+        <TxPdo Fixed="true" Mandatory="false" Sm="3">
+          <Index>#x1A61</Index>
+          <Name>Latch 3 Single Channel Status</Name>
+          <Entry>
+            <Index>#x630A</Index>
+            <SubIndex>#x11</SubIndex>
+            <BitLen>32</BitLen>
+            <Name>LTC3_Statusdword_0</Name>
+            <DataType>UDINT</DataType>
+          </Entry>
+          <Entry>
+            <Index>#x630C</Index>
+            <SubIndex>#x01</SubIndex>
+            <BitLen>32</BitLen>
+            <Name>LTC3_Single_Channel_Index_0</Name>
+            <DataType>DINT</DataType>
+          </Entry>
+          <Entry>
+            <Index>#x630C</Index>
+            <SubIndex>#x02</SubIndex>
+            <BitLen>32</BitLen>
+            <Name>LTC3_Single_Channel_Index_1</Name>
+            <DataType>DINT</DataType>
+          </Entry>
+          <Entry>
+            <Index>#x630C</Index>
+            <SubIndex>#x03</SubIndex>
+            <BitLen>32</BitLen>
+            <Name>LTC3_Single_Channel_Index_2</Name>
+            <DataType>DINT</DataType>
+          </Entry>
+          <Entry>
+            <Index>#x630C</Index>
+            <SubIndex>#x04</SubIndex>
+            <BitLen>32</BitLen>
+            <Name>LTC3_Single_Channel_Index_3</Name>
+            <DataType>DINT</DataType>
+          </Entry>
+          <Entry>
+            <Index>#x630C</Index>
+            <SubIndex>#x05</SubIndex>
+            <BitLen>32</BitLen>
+            <Name>LTC3_Single_Channel_Index_4</Name>
+            <DataType>DINT</DataType>
+          </Entry>
+          <Entry>
+            <Index>#x630C</Index>
+            <SubIndex>#x06</SubIndex>
+            <BitLen>32</BitLen>
+            <Name>LTC3_Single_Channel_Index_5</Name>
+            <DataType>DINT</DataType>
+          </Entry>
+        </TxPdo>
+        <TxPdo Fixed="true" Mandatory="false" Sm="3">
+          <Index>#x1A0A</Index>
+          <Name>Compare 0 Multi Channel Status</Name>
+          <Entry>
+            <Index>#x6014</Index>
+            <SubIndex>#x11</SubIndex>
+            <BitLen>32</BitLen>
+            <Name>CMP0_Statusdword_0</Name>
+            <DataType>UDINT</DataType>
+          </Entry>
+        </TxPdo>
+        <TxPdo Fixed="true" Mandatory="false" Sm="3">
+          <Index>#x1A29</Index>
+          <Name>Compare 1 Single Channel Status</Name>
+          <Entry>
+            <Index>#x6114</Index>
+            <SubIndex>#x11</SubIndex>
+            <BitLen>32</BitLen>
+            <Name>CMP1_Statusdword_0</Name>
+            <DataType>UDINT</DataType>
+          </Entry>
+        </TxPdo>
+        <TxPdo Fixed="true" Mandatory="false" Sm="3">
+          <Index>#x1A49</Index>
+          <Name>Compare 2 Single Channel Status</Name>
+          <Entry>
+            <Index>#x6214</Index>
+            <SubIndex>#x11</SubIndex>
+            <BitLen>32</BitLen>
+            <Name>CMP2_Statusdword_0</Name>
+            <DataType>UDINT</DataType>
+          </Entry>
+        </TxPdo>
+      </ProcessData>
+      <Mailbox>
+        <CoE>
+          <InitCmds>
+            <InitCmd Fixed="true">
+              <Transition>PS</Transition>
+              <Comment>clear sm pdos (0x1C12)</Comment>
+              <Timeout>100</Timeout>
+              <Ccs>2</Ccs>
+              <Index>7186</Index>
+              <SubIndex>0</SubIndex>
+              <Data>00</Data>
+            </InitCmd>
+            <InitCmd Fixed="true">
+              <Transition>PS</Transition>
+              <Comment>clear sm pdos (0x1C13)</Comment>
+              <Timeout>100</Timeout>
+              <Ccs>2</Ccs>
+              <Index>7187</Index>
+              <SubIndex>0</SubIndex>
+              <Data>00</Data>
+            </InitCmd>
+            <InitCmd Fixed="true">
+              <Transition>PS</Transition>
+              <Comment>download pdo 0x1C12:01 index</Comment>
+              <Timeout>100</Timeout>
+              <Ccs>2</Ccs>
+              <Index>7186</Index>
+              <SubIndex>1</SubIndex>
+              <Data>0016</Data>
+            </InitCmd>
+            <InitCmd Fixed="true">
+              <Transition>PS</Transition>
+              <Comment>download pdo 0x1C12:02 index</Comment>
+              <Timeout>100</Timeout>
+              <Ccs>2</Ccs>
+              <Index>7186</Index>
+              <SubIndex>2</SubIndex>
+              <Data>2016</Data>
+            </InitCmd>
+            <InitCmd Fixed="true">
+              <Transition>PS</Transition>
+              <Comment>download pdo 0x1C12:03 index</Comment>
+              <Timeout>100</Timeout>
+              <Ccs>2</Ccs>
+              <Index>7186</Index>
+              <SubIndex>3</SubIndex>
+              <Data>4016</Data>
+            </InitCmd>
+            <InitCmd Fixed="true">
+              <Transition>PS</Transition>
+              <Comment>download pdo 0x1C12:04 index</Comment>
+              <Timeout>100</Timeout>
+              <Ccs>2</Ccs>
+              <Index>7186</Index>
+              <SubIndex>4</SubIndex>
+              <Data>6016</Data>
+            </InitCmd>
+            <InitCmd Fixed="true">
+              <Transition>PS</Transition>
+              <Comment>download pdo 0x1C12:05 index</Comment>
+              <Timeout>100</Timeout>
+              <Ccs>2</Ccs>
+              <Index>7186</Index>
+              <SubIndex>5</SubIndex>
+              <Data>0116</Data>
+            </InitCmd>
+            <InitCmd Fixed="true">
+              <Transition>PS</Transition>
+              <Comment>download pdo 0x1C12:06 index</Comment>
+              <Timeout>100</Timeout>
+              <Ccs>2</Ccs>
+              <Index>7186</Index>
+              <SubIndex>6</SubIndex>
+              <Data>2116</Data>
+            </InitCmd>
+            <InitCmd Fixed="true">
+              <Transition>PS</Transition>
+              <Comment>download pdo 0x1C12:07 index</Comment>
+              <Timeout>100</Timeout>
+              <Ccs>2</Ccs>
+              <Index>7186</Index>
+              <SubIndex>7</SubIndex>
+              <Data>4116</Data>
+            </InitCmd>
+            <InitCmd Fixed="true">
+              <Transition>PS</Transition>
+              <Comment>download pdo 0x1C12:08 index</Comment>
+              <Timeout>100</Timeout>
+              <Ccs>2</Ccs>
+              <Index>7186</Index>
+              <SubIndex>8</SubIndex>
+              <Data>6116</Data>
+            </InitCmd>
+            <InitCmd Fixed="true">
+              <Transition>PS</Transition>
+              <Comment>download pdo 0x1C12:09 index</Comment>
+              <Timeout>100</Timeout>
+              <Ccs>2</Ccs>
+              <Index>7186</Index>
+              <SubIndex>9</SubIndex>
+              <Data>0A16</Data>
+            </InitCmd>
+            <InitCmd Fixed="true">
+              <Transition>PS</Transition>
+              <Comment>download pdo 0x1C12:0A index</Comment>
+              <Timeout>100</Timeout>
+              <Ccs>2</Ccs>
+              <Index>7186</Index>
+              <SubIndex>10</SubIndex>
+              <Data>2916</Data>
+            </InitCmd>
+            <InitCmd Fixed="true">
+              <Transition>PS</Transition>
+              <Comment>download pdo 0x1C12:0B index</Comment>
+              <Timeout>100</Timeout>
+              <Ccs>2</Ccs>
+              <Index>7186</Index>
+              <SubIndex>11</SubIndex>
+              <Data>4916</Data>
+            </InitCmd>
+            <InitCmd Fixed="true">
+              <Transition>PS</Transition>
+              <Comment>download pdo 0x1C12 count</Comment>
+              <Timeout>100</Timeout>
+              <Ccs>2</Ccs>
+              <Index>7186</Index>
+              <SubIndex>0</SubIndex>
+              <Data>0B</Data>
+            </InitCmd>
+            <InitCmd Fixed="true">
+              <Transition>PS</Transition>
+              <Comment>download pdo 0x1C13:01 index</Comment>
+              <Timeout>100</Timeout>
+              <Ccs>2</Ccs>
+              <Index>7187</Index>
+              <SubIndex>1</SubIndex>
+              <Data>001A</Data>
+            </InitCmd>
+            <InitCmd Fixed="true">
+              <Transition>PS</Transition>
+              <Comment>download pdo 0x1C13:02 index</Comment>
+              <Timeout>100</Timeout>
+              <Ccs>2</Ccs>
+              <Index>7187</Index>
+              <SubIndex>2</SubIndex>
+              <Data>201A</Data>
+            </InitCmd>
+            <InitCmd Fixed="true">
+              <Transition>PS</Transition>
+              <Comment>download pdo 0x1C13:03 index</Comment>
+              <Timeout>100</Timeout>
+              <Ccs>2</Ccs>
+              <Index>7187</Index>
+              <SubIndex>3</SubIndex>
+              <Data>401A</Data>
+            </InitCmd>
+            <InitCmd Fixed="true">
+              <Transition>PS</Transition>
+              <Comment>download pdo 0x1C13:04 index</Comment>
+              <Timeout>100</Timeout>
+              <Ccs>2</Ccs>
+              <Index>7187</Index>
+              <SubIndex>4</SubIndex>
+              <Data>601A</Data>
+            </InitCmd>
+            <InitCmd Fixed="true">
+              <Transition>PS</Transition>
+              <Comment>download pdo 0x1C13:05 index</Comment>
+              <Timeout>100</Timeout>
+              <Ccs>2</Ccs>
+              <Index>7187</Index>
+              <SubIndex>5</SubIndex>
+              <Data>011A</Data>
+            </InitCmd>
+            <InitCmd Fixed="true">
+              <Transition>PS</Transition>
+              <Comment>download pdo 0x1C13:06 index</Comment>
+              <Timeout>100</Timeout>
+              <Ccs>2</Ccs>
+              <Index>7187</Index>
+              <SubIndex>6</SubIndex>
+              <Data>211A</Data>
+            </InitCmd>
+            <InitCmd Fixed="true">
+              <Transition>PS</Transition>
+              <Comment>download pdo 0x1C13:07 index</Comment>
+              <Timeout>100</Timeout>
+              <Ccs>2</Ccs>
+              <Index>7187</Index>
+              <SubIndex>7</SubIndex>
+              <Data>411A</Data>
+            </InitCmd>
+            <InitCmd Fixed="true">
+              <Transition>PS</Transition>
+              <Comment>download pdo 0x1C13:08 index</Comment>
+              <Timeout>100</Timeout>
+              <Ccs>2</Ccs>
+              <Index>7187</Index>
+              <SubIndex>8</SubIndex>
+              <Data>611A</Data>
+            </InitCmd>
+            <InitCmd Fixed="true">
+              <Transition>PS</Transition>
+              <Comment>download pdo 0x1C13:09 index</Comment>
+              <Timeout>100</Timeout>
+              <Ccs>2</Ccs>
+              <Index>7187</Index>
+              <SubIndex>9</SubIndex>
+              <Data>0A1A</Data>
+            </InitCmd>
+            <InitCmd Fixed="true">
+              <Transition>PS</Transition>
+              <Comment>download pdo 0x1C13:0A index</Comment>
+              <Timeout>100</Timeout>
+              <Ccs>2</Ccs>
+              <Index>7187</Index>
+              <SubIndex>10</SubIndex>
+              <Data>291A</Data>
+            </InitCmd>
+            <InitCmd Fixed="true">
+              <Transition>PS</Transition>
+              <Comment>download pdo 0x1C13:0B index</Comment>
+              <Timeout>100</Timeout>
+              <Ccs>2</Ccs>
+              <Index>7187</Index>
+              <SubIndex>11</SubIndex>
+              <Data>491A</Data>
+            </InitCmd>
+            <InitCmd Fixed="true">
+              <Transition>PS</Transition>
+              <Comment>download pdo 0x1C13 count</Comment>
+              <Timeout>100</Timeout>
+              <Ccs>2</Ccs>
+              <Index>7187</Index>
+              <SubIndex>0</SubIndex>
+              <Data>0B</Data>
+            </InitCmd>
+            <InitCmd Fixed="true">
+              <Transition>PS</Transition>
+              <Comment>clear slot config</Comment>
+              <Timeout>100</Timeout>
+              <Ccs>2</Ccs>
+              <Index>61488</Index>
+              <SubIndex>0</SubIndex>
+              <Data>00</Data>
+            </InitCmd>
+            <InitCmd Fixed="true">
+              <Transition>PS</Transition>
+              <Comment>set slot 0 config</Comment>
+              <Timeout>100</Timeout>
+              <Ccs>2</Ccs>
+              <Index>61488</Index>
+              <SubIndex>1</SubIndex>
+              <Data>7042</Data>
+            </InitCmd>
+            <InitCmd Fixed="true">
+              <Transition>PS</Transition>
+              <Comment>set slot 1 config</Comment>
+              <Timeout>100</Timeout>
+              <Ccs>2</Ccs>
+              <Index>61488</Index>
+              <SubIndex>2</SubIndex>
+              <Data>704220</Data>
+            </InitCmd>
+            <InitCmd Fixed="true">
+              <Transition>PS</Transition>
+              <Comment>set slot 2 config</Comment>
+              <Timeout>100</Timeout>
+              <Ccs>2</Ccs>
+              <Index>61488</Index>
+              <SubIndex>3</SubIndex>
+              <Data>704242</Data>
+            </InitCmd>
+            <InitCmd Fixed="true">
+              <Transition>PS</Transition>
+              <Comment>set slot count</Comment>
+              <Timeout>100</Timeout>
+              <Ccs>2</Ccs>
+              <Index>61488</Index>
+              <SubIndex>0</SubIndex>
+              <Data>03</Data>
+            </InitCmd>
+          </InitCmds>
+          <Profile>
+            <ChannelInfo>
+              <ProfileNo xsi:type="xsd:int">5001</ProfileNo>
+            </ChannelInfo>
+          </Profile>
+        </CoE>
+      </Mailbox>
+    </Slave>
+    <Cyclic>
+      <Comment>Advantech MotionNavi Series Cyclic</Comment>
+      <CycleTime>1000</CycleTime>
+    </Cyclic>
+    <MasterOnline>
+      <WaitStableTime>200</WaitStableTime>
+      <RecoveryTimeOut>60000</RecoveryTimeOut>
+      <KeepLastValue>false</KeepLastValue>
+    </MasterOnline>
+  </Config>
+</EtherCATConfig>

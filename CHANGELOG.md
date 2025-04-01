@@ -1,6 +1,10 @@
 # Change log
 All notable changes to this project will be documented in this file.
 
+## [0.1.5] - 2025-03-03
+### Added
+- New structure for Acm2_GetMappedObjInfo
+
 ## [0.1.4] - 2024-08-13
 ### Added
 - Support Common motion 1.0 APIs

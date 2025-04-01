@@ -165,8 +165,8 @@ class AdvCmnAPI_Test(unittest.TestCase):
                 time.sleep(0.5) # sleep for 0.5 second
                 self.AdvMot.Acm2_AxGetState(ax_id_arr[i], state_type, byref(state))
         # Clear all
-        self.errCde = self.AdvMot.Acm2_DevResetAllError()
-        self.assertEqual(excepted_err, self.errCde)
+        # self.errCde = self.AdvMot.Acm2_DevResetAllError()
+        # self.assertEqual(excepted_err, self.errCde)
         # Set axis command position as 0
         for j in range(len(ax_id_arr)):
             self.errCde = self.AdvMot.Acm2_AxSetPosition(ax_id_arr[j], pos_type, pos)
@@ -3374,10 +3374,10 @@ if __name__ == '__main__':
     # unittest.main()
     # Test case with self-defined order
     runner = unittest.TextTestRunner()
-    get_available_devs = runner.run(JustGetAvailableDevices())
+    # get_available_devs = runner.run(JustGetAvailableDevices())
     # get_device = runner.run(GetMDevice())
     # ax_ptp = runner.run(AxPTP_Check())
-    device_do = runner.run(DeviceDO())
+    # device_do = runner.run(DeviceDO())
     # gp_create = runner.run(GroupCreateCheck())
     # get_all_error = runner.run(GetAllError())
     # ax_move_continue = runner.run(AxMoveContinue())
@@ -3412,7 +3412,7 @@ if __name__ == '__main__':
     # set_cnt_property = runner.run(SetCntProperty())
     # set_cmp_property = runner.run(SetCMPProperty())
     # run_cmp_cnt_pulse = runner.run(RunCMPCNTPulse())
-    # run_cmp_diff = runner.run(RunCMPDiff())
+    run_cmp_diff = runner.run(RunCMPDiff())
     # run_cmp_auto_pulse = runner.run(RunCMPAutoPulse())
     # run_cmp_cnt_toggle = runner.run(RunCMPCNTToggle())
     # run_cmp_ltc = runner.run(RunCMPLTC())

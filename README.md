@@ -900,7 +900,7 @@ errCde = AdvMot.Acm2_SetMultiProperty(ax_id, trans_ppt_arr, trans_val_arr, data_
 # Check value
 get_val = (c_double * data_cnt.value)()
 errCde = AdvMot.Acm2_GetMultiProperty(ax_id, trans_ppt_arr, get_val, data_cnt, err_buffer)
-for i range(data_cnt.value):
+for i in range(data_cnt.value):
     print('set[{0}]:{1}, get:{2}'.format(i, value_arr[i].value, get_val[i]))
 ```
 

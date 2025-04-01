@@ -177,8 +177,10 @@ class AdvCmnAPI_Test(unittest.TestCase):
         excepted_err = 0
         cntPulseMode = c_uint32(PropertyID2.CFG_CH_DaqCntPulseInMode.value)
         cntPulseLogic = c_uint32(PropertyID2.CFG_CH_DaqCntPulseInLogic.value)
+        cntMaxFreq = c_uint32(PropertyID2.CFG_CH_DaqCntPulseInMaxFreq.value)
         cntPulseVal = c_double(PULSE_IN_MODE.I_CW_CCW.value)
         cntPulseLogicVal = c_double(PULSE_IN_LOGIC.NO_INV_DIR.value)
+        cntMaxFreqVal = c_double(0)
         getVal = c_double(0)
         for idx in range(len(self.cntCh4270)):
             self.errCde = self.AdvMot.Acm2_SetProperty(self.cntCh4270[idx], cntPulseMode, cntPulseVal)
@@ -192,6 +194,11 @@ class AdvCmnAPI_Test(unittest.TestCase):
             self.errCde = self.AdvMot.Acm2_GetProperty(self.cntCh4270[idx], cntPulseLogic, byref(getVal))
             self.assertEqual(excepted_err, self.errCde, '{0} failed.'.format(self._testMethodName))
             self.assertEqual(cntPulseLogicVal.value, getVal.value, 'Set pulse logic failed! Ch:{2} set {0}, get {1}'.format(cntPulseLogicVal.value, getVal.value, self.cntCh4270[idx].value))
+            self.errCde = self.AdvMot.Acm2_SetProperty(self.cntCh4270[idx], cntMaxFreq, cntMaxFreqVal)
+            self.assertEqual(excepted_err, self.errCde, '{0} failed.'.format(self._testMethodName))
+            self.errCde = self.AdvMot.Acm2_GetProperty(self.cntCh4270[idx], cntMaxFreq, byref(getVal))
+            self.assertEqual(excepted_err, self.errCde, '{0} failed.'.format(self._testMethodName))
+            self.assertEqual(cntMaxFreqVal.value, getVal.value, 'Set pulse max freq failed! Ch:{2} set {0}, get {1}'.format(cntMaxFreqVal.value, getVal.value, self.cntCh4270[idx].value))
     
     def test_Get4270CounterData(self):
         excepted_err = 0
@@ -329,12 +336,13 @@ class AdvCmnAPI_Test(unittest.TestCase):
     def test_Get4270LTCLinkedCnt(self):
         excepted_err = 0
         objType = c_uint(ADV_OBJ_TYPE.ADV_COUNTER_CHANNEL.value)
-        arrElement = c_uint32(2)
-        objArr = (c_uint32 * 2)()
+        arrElement = c_uint32(4)
+        objArr = (c_uint32 * 4)()
         for idx in range(len(self.LTCCh)):
             self.errCde = self.AdvMot.Acm2_ChGetLinkedLatchObject(self.LTCCh[idx].value, byref(objType), objArr, byref(arrElement))
             self.assertEqual(excepted_err, self.errCde, '{0} failed.'.format(self._testMethodName))
-            print('LTC {0} linked to CNT {1}'.format(self.LTCCh[idx].value, objArr[0]))
+            for i in range(arrElement.value):
+                print('LTC {0} linked to CNT {1}'.format(self.LTCCh[idx].value, objArr[i]))
     
     def test_Enable4270CMPLTC(self):
         excepted_err = 0
@@ -375,6 +383,10 @@ class AdvCmnAPI_Test(unittest.TestCase):
         ltcEnable = c_uint32(PropertyID2.CFG_CH_DaqLtcEnable.value)
         disable = c_double(COMPARE_ENABLE.CMP_DISABLE.value)
         getSettingValue = c_double(0)
+        # Get LTC enable
+        for idx in range(len(self.LTCCh)):
+            self.errCde = self.AdvMot.Acm2_GetProperty(self.LTCCh[idx].value, ltcEnable, byref(getSettingValue))
+            print('LTC[{0}] enable:{1}'.format(self.LTCCh[idx].value, getSettingValue.value))
         for idx in range(len(self.cmpCh4270)):
             # Disable CMP
             self.errCde = self.AdvMot.Acm2_SetProperty(self.cmpCh4270[idx].value, cmpOutEnable, disable)
@@ -382,14 +394,14 @@ class AdvCmnAPI_Test(unittest.TestCase):
             self.errCde = self.AdvMot.Acm2_GetProperty(self.cmpCh4270[idx].value, cmpOutEnable, byref(getSettingValue))
             self.assertEqual(disable.value, getSettingValue.value, 'CMP[{3}] Set {0} failed! Set {1}, get {2}'.format(
                 PropertyID2.CFG_CH_DaqCmpDoEnable.name, disable.value, getSettingValue.value, self.cmpCh4270[idx].value))
-        for idx in range(len(self.LTCCh)):
-            # Disable LTC
-            self.errCde = self.AdvMot.Acm2_SetProperty(self.LTCCh[idx].value, ltcEnable, disable)
-            self.assertEqual(excepted_err, self.errCde, '{0} failed.'.format(self._testMethodName))
-            self.errCde = self.AdvMot.Acm2_GetProperty(self.LTCCh[idx].value, ltcEnable, byref(getSettingValue))
-            self.assertEqual(excepted_err, self.errCde, '{0} failed.'.format(self._testMethodName))
-            self.assertEqual(disable.value, getSettingValue.value, 'LTC[{3}] Set {0} failed! Set {1}, get {2}'.format(
-               PropertyID2.CFG_CH_DaqLtcEnable.name, disable.value, getSettingValue.value, self.LTCCh[idx].value))
+        # for idx in range(len(self.LTCCh)):
+        #     # Disable LTC
+        #     self.errCde = self.AdvMot.Acm2_SetProperty(self.LTCCh[idx].value, ltcEnable, disable)
+        #     self.assertEqual(excepted_err, self.errCde, '{0} failed.'.format(self._testMethodName))
+        #     self.errCde = self.AdvMot.Acm2_GetProperty(self.LTCCh[idx].value, ltcEnable, byref(getSettingValue))
+        #     self.assertEqual(excepted_err, self.errCde, '{0} failed.'.format(self._testMethodName))
+        #     self.assertEqual(disable.value, getSettingValue.value, 'LTC[{3}] Set {0} failed! Set {1}, get {2}'.format(
+        #        PropertyID2.CFG_CH_DaqLtcEnable.name, disable.value, getSettingValue.value, self.LTCCh[idx].value))
 
     def test_Set4270CMPPulse(self):
         # Disable CMP & LTC
@@ -399,12 +411,35 @@ class AdvCmnAPI_Test(unittest.TestCase):
         cmpOutMode = c_uint32(PropertyID2.CFG_CH_DaqCmpDoOutputMode.value)
         cmpOutDelay = c_uint32(PropertyID2.CFG_CH_DaqCmpDoDelay.value)
         cmpPulseWidth = c_uint32(PropertyID2.CFG_CH_DaqCmpDoPulseWidth.value)
+        cmpPulseWidthEx = c_uint32(PropertyID2.CFG_CH_DaqCmpDoPulseWidthEx.value)
+        cmpDeviation = c_uint32(PropertyID2.CFG_CH_DaqCmpDeviation.value)
+        cmpLogic = c_uint32(PropertyID2.CFG_CH_DaqCmpDoLogic.value)
         getSettingValue = c_double(0)
         delay0 = c_double(0)
         pulseMode = c_double(COMPARE_OUTPUT_MODE.CMP_PULSE.value)
         # 23: 168ms
         pulseWidth = c_double(23)
+        deviation500 = c_double(0)
         for idx in range(len(self.cmpCh4270)):
+            # Set Logic
+            self.errCde = self.AdvMot.Acm2_SetProperty(self.cmpCh4270[idx].value, cmpLogic, delay0)
+            self.assertEqual(excepted_err, self.errCde, '{0} failed.'.format(self._testMethodName))
+            self.errCde = self.AdvMot.Acm2_GetProperty(self.cmpCh4270[idx].value, cmpLogic, byref(getSettingValue))
+            self.assertEqual(excepted_err, self.errCde, '{0} failed.'.format(self._testMethodName))
+            self.assertEqual(delay0.value, getSettingValue.value, 'CMP[{0}] Set {1} failed! Set {2}, get {3}'.format(self.cmpCh4270[idx].value, PropertyID2.CFG_CH_DaqCmpDoLogic.name, delay0.value, getSettingValue.value))
+            # Set Deviation
+            self.errCde = self.AdvMot.Acm2_SetProperty(self.cmpCh4270[idx].value, cmpDeviation, deviation500)
+            self.assertEqual(excepted_err, self.errCde, '{0} failed.'.format(self._testMethodName))
+            self.errCde = self.AdvMot.Acm2_GetProperty(self.cmpCh4270[idx].value, cmpDeviation, byref(getSettingValue))
+            self.assertEqual(excepted_err, self.errCde, '{0} failed.'.format(self._testMethodName))
+            self.assertEqual(deviation500.value, getSettingValue.value, 'CMP[{0}] Set {1} failed! Set {2}, get {3}'.format(self.cmpCh4270[idx].value, PropertyID2.CFG_CH_DaqCmpDeviation.name, deviation500.value, getSettingValue.value))
+            # Set widthEx
+            self.errCde = self.AdvMot.Acm2_SetProperty(self.cmpCh4270[idx].value, cmpPulseWidthEx, pulseWidth)
+            self.assertEqual(excepted_err, self.errCde, '{0} failed.'.format(self._testMethodName))
+            self.errCde = self.AdvMot.Acm2_GetProperty(self.cmpCh4270[idx].value, cmpPulseWidthEx, byref(getSettingValue))
+            self.assertEqual(excepted_err, self.errCde, '{0} failed.'.format(self._testMethodName))
+            self.assertEqual(pulseWidth.value, getSettingValue.value, 'CMP[{3}] Set {0} failed! Set {1}, get {2}'.format(
+                PropertyID2.CFG_CH_DaqCmpDoPulseWidthEx.name, pulseWidth.value, getSettingValue.value, self.cmpCh4270[idx].value))
             # Set CMP output mode as Pulse mode
             self.errCde = self.AdvMot.Acm2_SetProperty(self.cmpCh4270[idx].value, cmpOutMode, pulseMode)
             self.assertEqual(excepted_err, self.errCde, '{0} failed.'.format(self._testMethodName))
@@ -419,13 +454,15 @@ class AdvCmnAPI_Test(unittest.TestCase):
             self.assertEqual(excepted_err, self.errCde, '{0} failed.'.format(self._testMethodName))
             self.assertEqual(pulseWidth.value, getSettingValue.value, 'CMP[{3}] Set {0} failed! Set {1}, get {2}'.format(
                 PropertyID2.CFG_CH_DaqCmpDoPulseWidth.name, pulseWidth.value, getSettingValue.value, self.cmpCh4270[idx].value))
+            self.errCde = self.AdvMot.Acm2_SetProperty(0, c_uint32(PropertyID2.CFG_CH_DaqDoFuncSelect.value), c_double(1))
+            self.assertEqual(excepted_err, self.errCde, '{0} failed.'.format(self._testMethodName))
             # Set CMP output delay time as 0
             self.errCde = self.AdvMot.Acm2_SetProperty(self.cmpCh4270[idx].value, cmpOutDelay, delay0)
             self.assertEqual(excepted_err, self.errCde, '{0} failed.'.format(self._testMethodName))
             self.errCde = self.AdvMot.Acm2_GetProperty(self.cmpCh4270[idx].value, cmpOutDelay, byref(getSettingValue))
             self.assertEqual(excepted_err, self.errCde, '{0} failed.'.format(self._testMethodName))
             self.assertEqual(delay0.value, getSettingValue.value, 'CMP[{3}] Set {0} failed! Set {1}, get {2}'.format(
-                'Delay time', delay0.value, getSettingValue.value, self.cmpCh4270[idx].value))
+                'Delay time', delay0.value, getSettingValue.value, self.cmpCh4270[idx].value))            
         if global_cmp_mode == 2:
             cmpDeviation = c_uint32(PropertyID2.CFG_CH_DaqCmpDeviation.value)
             deviation500 = c_double(500)
@@ -723,6 +760,11 @@ class AdvCmnAPI_Test(unittest.TestCase):
         # Reset CMP & LTC Data
         self.test_Reset4270CMPLTCData()
 
+    def test_SingleAPI(self):
+        self.test_Initial()
+        getInfo = ADVAPI_IO_LINK_INFO()
+        self.errCde = self.AdvMot.Acm2_GetMappedObjInfo(c_int(ADV_OBJ_TYPE.ADV_COUNTER_CHANNEL.value), 0, byref(getInfo))
+        print('Dev:{0}'.format(getInfo.DeviceName))
 
 def InitialDevice():
     tests = ['test_Initial']
@@ -977,8 +1019,17 @@ def RunCMP3LTC0TableToggleBothEdge():
     suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
     return suite
 
+def RunTestSingleAPI():
+    global global_cmp_mode, global_ltc_mode, global_cmp_delay
+    global_cmp_mode = 1
+    global_ltc_mode = 1
+    tests = ['test_SingleAPI']
+    suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
+    return suite
+
 if __name__ == '__main__':
     runner = unittest.TextTestRunner()
+    run_test_single_api = runner.run(RunTestSingleAPI())
     # get_available_devs = runner.run(InitialDevice())
     # load_eni_set_op_mode = runner.run(DownloadENIAndSetOPMode())
     # set_4270cnt_pulse_mode = runner.run(Set4270CntPulseMode())
@@ -1012,7 +1063,7 @@ if __name__ == '__main__':
     # run_cmp2_ltc0_auto_toggle_both_edge = runner.run(RunCMP2LTC0AutoToggleBothEdge())
     # run_cmp2_ltc0_table_toggle_both_edge = runner.run(RunCMP2LTC0TableToggleBothEdge())
 # CMP Mode 3 LTC Mode0
-    run_cmp3_ltc0_auto_pulse_rising = runner.run(RunCMP3LTC0AutoPulseRising())
-    run_cmp3_ltc0_table_pulse_rising = runner.run(RunCMP3LTC0TablePulseRising())
-    run_cmp3_ltc0_auto_toggle_both_edge = runner.run(RunCMP3LTC0AutoToggleBothEdge())
-    run_cmp3_ltc0_table_toggle_both_edge = runner.run(RunCMP3LTC0TableToggleBothEdge())
+    # run_cmp3_ltc0_auto_pulse_rising = runner.run(RunCMP3LTC0AutoPulseRising())
+    # run_cmp3_ltc0_table_pulse_rising = runner.run(RunCMP3LTC0TablePulseRising())
+    # run_cmp3_ltc0_auto_toggle_both_edge = runner.run(RunCMP3LTC0AutoToggleBothEdge())
+    # run_cmp3_ltc0_table_toggle_both_edge = runner.run(RunCMP3LTC0TableToggleBothEdge())

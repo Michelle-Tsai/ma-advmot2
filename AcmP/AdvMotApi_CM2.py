@@ -310,7 +310,22 @@ class OSC_PROFILE_PRM(Structure):
         ('TimeWidth', c_uint32)
     ]
 
-
+class ADVAPI_IO_LINK_INFO(Structure):
+    _fields_ = [
+        ('DeviceName', c_char*48),
+        ('SubDeviceID', c_uint32),
+        ('Position', c_uint32),
+        ('VendorID', c_uint32),
+        ('ProductID', c_uint32),
+        ('SubDeviceName', c_char*64),
+        ('PhysicRingNo', c_uint32),
+        ('PortType', c_int),
+        ('PhysicNo', c_uint32),
+        ('EntryName', c_char*64),
+        ('EntryIndex', c_uint32),
+        ('EntrySubIndex', c_uint32),
+        ('BitLength', c_uint32)
+    ]
 
 
 

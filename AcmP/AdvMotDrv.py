@@ -555,3 +555,12 @@ class UPDATE_STATE(Enum):
     UPGRADE_FILE_EXIST = 3
     UPGRADE_FAILED = 4
     UPGRADE_NEXT = 5
+
+class PORT_TYPE(Enum):
+    PORT_DO = 0
+    PORT_DI = 1
+    PORT_AO = 2
+    PORT_AI = 3
+    PORT_CNT = 4
+    PORT_INPUT = 5
+    PORT_OUTPUT = 6

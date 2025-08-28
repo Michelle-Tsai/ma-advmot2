@@ -1,3 +1,3 @@
 rm -r dist
-python setup.py bdist_wheel
+python -m build
 twine upload dist/*

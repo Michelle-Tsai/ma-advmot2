@@ -10,6 +10,7 @@ from AcmP.MotionInfo import *
 
 global_isRotate = False
 global_maxFileCnt = 1
+global_fileNames = []
 
 class AmcDataLogAPI_Test(unittest.TestCase):
     def setUp(self):
@@ -24,7 +25,6 @@ class AmcDataLogAPI_Test(unittest.TestCase):
         self.log_index = c_uint16(0)
         self.dirPath = b'/tmp'
         self.fileName = b'PyTestDataLog'
-        self.saveLocalFile = "download_amclog.txt"
     def tearDown(self):
         self.errCde = 0
 
@@ -63,7 +63,7 @@ class AmcDataLogAPI_Test(unittest.TestCase):
         print(f'Get ax:{self.ax_id.value}, pos:{get_distance.value}')
 
     def setLog(self):
-        global global_isRotate, global_maxFileCnt
+        global global_isRotate, global_maxFileCnt, global_fileNames
         except_err = 0
         dataLogSource = AMC_DATA_LOG_SOURCE()
         dataLogSource.type = c_uint(AMC_DATA_LOG_SOURCE_TYPE.LOG_SOURCE_MOTION_AXIS.value)
@@ -79,7 +79,10 @@ class AmcDataLogAPI_Test(unittest.TestCase):
         dataLogOption = AMC_DATA_LOG_OPTIONS()
         dataLogOption.isRotateFile = c_uint8(global_isRotate)
         dataLogOption.maxLogFileCount = c_uint32(global_maxFileCnt)
-        dataLogOption.maxLogFileSize = c_int32(0)
+        if global_isRotate is True:
+            dataLogOption.maxLogFileSize = c_int32(1024 * 100)
+        else:
+            dataLogOption.maxLogFileSize = c_int32(0)
         dataLogOption.samplingTimeMilliseconds = c_int32(0)
         getDataLogOption = AMC_DATA_LOG_OPTIONS()
 
@@ -106,43 +109,34 @@ class AmcDataLogAPI_Test(unittest.TestCase):
         self.errCde = self.AdvAmc.Amc_DataLogGetLogFilePath(self.log_ch, getDirPath, getFileName)
         self.assertEqual(except_err, self.errCde, '{0} failed.'.format(self._testMethodName))
         print(f'dirPath:{getDirPath.value.decode('utf-8', errors='ignore')}, fileName:{getFileName.value.decode('utf-8', errors='ignore')}')
-        fileNames = []
-        if (global_isRotate is True):
-            fileBufferSize = c_uint32(1024)
-            getFilePath = create_string_buffer(fileBufferSize.value)
-            getFileCnt = c_uint32(0)
-            self.errCde = self.AdvAmc.Amc_DataLog_GetRotatedLogFilePaths(self.log_ch, getFilePath, POINTER(fileBufferSize), POINTER(getFileCnt))
-            self.assertEqual(except_err, self.errCde, '{0} failed.'.format(self._testMethodName))
-            print(f'getFileCnt:{getFileCnt.value}')
-            if getFileCnt.value > 0:
-                startIdx = 0
-                content = getFilePath.raw[:fileBufferSize.value]
-                for _ in range(getFileCnt.value):
-                    nullPos = content.find(b'\0', startIdx)
-                    if nullPos == -1:
-                        print("Cann't find")
-                        break
-                    try:
-                        fileName = content[startIdx:nullPos].decode('utf-8', errors='replace')
-                    except UnicodeDecodeError:
-                        try:
-                            import locale
-                            fileName = content[startIdx:nullPos].decode(locale.getpreferredencoding, errors='replace')
-                        except Exception:
-                            print("Failed to decode")
-                    fileNames.append(fileName)
-                    startIdx = nullPos + 1
-                    if startIdx >= len(fileBufferSize.value):
-                        if len(fileNames) < getFileCnt.value:
-                            print(f"End decode, still has:{getFileCnt.value}")
-                            break
-                if len(fileNames) != getFileCnt.value:
-                    print(f"fileNames:{len(fileNames)} != getFileCnt:{getFileCnt.value}")
-            for fname in fileNames:
-                print(f"{fname}")
 
         self.errCde = self.AdvAmc.Amc_DataLog_SetLogHeader(self.log_ch, logHeader)
         self.assertEqual(except_err, self.errCde, '{0} failed.'.format(self._testMethodName))
+        self.errCde = self.AdvAmc.Amc_DataLogGetLogHeader(self.log_ch, getLogHeader)
+        self.assertEqual(except_err, self.errCde, '{0} failed.'.format(self._testMethodName))
+        print(f'logHeader:{getLogHeader.value.decode('utf-8', errors='ignore')}')
+
+    def getLog(self):
+        global global_isRotate, global_maxFileCnt, global_fileNames
+        except_err = 0
+        getDataLogSource = AMC_DATA_LOG_SOURCE()
+        getDataLogOption = AMC_DATA_LOG_OPTIONS()
+        getDirPath = create_string_buffer(256)
+        getFileName = create_string_buffer(256)
+        getLogHeader = create_string_buffer(256)
+
+        self.errCde = self.AdvAmc.Amc_DataLogGetLog(self.log_ch, byref(getDataLogSource), self.log_index)
+        self.assertEqual(except_err, self.errCde, '{0} failed.'.format(self._testMethodName))
+        print(f'count:{getDataLogSource.count}, type:{getDataLogSource.type}, cmd_pos:{getDataLogSource.items.smItems.cmd_pos}')
+
+        self.errCde = self.AdvAmc.Amc_DataLogGetLogOption(self.log_ch, byref(getDataLogOption))
+        self.assertEqual(except_err, self.errCde, '{0} failed.'.format(self._testMethodName))
+        print(f'isRotateFile:{getDataLogOption.isRotateFile}, maxLogFileCount:{getDataLogOption.maxLogFileCount}, samplingTimeMilliseconds:{getDataLogOption.samplingTimeMilliseconds}')
+
+        self.errCde = self.AdvAmc.Amc_DataLogGetLogFilePath(self.log_ch, getDirPath, getFileName)
+        self.assertEqual(except_err, self.errCde, '{0} failed.'.format(self._testMethodName))
+        print(f'dirPath:{getDirPath.value.decode('utf-8', errors='ignore')}, fileName:{getFileName.value.decode('utf-8', errors='ignore')}')
+
         self.errCde = self.AdvAmc.Amc_DataLogGetLogHeader(self.log_ch, getLogHeader)
         self.assertEqual(except_err, self.errCde, '{0} failed.'.format(self._testMethodName))
         print(f'logHeader:{getLogHeader.value.decode('utf-8', errors='ignore')}')
@@ -164,25 +158,82 @@ class AmcDataLogAPI_Test(unittest.TestCase):
         self.errCde = self.AdvAmc.Amc_DataLogStopLog(self.log_ch)
         self.assertEqual(except_err, self.errCde, '{0} failed.'.format(self._testMethodName))
 
-    def getLogFile(self):
+    def getfileNames(self):
         except_err = 0
-        filePath = self.dirPath + b'/' + self.fileName + b'.txt'
-        bufferSize = c_uint32(5 * 1024 * 1024) # 5MB
-        currSize = bufferSize
-        fileBuffer = create_string_buffer(bufferSize.value)
-        self.errCde = self.AdvAmc.Amc_DataLogGetLogFile(filePath, fileBuffer, byref(bufferSize))
-        self.assertEqual(except_err, self.errCde, '{0} failed.'.format(self._testMethodName))
-        if self.errCde == ErrorCode2.MemAllocateFailed:
-            print(f'Initial buffer too small. Required: {bufferSize} bytes')
-            if bufferSize <= currSize:
-                print(f'Error!currSize:{currSize.value}, bufferSize:{bufferSize.value}')
-            currSize = bufferSize
-            fileBuffer = create_string_buffer(currSize)
-            self.errCde = self.AdvAmc.Amc_DataLogGetLogFile(filePath, fileBuffer, byref(bufferSize))
+        global global_isRotate, global_fileNames
+        fileNames = []
+        if (global_isRotate is True):
+            fileBufferSize = c_uint32(1024)
+            getFilePath = create_string_buffer(fileBufferSize.value)
+            getFileCnt = c_uint32(0)
+            self.errCde = self.AdvAmc.Amc_DataLog_GetRotatedLogFilePaths(self.log_ch, getFilePath, byref(fileBufferSize), byref(getFileCnt))
             self.assertEqual(except_err, self.errCde, '{0} failed.'.format(self._testMethodName))
-        if self.errCde == ErrorCode2.SUCCESS:
-            with open(self.saveLocalFile, "wb") as f:
-                f.write(fileBuffer.raw[:bufferSize.value])
+            print(f'getFileCnt:{getFileCnt.value}')
+            if getFileCnt.value > 0:
+                startIdx = 0
+                content = getFilePath.raw[:fileBufferSize.value]
+                for _ in range(getFileCnt.value):
+                    nullPos = content.find(b'\0', startIdx)
+                    if nullPos == -1:
+                        print("Cann't find")
+                        break
+                    try:
+                        fileName = content[startIdx:nullPos].decode('utf-8', errors='replace')
+                    except UnicodeDecodeError:
+                        try:
+                            import locale
+                            fileName = content[startIdx:nullPos].decode(locale.getpreferredencoding, errors='replace')
+                        except Exception:
+                            print("Failed to decode")
+                    fileNames.append(fileName)
+                    startIdx = nullPos + 1
+                    if startIdx >= fileBufferSize.value:
+                        if len(fileNames) < getFileCnt.value:
+                            print(f"End decode, still has:{getFileCnt.value}")
+                            break
+                if len(fileNames) != getFileCnt.value:
+                    print(f"fileNames:{len(fileNames)} != getFileCnt:{getFileCnt.value}")
+            for fname in fileNames:
+                print(f"file name:{fname}")
+            global_fileNames = fileNames
+
+    def getLogFile(self):
+        global global_isRotate, global_fileNames
+        except_err = 0
+        if global_isRotate is True:
+            filePaths = global_fileNames
+        else:
+            filePaths = [self.dirPath + b'/' + self.fileName + b'.txt']
+        print(f'rotate:{global_isRotate}, len:{len(filePaths)}')
+        for idx, filePath in enumerate(filePaths):
+            print(f"idx:{idx}, filePath:{filePath}")
+            bufferSize = c_uint32(5 * 1024 * 1024) # 5MB
+            currSize = bufferSize
+            fileBuffer = create_string_buffer(bufferSize.value)
+            if global_isRotate is True:
+                self.errCde = self.AdvAmc.Amc_DataLogGetLogFile(filePath.encode('utf-8'), fileBuffer, byref(bufferSize))
+            else:
+                self.errCde = self.AdvAmc.Amc_DataLogGetLogFile(filePath, fileBuffer, byref(bufferSize))
+            self.assertEqual(except_err, self.errCde, '{0} failed.'.format(self._testMethodName))
+            if self.errCde == ErrorCode2.MemAllocateFailed:
+                print(f'Initial buffer too small. Required: {bufferSize} bytes')
+                if bufferSize <= currSize:
+                    print(f'Error!currSize:{currSize.value}, bufferSize:{bufferSize.value}')
+                currSize = bufferSize
+                fileBuffer = create_string_buffer(currSize)
+                if global_isRotate is True:
+                    self.errCde = self.AdvAmc.Amc_DataLogGetLogFile(filePath.encode('utf-8'), fileBuffer, byref(bufferSize))
+                else:
+                    self.errCde = self.AdvAmc.Amc_DataLogGetLogFile(filePath, fileBuffer, byref(bufferSize))
+                self.assertEqual(except_err, self.errCde, '{0} failed.'.format(self._testMethodName))
+            if self.errCde == ErrorCode2.SUCCESS:
+                if global_isRotate is True:
+                    saveFileName = self.fileName + (f'_{idx}').encode('utf-8')  + b'.txt'
+                else:
+                    saveFileName = self.fileName + b'.txt'
+                print(f'saveFileName:{saveFileName}')
+                with open(saveFileName, "wb") as f:
+                    f.write(fileBuffer.raw[:bufferSize.value])
 
     def stopAll(self):
         except_err = 0
@@ -205,41 +256,72 @@ class AmcDataLogAPI_Test(unittest.TestCase):
     def sleep(self):
         time.sleep(5)
 
+def Initial():
+    tests = ['initial']
+    suite = unittest.TestSuite(map(AmcDataLogAPI_Test, tests))
+    return suite
+
 def SetLog():
-    global global_isRotate, global_maxFileCnt
+    global global_isRotate, global_maxFileCnt, global_fileNames
     global_isRotate = False
     global_maxFileCnt = 1
-    tests = ['initial', 'setLog']
+    tests = ['setLog']
     suite = unittest.TestSuite(map(AmcDataLogAPI_Test, tests))
     return suite
 
 def SetLogWithRotate():
-    global global_isRotate, global_maxFileCnt
+    global global_isRotate, global_maxFileCnt, global_fileNames
     global_isRotate = True
     global_maxFileCnt = 2
-    tests = ['initial', 'setLog']
+    tests = ['setLog']
+    suite = unittest.TestSuite(map(AmcDataLogAPI_Test, tests))
+    return suite
+
+def GetLog():
+    global global_isRotate, global_maxFileCnt, global_fileNames
+    global_isRotate = True
+    global_maxFileCnt = 2
+    tests = ['getLog']
     suite = unittest.TestSuite(map(AmcDataLogAPI_Test, tests))
     return suite
 
 def Run():
-    tests = ['initial', 'startLog', 'axPTP', 'sleep','stopLog', 'getLogStatus']
+    tests = ['startLog', 'axPTP', 'sleep', 'stopLog', 'getLogStatus']
     suite = unittest.TestSuite(map(AmcDataLogAPI_Test, tests))
     return suite
 
 def StopAllAndReset():
-    tests = ['initial', 'stopAll', 'getLogStatus', 'resetLog']
+    tests = ['stopAll', 'getLogStatus', 'stopLog', 'resetLog']
     suite = unittest.TestSuite(map(AmcDataLogAPI_Test, tests))
     return suite
 
 def GetLogFile():
-    tests = ['initial', 'getLogFile']
+    global global_isRotate, global_maxFileCnt, global_fileNames
+    global_isRotate = False
+    global_maxFileCnt = 1
+    tests = ['getLogFile']
+    suite = unittest.TestSuite(map(AmcDataLogAPI_Test, tests))
+    return suite
+
+def GetRotateLogFile():
+    global global_isRotate, global_maxFileCnt, global_fileNames
+    global_isRotate = True
+    global_maxFileCnt = 2
+    tests = ['getfileNames', 'getLogFile']
     suite = unittest.TestSuite(map(AmcDataLogAPI_Test, tests))
     return suite
 
 if __name__ == '__main__':
     runner = unittest.TextTestRunner()
+    initial = runner.run(Initial())
+    # Not Rotate
     stop_reset = runner.run(StopAllAndReset())
-    # set_log = runner.run(SetLog())
-    set_log = runner.run(SetLogWithRotate())
+    set_log = runner.run(SetLog())
     run = runner.run(Run())
     logFile = runner.run(GetLogFile())
+    # Rotate with 2 files
+    stop_reset = runner.run(StopAllAndReset())
+    set_log = runner.run(SetLogWithRotate())
+    run = runner.run(Run())
+    get_log = runner.run(GetLog())
+    logFile = runner.run(GetRotateLogFile())

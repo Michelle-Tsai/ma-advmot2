@@ -4800,3 +4800,150 @@ class AdvCmnAPI:
         Acm_AxGetCompensateDistance.restype = c_uint32
     except:
         pass
+
+class AmcLogAPI:
+# API Log
+    try:
+        Amc_SetApiLog = lib.Amc_SetApiLog
+        Amc_SetApiLog.argtypes = [c_char_p, c_char_p, POINTER(AMC_API_LOG_OPT), c_size_t]
+        Amc_SetApiLog.restype = c_uint32
+    except:
+        pass
+
+    try:
+        Amc_StartApiLog = lib.Amc_StartApiLog
+        Amc_StartApiLog.restype = c_uint32
+    except:
+        pass
+
+    try:
+        Amc_StopApiLog = lib.Amc_StopApiLog
+        Amc_StopApiLog.restype = c_uint32
+    except:
+        pass
+
+    try:
+        Amc_OpenApiLogFile = lib.Amc_OpenApiLogFile
+        Amc_OpenApiLogFile.argtypes = [c_char_p, POINTER(c_void_p)]
+        Amc_OpenApiLogFile.restype = c_uint32
+    except:
+        pass
+
+    try:
+        Amc_GetApiLogData = lib.Amc_GetApiLogData
+        Amc_GetApiLogData.argtypes = [c_void_p, POINTER(c_uint8), c_uint32, POINTER(AMC_API_LOG_HEADER)]
+        Amc_GetApiLogData.restype = c_uint32
+    except:
+        pass
+
+    try:
+        Amc_CloseApiLogFile = lib.Amc_CloseApiLogFile
+        Amc_CloseApiLogFile.argtypes = [c_void_p]
+        Amc_CloseApiLogFile.restype = c_uint32
+    except:
+        pass
+
+    try:
+        Amc_ApiLogToString = lib.Amc_ApiLogToString
+        Amc_ApiLogToString.argtypes = [POINTER(AMC_API_LOG_HEADER), POINTER(c_uint8), c_char_p, c_size_t]
+        Amc_ApiLogToString.restype = c_uint32
+    except:
+        pass
+# Data Log
+    try:
+        Amc_DataLogSetLog = lib.Amc_DataLog_SetLog
+        Amc_DataLogSetLog.argtypes = [c_uint32, POINTER(AMC_DATA_LOG_SOURCE), c_uint16]
+        Amc_DataLogSetLog.restype = c_uint32
+    except:
+        pass
+    
+    try:
+        Amc_DataLogGetLog = lib.Amc_DataLog_GetLog
+        Amc_DataLogGetLog.argtypes = [c_uint32, POINTER(AMC_DATA_LOG_SOURCE), c_uint16]
+        Amc_DataLogGetLog.restype = c_uint32
+    except:
+        pass
+
+    try:
+        Amc_DataLogSetLogOption = lib.Amc_DataLog_SetLogOption
+        Amc_DataLogSetLogOption.argtypes = [c_uint32, POINTER(AMC_DATA_LOG_OPTIONS)]
+        Amc_DataLogSetLogOption.restype = c_uint32
+    except:
+        pass
+
+    try:
+        Amc_DataLogGetLogOption = lib.Amc_DataLog_GetLogOption
+        Amc_DataLogGetLogOption.argtypes = [c_uint32, POINTER(AMC_DATA_LOG_OPTIONS)]
+        Amc_DataLogGetLogOption.restype = c_uint32
+    except:
+        pass
+
+    try:
+        Amc_DataLogSetLogFilePath = lib.Amc_DataLog_SetLogFilePath
+        Amc_DataLogSetLogFilePath.argtypes = [c_uint32, c_char_p, c_char_p]
+        Amc_DataLogSetLogFilePath.restype = c_uint32
+    except:
+        pass
+    
+    try:
+        Amc_DataLogGetLogFilePath = lib.Amc_DataLog_GetLogFilePath
+        Amc_DataLogGetLogFilePath.argtypes = [c_uint32, c_char_p, c_char_p]
+        Amc_DataLogGetLogFilePath.restype = c_uint32
+    except:
+        pass
+
+    try:
+        Amc_DataLog_GetRotatedLogFilePaths = lib.Amc_DataLog_GetRotatedLogFilePaths
+        Amc_DataLog_GetRotatedLogFilePaths.argtypes = [c_uint32, c_char_p, POINTER(c_uint32), POINTER(c_uint32)]
+        Amc_DataLog_GetRotatedLogFilePaths.restype = c_uint32
+    except:
+        pass
+
+    try:
+        Amc_DataLog_SetLogHeader = lib.Amc_DataLog_SetLogHeader
+        Amc_DataLog_SetLogHeader.argtypes = [c_uint32, c_char_p]
+        Amc_DataLog_SetLogHeader.restype = c_uint32
+    except:
+        pass
+
+    try:
+        Amc_DataLogGetLogHeader = lib.Amc_DataLog_GetLogHeader
+        Amc_DataLogGetLogHeader.argtypes = [c_uint32, c_char_p]
+        Amc_DataLogGetLogHeader.restype = c_uint32
+    except:
+        pass
+
+    try:
+        Amc_DataLogGetStatus = lib.Amc_DataLog_GetStatus
+        Amc_DataLogGetStatus.argtypes = [c_uint32, POINTER(AMC_DATA_LOG_STATUS)]
+        Amc_DataLogGetStatus.restype = c_uint32
+    except:
+        pass
+
+    try:
+        Amc_DataLogStartLog = lib.Amc_DataLog_StartLog
+        Amc_DataLogStartLog.argtypes = [c_uint32]
+        Amc_DataLogStartLog.restype = c_uint32
+    except:
+        pass
+
+    try:
+        Amc_DataLogStopLog = lib.Amc_DataLog_StopLog
+        Amc_DataLogStopLog.argtypes = [c_uint32]
+        Amc_DataLogStopLog.restype = c_uint32
+    except:
+        pass
+
+    try:
+        Amc_DataLogResetLog = lib.Amc_DataLog_ResetLog
+        Amc_DataLogResetLog.argtypes = [c_uint32]
+        Amc_DataLogResetLog.restype = c_uint32
+    except:
+        pass
+
+    try:
+        Amc_DataLogGetLogFile = lib.Amc_DataLog_GetLogFile
+        Amc_DataLogGetLogFile.argtypes = [c_char_p, c_char_p, POINTER(c_uint32)]
+        Amc_DataLogGetLogFile.restype = c_uint32
+    except:
+        pass

@@ -273,6 +273,9 @@ class ErrorCode2(IntEnum):
     CompareIntervalorPartsCalcuFail	= (FuncError + 312)
     CmpIntervalorPartsExceedMax= (FuncError + 313)
     LinkObjectNotAssigned = (FuncError + 314)
+    APILogIsRunning = (FuncError + 315)
+    NoMoreLogData = (FuncError + 316)
+    BufferTooSmall = (FuncError + 317)
     HLmtPExceeded = (MotionError)
     HLmtNExceeded = (MotionError + 1)
     SLmtPExceeded = (MotionError + 2)
@@ -1674,3 +1677,14 @@ class ErrorCode(IntEnum):
     ECAT_SDO_ErrorStoredOfPresentDeviceState = (ECTDevSDOError + 0x8022)
     # Object dictionary dynamic generation fails or no object
     ECAT_SDO_DynamicGenerationFails = (ECTDevSDOError + 0x8023)
+
+class AMCDataLogErrorCode(IntEnum):
+    ParameterError = 0xFF
+    StateError = (ParameterError + 1)
+    RotateFileCntError = (ParameterError + 2)
+    DataSourceExceedLimit = (ParameterError + 3)
+    DataSourceError = (ParameterError + 4)
+    MemoryFailed = (ParameterError + 5)
+    ThreadError = (ParameterError + 6)
+    SharedMemoryError = (ParameterError + 7)
+    BufferTooSmall = (ParameterError + 8)

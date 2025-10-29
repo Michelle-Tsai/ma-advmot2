@@ -564,3 +564,43 @@ class PORT_TYPE(Enum):
     PORT_CNT = 4
     PORT_INPUT = 5
     PORT_OUTPUT = 6
+
+class AMC_API_LOG_DATA_TYPE(Enum):
+    LogCommand = 0
+    LogResponse = 1
+
+class AMC_DATA_LOG_STATE(Enum):
+    LOG_STATE_IDLE = 0
+    LOG_STATE_WAITING_FOR_TRIGGER = 1
+    LOG_STATE_RUNNING = 2
+    LOG_STATE_STOP = 3
+    LOG_STATE_FINISHED = 4
+    LOG_STATE_WRITE_FAIL = 5
+    LOG_STATE_BUFFER_OVERFLOW = 6
+    LOG_STATE_ERROR = 7
+
+class AMC_DATA_LOG_SOURCE_TYPE(Enum):
+    LOG_SOURCE_NONE = 0
+    LOG_SOURCE_MOTION_AXIS = 1
+    LOG_SOURCE_IO = 2
+
+class AMC_DATA_LOG_COMMAND(Enum):
+    CMD_NONE = 0
+    CMD_START_LOG = 1
+    CMD_STOP_LOG = 2
+    CMD_RESET_LOG = 3
+
+class AMC_DATA_LOG_COMMAND_STATUE(Enum):
+    CMD_STATE_IDLE = 0
+    CMD_STATE_PENDGING = 1
+    CMD_STATE_SUCCESS = 2
+    CMD_STATE_ERROR = 3
+
+class ADV_CMN_API_FUNCID(Enum):
+    Acm2_GetErrorMessage_ = 0
+    Acm2_DevInitialize_ = 1
+    Acm2_GetAvailableDevs_ = 2
+    Acm2_GetObjectCount_ = 3
+    Acm2_GetMappedPhysicalID_ = 4
+    Acm2_GetMappedLogicalIDList_ = 5
+    # TODO: functions ...

@@ -327,5 +327,64 @@ class ADVAPI_IO_LINK_INFO(Structure):
         ('BitLength', c_uint32)
     ]
 
+class AMC_API_LOG_OPT(Structure):
+    _fields_ = [
+        ('sizePerFile', c_uint32)
+    ]
 
+class AMC_API_LOG_HEADER(Structure):
+    _fields_ = [
+        ('timestamp', c_int64),
+        ('logId', c_uint16),
+        ('type', c_uint8),
+        ('functionId', c_uint16),
+        ('dataLen', c_uint32),
+        ('threadId', c_uint32),
+    ]
 
+class AMC_DATA_LOG_OPTIONS(Structure):
+    _fields_ = [
+        ('samplingTimeMilliseconds', c_int32),
+        ('samplingPeriodInCycles',c_uint32),
+        ('isRotateFile', c_uint8),
+        ('maxLogFileCount', c_uint32),
+        ('maxLogFileSize', c_int32),
+        ('stopLoggingOnBufferOverflow', c_uint8),
+        ('delimiter', c_char),
+        ('triggerOnCondition', c_uint8),
+        ('triggerOnEvent', c_uint8),
+        ('triggerEventID', c_uint32),
+    ]
+
+class AMC_DATA_LOG_SM_ITEMS(Structure):
+    _fields_ = [
+        ('cmd_pos', c_uint8),
+        ('act_pos', c_uint8),
+        ('cmd_vel', c_uint8),
+        ('act_vel', c_uint8),
+    ]
+
+class AMC_DATA_LOG_SOURCE_ITEMS(Union):
+    _fields_ = [
+        ('smItems', AMC_DATA_LOG_SM_ITEMS),
+    ]
+
+class AMC_DATA_LOG_SOURCE(Structure):
+    _fields_ = [
+        ('selection', c_uint32*64),
+        ('count', c_uint32),
+        ('type', c_uint),
+        ('items', AMC_DATA_LOG_SOURCE_ITEMS),
+    ]
+
+class AMC_DATA_LOG_STATUS(Structure):
+    _fields_ = [
+        ('state', c_uint),
+        ('samplesToCollect', c_ulonglong),
+        ('millisecondsToCollect', c_longlong),
+        ('samplesCollected', c_ulonglong),
+        ('samplesWritten', c_ulonglong),
+        ('currentFileIndex', c_uint32),
+        ('currentFileSize', c_int32),
+        ('stopRequest', c_uint8),
+    ]

@@ -327,12 +327,29 @@ class ADVAPI_IO_LINK_INFO(Structure):
         ('BitLength', c_uint32)
     ]
 
+class PATH_VAR_PRM(Structure):
+    _fields_ = [
+        ('VarID', c_uint32),
+        ('CmpMethod', c_uint32),
+        ('CmpValue', c_double),
+        ('ValueRange', c_double)
+    ]
+
+class PATH_OPERATOR_PRM(Structure):
+    _fields_ = [
+        ('VarID', c_uint32),
+        ('Operator', c_uint32),
+        ('Value', c_int32)
+    ]
+
 class AMC_API_LOG_OPT(Structure):
     _fields_ = [
-        ('sizePerFile', c_uint32)
+        ('sizePerFile', c_uint32),
+        ('excludePolling', c_uint8)
     ]
 
 class AMC_API_LOG_HEADER(Structure):
+    _pack_ = 1
     _fields_ = [
         ('timestamp', c_int64),
         ('logId', c_uint16),
@@ -340,6 +357,13 @@ class AMC_API_LOG_HEADER(Structure):
         ('functionId', c_uint16),
         ('dataLen', c_uint32),
         ('threadId', c_uint32),
+    ]
+
+class AMC_API_LOG_STATUS(Structure):
+    _fields_ = [
+        ('state', c_uint8),
+        ('totalQueueSize', c_long),
+        ('usedQueueSize', c_uint32),
     ]
 
 class AMC_DATA_LOG_OPTIONS(Structure):

@@ -148,6 +148,7 @@ class PropertyID2(Enum):
     CFG_DevMultiCmpOutChannelEx = (CFG_Dev_ID + 76)
     CFG_DevMotionDisconnectSubDevice = (CFG_Dev_ID + 77)
     CFG_DevIoDisconnectSubDevice = (CFG_Dev_ID + 78)
+    CFG_DevExtendVirtualAxisNum = (CFG_Dev_ID + 79)
     CFG_DevExtEncoderEn = (CFG_Dev_ID + 80)
     CFG_DevExtEncoderPPUNum = (CFG_Dev_ID + 81)
     CFG_DevExtEncoderPPUDemo = (CFG_Dev_ID + 82)
@@ -182,6 +183,7 @@ class PropertyID2(Enum):
     CFG_DevIoCyclicPercent = (CFG_Dev_ID + 116)
     CFG_DevMotionCyclicWarnThreshold = (CFG_Dev_ID + 117)
     CFG_DevIoCyclicWarnThreshold = (CFG_Dev_ID + 118)
+    CFG_DevSubSystemID = (CFG_Dev_ID + 119)
     CFG_ModbusServerID = (CFG_Dev_ID + 120)
     CFG_Modbus485Baud = (CFG_Dev_ID + 121)
     CFG_Modbus485Parity = (CFG_Dev_ID + 122)
@@ -199,6 +201,10 @@ class PropertyID2(Enum):
     CFG_ModbusPvarRegMapStart = (CFG_Dev_ID + 134)
     CFG_ModbusPvarRegMapCount = (CFG_Dev_ID + 135)
     CFG_DevModbusEnable = (CFG_Dev_ID + 136)
+    CFG_DevFsvEnable = (CFG_Dev_ID + 137)
+    CFG_DevFsv = (CFG_Dev_ID + 138)
+    CFG_DevFsvType = (CFG_Dev_ID + 139)
+    CFG_DevFsvAssign = (CFG_Dev_ID + 140)
     FT_AxFunctionMap = (FT_Ax_ID + 0)
     FT_AxMaxVel = (FT_Ax_ID + 1)
     FT_AxMaxAcc = (FT_Ax_ID + 2)
@@ -293,6 +299,9 @@ class PropertyID2(Enum):
     PAR_AxCiA402HomeVelHigh = (PAR_Ax_ID + 61)
     PAR_AxCiA402HomeVelLow = (PAR_Ax_ID + 62)
     PAR_AxCiA402HomeAcc = (PAR_Ax_ID + 63)
+    PAR_AxMPGCounterValue = (PAR_Ax_ID + 64)
+    PAR_AxPosTorqueLmt = (PAR_Ax_ID + 65)
+    PAR_AxNegTorqueLmt = (PAR_Ax_ID + 66)
     CFG_AxPPU = (CFG_Ax_ID + 50)
     CFG_AxPhyID = (CFG_Ax_ID + 51)
     CFG_AxMaxVel = (CFG_Ax_ID + 52)
@@ -506,19 +515,30 @@ class PropertyID2(Enum):
     CFG_AxPulseInMaxFreqEx = (CFG_Ax_ID + 262)
     CFG_AxAlmCommErrorEnable = (CFG_Ax_ID + 263)
     CFG_AxPulseInDirReverse = (CFG_Ax_ID + 264)
-    CFG_AxPhyPosition		= (CFG_Ax_ID + 265)
-    CFG_AxAliasID			= (CFG_Ax_ID + 266)
-    CFG_AxSubNumber			= (CFG_Ax_ID + 267)
-    CFG_AxType				= (CFG_Ax_ID + 268)
+    CFG_AxOffsetDistance = (CFG_Ax_ID + 265)
+    CFG_AxPhyPosition = (CFG_Ax_ID + 266)
+    CFG_AxAliasID = (CFG_Ax_ID + 267)
+    CFG_AxSubNumber = (CFG_Ax_ID + 268)
+    CFG_AxType = (CFG_Ax_ID + 269)
+    CFG_AxMPGCounterSrc = (CFG_Ax_ID + 270)
+    CFG_Ax2DCompensateTableEnable = (CFG_Ax_ID + 271)
+    CFG_AxZAxisCompensateTableEnable = (CFG_Ax_ID + 272)
+    CFG_AxFsvEnable = (CFG_Ax_ID + 273)
+    CFG_AxFsv = (CFG_Ax_ID + 274)
+    CFG_AxFsvType = (CFG_Ax_ID + 275)
+    CFG_AxFsvAssign = (CFG_Ax_ID + 276)
+    CFG_AxHomeResetMode = (CFG_Ax_ID + 277)
     CFG_CH_DaqDiInvertEnable = CFG_CH_DaqDI_ID + 0
     CFG_CH_DaqDiLowFilter = CFG_CH_DaqDI_ID + 1
     CFG_CH_DaqDiHighFilter = CFG_CH_DaqDI_ID + 2
     CFG_CH_DaqDiFilter = CFG_CH_DaqDI_ID + 3
     CFG_CH_DaqDiLogic = CFG_CH_DaqDI_ID + 4
     CFG_CH_DaqDiEmgEnable = CFG_CH_DaqDI_ID + 5
-    CFG_CH_DaqDiAssignSubDeviceID = CFG_CH_DaqDI_ID + 6
-    CFG_CH_DaqDiAssignPDOIndex = CFG_CH_DaqDI_ID + 7
-    CFG_CH_DaqDiAssignPDOSubIndex = CFG_CH_DaqDI_ID + 8
+    CFG_CH_DaqDiEmgLogic = CFG_CH_DaqDI_ID + 6
+    CFG_CH_DaqDiAssignSubDeviceID = CFG_CH_DaqDI_ID + 7
+    CFG_CH_DaqDiAssignPDOIndex = CFG_CH_DaqDI_ID + 8
+    CFG_CH_DaqDiAssignPDOSubIndex = CFG_CH_DaqDI_ID + 9
+    CFG_CH_DaqDiFilterEnable = CFG_CH_DaqDI_ID + 10
     CFG_CH_DaqDoFsvEnable = CFG_CH_DaqDO_ID + 0
     CFG_CH_DaqDoFuncSelect = CFG_CH_DaqDO_ID + 1
     CFG_CH_DaqDoOutputMode = CFG_CH_DaqDO_ID + 2
@@ -529,6 +549,7 @@ class PropertyID2(Enum):
     CFG_CH_DaqDoAssignSubDeviceID = CFG_CH_DaqDO_ID + 7
     CFG_CH_DaqDoAssignPDOIndex = CFG_CH_DaqDO_ID + 8
     CFG_CH_DaqDoAssignPDOSubIndex = CFG_CH_DaqDO_ID + 9
+    CFG_CH_DaqDoFsv = CFG_CH_DaqDO_ID + 10
     CFG_CH_DaqAiRange = CFG_CH_DaqAI_ID + 0
     CFG_CH_DaqAiEnable = CFG_CH_DaqAI_ID + 1
     CFG_CH_DaqAiIntegrationTime = CFG_CH_DaqAI_ID + 2
@@ -539,6 +560,11 @@ class PropertyID2(Enum):
     CFG_CH_DaqAiLowerBound = CFG_CH_DaqAI_ID + 7
     CFG_CH_DaqAiResolution = CFG_CH_DaqAI_ID + 8
     CFG_CH_DaqAiTransType = CFG_CH_DaqAI_ID + 9
+    CFG_CH_DaqAiSamplingRate = CFG_CH_DaqAI_ID + 10
+    CFG_CH_DaqAiFilter = CFG_CH_DaqAI_ID + 11
+    CFG_CH_DaqAiBurnOutValue = CFG_CH_DaqAI_ID + 12
+    CFG_CH_DaqAiBurnOutEnable = CFG_CH_DaqAI_ID + 13
+    CFG_CH_DaqAiCJCOffset = CFG_CH_DaqAI_ID + 14
     CFG_CH_DaqAoRange = CFG_CH_DaqAO_ID + 0	
     CFG_CH_DaqAoFsv = CFG_CH_DaqAO_ID + 1
     CFG_CH_DaqAoStartup = CFG_CH_DaqAO_ID + 2
@@ -550,6 +576,11 @@ class PropertyID2(Enum):
     CFG_CH_DaqAoLowerBound = CFG_CH_DaqAO_ID + 8
     CFG_CH_DaqAoResolution = CFG_CH_DaqAO_ID + 9
     CFG_CH_DaqAoTransType = CFG_CH_DaqAO_ID + 10
+    CFG_CH_DaqAoFsvEnable = CFG_CH_DaqAO_ID + 11
+    CFG_CH_DaqAoStartupEnable = CFG_CH_DaqAO_ID + 12
+    CFG_CH_DaqAoSlewRateEnable = CFG_CH_DaqAO_ID + 13
+    CFG_CH_DaqAoSlewRate = CFG_CH_DaqAO_ID + 14
+    FT_CH_DaqCmpDoLinkObjectType = FT_CH_CmpDO_ID + 0
     PAR_CH_CmpDoDataSettingMode = PAR_CH_CmpDO_ID + 0
     PAR_CH_CmpDoNumberOfParts = PAR_CH_CmpDO_ID + 1
     CFG_CH_DaqCmpDoEnable = CFG_CH_CmpDO_ID + 0
@@ -579,6 +610,7 @@ class PropertyID2(Enum):
     CFG_CH_DaqCmpDeviation = CFG_CH_CmpDO_ID + 26
     CFG_CH_DaqCmpLinkCounter = CFG_CH_CmpDO_ID + 27
     CFG_CH_DaqCmpTRIGAEndposiForce = CFG_CH_CmpDO_ID + 30
+    FT_CH_DaqLtcLinkObjectType = FT_CH_LtcDI_ID + 0
     CFG_CH_DaqLtcLinkAxis = CFG_CH_LtcDI_ID + 0
     CFG_CH_DaqLtcAxisEnable = CFG_CH_LtcDI_ID + 1
     # //CFG_CH_DaqLtcAxisEnableEx = CFG_CH_LtcDI_ID + 1
@@ -590,6 +622,7 @@ class PropertyID2(Enum):
     CFG_CH_DaqLtcLinkCounter = CFG_CH_LtcDI_ID + 7
     CFG_CH_DaqLtcEnable = CFG_CH_LtcDI_ID + 8
     CFG_CH_DaqLtcMinDist = CFG_CH_LtcDI_ID + 9
+    CFG_CH_DaqLtcPinSelect = CFG_CH_LtcDI_ID + 10
     CFG_CH_DaqCntEnable = CFG_CH_DaqCnt_ID + 0
     CFG_CH_DaqCntInitValue = CFG_CH_DaqCnt_ID + 1
     CFG_CH_DaqCntMaxValue = CFG_CH_DaqCnt_ID + 2
@@ -632,6 +665,7 @@ class PropertyID2(Enum):
     CFG_GpGroupID = (CFG_Gp_ID + 6)
     CFG_GpBldTime = (CFG_Gp_ID + 7)
     CFG_GpSFEnable = (CFG_Gp_ID + 8)
+    CFG_GpPathDoPauseReact = (CFG_Gp_ID + 9)
     CFG_GpVectorEnable = (CFG_Gp_ID + 13)
     CFG_GpSpdFwdVelEn = (CFG_Gp_ID + 14)
     CFG_GpCornerAngleFloor = (CFG_Gp_ID + 15)
@@ -643,6 +677,10 @@ class PropertyID2(Enum):
     CFG_GpPWMMonitorMode = (CFG_Gp_ID + 21)
     CFG_GpPWMRefVel = (CFG_Gp_ID + 22)
     CFG_GpPathMode = (CFG_Gp_ID + 23)
+    CFG_GpFsvEnable = (CFG_Gp_ID + 24)
+    CFG_GpFsv = (CFG_Gp_ID + 25)
+    CFG_GpFsvType = (CFG_Gp_ID + 26)
+    CFG_GpFsvAssign = (CFG_Gp_ID + 27)
     CFG_RbLengthArm1 = (CFG_RB_ID + 0)
     CFG_RbLengthArm2 = (CFG_RB_ID + 1)
     CFG_RbLengthArm3 = (CFG_RB_ID + 2)
@@ -800,6 +838,7 @@ class PropertyID(Enum):
     CFG_DevMultiCmpOutChannelEx = (CFG_Dev_ID + 76)
     CFG_DevMotionDisconnectSlave = (CFG_Dev_ID + 77)
     CFG_DevIoDisconnectSlave = (CFG_Dev_ID + 78)
+    CFG_DevExtendVirtualAxisNum = (CFG_Dev_ID + 79)
     # Add for movelink for 1245S
     CFG_DevExtEncoderEn = (CFG_Dev_ID + 80)
     CFG_DevExtEncoderPPUNum = (CFG_Dev_ID + 81)
@@ -854,6 +893,10 @@ class PropertyID(Enum):
     CFG_ModbusPvarRegMapStart = (CFG_Dev_ID + 134)
     CFG_ModbusPvarRegMapCount = (CFG_Dev_ID + 135)
     CFG_DevModbusEnable = (CFG_Dev_ID + 136)
+    CFG_DevFsvEnable = (CFG_Dev_ID + 137)
+    CFG_DevFsv = (CFG_Dev_ID + 138)
+    CFG_DevFsvType = (CFG_Dev_ID + 139)
+    CFG_DevFsvAssign = (CFG_Dev_ID + 140)
     # axis feature
     FT_AxFunctionMap = (FT_Ax_ID + 0)
     FT_AxMaxVel = (FT_Ax_ID + 1)
@@ -1180,6 +1223,11 @@ class PropertyID(Enum):
     CFG_AxMPGCounterSrc = (CFG_Ax_ID + 270)
     CFG_Ax2DCompensateTableEnable = (CFG_Ax_ID + 271)
     CFG_AxZAxisCompensateTableEnable = (CFG_Ax_ID + 272)
+    CFG_AxFsvEnable = (CFG_Ax_ID + 273)
+    CFG_AxFsv = (CFG_Ax_ID + 274)
+    CFG_AxFsvType = (CFG_Ax_ID + 275)
+    CFG_AxFsvAssign = (CFG_Ax_ID + 276)
+    CFG_AxHomeResetMode = (CFG_Ax_ID + 277)
     # Add for EtherCAT
     CFG_CH_DaqDiInvertEnable = CFG_CH_ID + 0
     CFG_CH_DaqDiLowFilter = CFG_CH_ID + 1
@@ -1320,3 +1368,30 @@ class PropertyID(Enum):
     CFG_GpPWMMonitorMode = (CFG_Gp_ID + 21)
     CFG_GpPWMRefVel = (CFG_Gp_ID + 22)
     CFG_GpPathMode = (CFG_Gp_ID + 23)
+    CFG_GpFsvEnable = (CFG_Gp_ID + 24)
+    CFG_GpFsv = (CFG_Gp_ID + 25)
+    CFG_GpFsvType = (CFG_Gp_ID + 26)
+    CFG_GpFsvAssign = (CFG_Gp_ID + 27)
+    # Robot
+    CFG_RbLengthArm1 = (CFG_RB_ID + 0)
+    CFG_RbLengthArm2 = (CFG_RB_ID + 1)
+    CFG_RbLengthArm3 = (CFG_RB_ID + 2)
+    CFG_RbHandMode = (CFG_RB_ID + 3)
+    CFG_RbSFEnable = (CFG_RB_ID + 4)
+    CFG_RbLengthArm4 = (CFG_RB_ID + 5)
+    CFG_RbLengthArm5 = (CFG_RB_ID + 6)
+    CFG_RbCsys = (CFG_RB_ID + 7)
+    CFG_RbJogAxis = (CFG_RB_ID + 8)
+    CFG_RbRZCOUPLING = (CFG_RB_ID + 9)
+    CFG_RbRZCFNumerator = (CFG_RB_ID + 10)
+    CFG_RbRZCFDenominator = (CFG_RB_ID + 11)
+    CFG_RbScaraAxisMode = (CFG_RB_ID + 12)
+    CFG_RbJ1J2CouplingEn = (CFG_RB_ID + 13)
+    CFG_RbMoveLinkCSAngle = (CFG_RB_ID + 14)
+    CFG_RbMoveLinkAutoEn = (CFG_RB_ID + 15)
+    PAR_RbVelLow = (PAR_RB_ID + 0)
+    PAR_RbVelHigh = (PAR_RB_ID + 1)
+    PAR_RbAcc = (PAR_RB_ID + 2)
+    PAR_RbDec = (PAR_RB_ID + 3)
+    PAR_RbJerk = (PAR_RB_ID + 4)
+    PAR_RbRefPlane = (PAR_RB_ID + 5)

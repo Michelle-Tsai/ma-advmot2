@@ -1,7 +1,7 @@
 import unittest
 import os
 import time
-from datetime import datetime
+import datetime
 from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI_CM2
 from AcmP.AdvCmnAPI_CM2 import AmcLogAPI
 from AcmP.AdvMotDrv import *
@@ -19,7 +19,8 @@ class AmcLogAPI_Test(unittest.TestCase):
         self.errCde = 0
         self.AdvMot = AdvCmnAPI_CM2
         self.AmcApi = AmcLogAPI
-        self.bufferSize = 10 * 1024 * 1024
+        # self.bufferSize = 10 * 1024 * 1024
+        self.bufferSize = 100 * 1024
         if os.name == 'nt':
             self.logDir = b'D:\\'
         else:
@@ -36,6 +37,26 @@ class AmcLogAPI_Test(unittest.TestCase):
             print('Dev number:{0:x}'.format(self.devlist[i].dwDeviceNum))
         self.errCde = self.AdvMot.Acm2_DevInitialize()
         self.assertEqual(except_err, self.errCde, '{0} failed.'.format(self._testMethodName))
+
+    def convert_filetime_to_datetime(self, filetime_int: int):
+        """
+        將一個 64-bit Windows FILETIME (I64) 轉換為
+        人類可讀的 (human-readable) 本地時區 datetime 物件。
+
+        FILETIME 是自 1601-01-01 00:00:00 UTC 起的 100 奈秒間隔數。
+        """
+        # 1. 定義 FILETIME 的起始時間 (epoch)
+        epoch = datetime.datetime(1601, 1, 1, tzinfo=datetime.timezone.utc)
+        # 2. 計算總共的微秒數 (microseconds)
+        # 1 微秒 = 10 個 (100奈秒) 間隔
+        microseconds_delta = filetime_int / 10
+        # 3. 建立時間差 (timedelta)
+        delta = datetime.timedelta(microseconds=microseconds_delta)
+        # 4. 計算出正確的 UTC 時間
+        utc_time = epoch + delta
+        # 5. 轉換為系統的本地時區 (例如: CST)
+        local_time = utc_time.astimezone(None)
+        return local_time
 
     def axPTP(self):
         except_err = 0
@@ -64,23 +85,27 @@ class AmcLogAPI_Test(unittest.TestCase):
         except_err = 0
         logOpt = AMC_API_LOG_OPT()
         logOpt.sizePerFile = self.bufferSize
-        self.errCde = self.AmcApi.Amc_SetApiLog(self.logDir, self.baseName, byref(logOpt), self.bufferSize)
+        logOpt.excludePolling = c_uint8(True)
+        # self.errCde = self.AmcApi.Amc_SetApiLog(self.logDir, self.baseName, byref(logOpt), self.bufferSize)
+        baseName = "設中文1211".encode("cp950")
+        self.errCde = self.AmcApi.Amc_SetApiLog(self.logDir, baseName, byref(logOpt), self.bufferSize)
         self.assertEqual(except_err, self.errCde, '{0} failed. err={1:x}'.format(self._testMethodName, self.errCde))
     
     def startLog(self):
         except_err = 0
         self.errCde = self.AmcApi.Amc_StartApiLog()
         self.assertEqual(except_err, self.errCde, '{0} failed. err={1:x}'.format(self._testMethodName, self.errCde))
+        # time.sleep(5)
 
     def stopLog(self):
         except_err = 0
         self.errCde = self.AmcApi.Amc_StopApiLog()
-        self.assertEqual(except_err, self.errCde, '{0} failed.'.format(self._testMethodName))
+        self.assertEqual(except_err, self.errCde, '{0} failed. err={1:x}'.format(self._testMethodName, self.errCde))
 
     def readFile(self):
         except_err = 0
         pfile = c_void_p()
-        file_name = b"D:\\amc_api_log_20250908_151026_400.dat"
+        file_name = b"D:\\amc_api_log_20251111_132212_897.dat"
         data_buffer = (c_uint8 * self.bufferSize)()
         api_header = AMC_API_LOG_HEADER()
         out_str = create_string_buffer(self.bufferSize)
@@ -92,11 +117,12 @@ class AmcLogAPI_Test(unittest.TestCase):
             print(f"type={'Command' if api_header.type == AMC_API_LOG_DATA_TYPE.LogCommand.value else 'Response'}, functionId={api_header.functionId}")
             self.errCde = self.AmcApi.Amc_ApiLogToString(byref(api_header), data_buffer, out_str, self.bufferSize)
             output = out_str.value.decode('utf-8')
-            print('{0}'.format(output))
+            print(f'{self.convert_filetime_to_datetime(api_header.timestamp)}|{output}')
         self.errCde = self.AmcApi.Amc_CloseApiLogFile(pfile)
         self.assertEqual(except_err, self.errCde, '{0} failed. err={1:x}'.format(self._testMethodName, self.errCde))
 
 def SetOpt():
+    # tests = ['setLog']
     tests = ['setLog', 'startLog']
     suite = unittest.TestSuite(map(AmcLogAPI_Test, tests))
     return suite
@@ -118,7 +144,8 @@ def ReadLog():
 
 if __name__ == '__main__':
     runner = unittest.TextTestRunner()
-    # set_start = runner.run(SetOpt())
+    set_start = runner.run(SetOpt())
+    time.sleep(100)
     # stop_log = runner.run(Run())
-    # stop_log = runner.run(StopLog())
-    read_log = runner.run(ReadLog())
+    stop_log = runner.run(StopLog())
+    # read_log = runner.run(ReadLog())

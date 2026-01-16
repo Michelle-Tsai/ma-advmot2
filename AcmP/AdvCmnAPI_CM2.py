@@ -302,6 +302,13 @@ class AdvCmnAPI_CM2:
         pass
 
     try:
+        Acm2_DevCheckAllAxReady = lib.Acm2_DevCheckAllAxReady
+        Acm2_DevCheckAllAxReady.argtypes = [c_uint32]
+        Acm2_DevCheckAllAxReady.restype = c_uint32
+    except:
+        pass
+
+    try:
         Acm2_AxGetState = lib.Acm2_AxGetState
         Acm2_AxGetState.argtypes = [c_uint32, c_uint, POINTER(c_uint32)]
         Acm2_AxGetState.restype = c_uint32
@@ -4847,6 +4854,13 @@ class AmcLogAPI:
         Amc_ApiLogToString = lib.Amc_ApiLogToString
         Amc_ApiLogToString.argtypes = [POINTER(AMC_API_LOG_HEADER), POINTER(c_uint8), c_char_p, c_size_t]
         Amc_ApiLogToString.restype = c_uint32
+    except:
+        pass
+
+    try:
+        Amc_ApiLogGetStatus = lib.Amc_ApiLogGetStatus
+        Amc_ApiLogGetStatus.argtypes = [POINTER(AMC_API_LOG_STATUS)]
+        Amc_ApiLogGetStatus.restype = c_uint32
     except:
         pass
 # Data Log

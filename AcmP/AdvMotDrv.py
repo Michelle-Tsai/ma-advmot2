@@ -565,9 +565,50 @@ class PORT_TYPE(Enum):
     PORT_INPUT = 5
     PORT_OUTPUT = 6
 
+class AX_BATCH_MODE(Enum):
+    AX_BATCH_MODE_DISABLE = 0
+    AX_BATCH_MODE_ENABLE = 1
+
+class GP_PATH_MODE(Enum):
+    PATH_MODE_DISABLE = 0
+    PATH_BUFFER_MODE = 1
+    PATH_BLENDING_MODE = 2
+    PATH_FLY_MODE = 3
+    PATH_SPEED_FORWARD_MODE = 4
+
+class PATH_MOVE_MODE(Enum):
+    BLENDING_DISABLE = 0
+    BLENDING_ENABLE = 1
+
+class PWM_CONTROL_MODE(Enum):
+    PWM_MODE_FIXED_FREQ = 0
+    PWM_MODE_FIXED_WIDTH = 1
+    PWM_MODE_FIXED_DUTY = 2
+
+class DAQ_TRANS_TYPE(Enum):
+    TRANSTYPE_UNKNOWN = -1
+    TRANSTYPE_UNSIGNED = 0
+    TRANSTYPE_SIGNED = 1
+
+class ADV_PORT_TYPE(Enum):
+    ADV_PORT_DO = 0
+    ADV_PORT_DI = 1
+    ADV_PORT_AO = 2
+    ADV_PORT_AI = 3
+    ADV_PORT_DOEX = 4
+    ADV_PORT_DIEX = 5
+    ADV_PORT_CNT = 6
+    ADV_PORT_INPUT = 7
+    ADV_PORT_OUTPUT = 8
+
 class AMC_API_LOG_DATA_TYPE(Enum):
     LogCommand = 0
     LogResponse = 1
+
+class AMC_API_LOG_STATE(Enum):
+    API_LOG_STOPPED = 0
+    API_LOG_RUNNING = 1
+    API_LOG_STOPPING = 2
 
 class AMC_DATA_LOG_STATE(Enum):
     LOG_STATE_IDLE = 0
@@ -595,12 +636,3 @@ class AMC_DATA_LOG_COMMAND_STATUE(Enum):
     CMD_STATE_PENDGING = 1
     CMD_STATE_SUCCESS = 2
     CMD_STATE_ERROR = 3
-
-class ADV_CMN_API_FUNCID(Enum):
-    Acm2_GetErrorMessage_ = 0
-    Acm2_DevInitialize_ = 1
-    Acm2_GetAvailableDevs_ = 2
-    Acm2_GetObjectCount_ = 3
-    Acm2_GetMappedPhysicalID_ = 4
-    Acm2_GetMappedLogicalIDList_ = 5
-    # TODO: functions ...

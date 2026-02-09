@@ -60,6 +60,12 @@ def EvtAxMotionDone_multi_4(axid, reservedParam):
 def EmptyFunction(val, res):
     return 0;
 
+@CFUNCTYPE(c_uint32, c_uint32, c_void_p)
+def EvtGpMotionDone(gpid, reservedParam):
+    ax_motion_cnt.value = ax_motion_cnt.value + 1;
+    print('[EvtGpMotionDone] GP:{0}, counter:{1}'.format(gpid, ax_motion_cnt.value))
+    return 0;
+
 class AdvCmnAPI_Test(unittest.TestCase):
     def setUp(self):
         self.maxEnt = 10
@@ -83,7 +89,7 @@ class AdvCmnAPI_Test(unittest.TestCase):
         self.errCde = self.AdvMot.Acm2_GetAvailableDevs(self.devlist, self.maxEnt, byref(self.outEnt))
         self.assertEqual(excepted_err, self.errCde, '{0} failed.'.format(self._testMethodName))
         for i in range(self.outEnt.value):
-            print('Dev number:{0:x}'.format(self.devlist[i].dwDeviceNum))
+            print(f'Dev num:{self.devlist[i].dwDeviceNum:x}, name:{self.devlist[i].szDeviceName}')
         # result_dev = self.devlist[0].dwDeviceNum
         # self.assertEqual(excepted_dev, result_dev, '{0} failed.'.format(self._testMethodName))
 
@@ -172,6 +178,51 @@ class AdvCmnAPI_Test(unittest.TestCase):
             self.errCde = self.AdvMot.Acm2_AxSetPosition(ax_id_arr[j], pos_type, pos)
             self.assertEqual(excepted_err, self.errCde, '{0} failed.'.format(self._testMethodName))
     
+    def test_CheckAllAxReady(self):
+        timeout = c_uint32(5)
+        excepted_err = 0
+        self.errCde = self.AdvMot.Acm2_DevCheckAllAxReady(timeout)
+        self.assertEqual(excepted_err, self.errCde, f'{self._testMethodName} failed, errCde = {self.errCde:x}')
+
+    def test_AxReturnPausePos(self):
+        ax_id = c_uint32(0)
+        except_err = 0
+        self.errCde = self.AdvMot.Acm2_AxReturnPausePosition(ax_id)
+        self.assertEqual(except_err, self.errCde, f'{self._testMethodName} failed, errCde = {self.errCde:x}')
+    
+    def test_AxResetErr(self):
+        ax_id = c_uint32(0)
+        except_err = 0
+        self.errCde = self.AdvMot.Acm2_AxResetError(ax_id)
+        self.assertEqual(except_err, self.errCde, f'{self._testMethodName} failed, errCde = {self.errCde:x}')
+
+    def test_AxGetMotionIO(self):
+        ax_id = c_uint32(0)
+        io_status = MOTION_IO()
+        except_err = 0
+        self.errCde = self.AdvMot.Acm2_AxGetMotionIO(ax_id, byref(io_status))
+        self.assertEqual(except_err, self.errCde, f'{self._testMethodName} failed, errCde = {self.errCde:x}')
+        print(f'EMG:{io_status.EMG}')
+
+    def test_AxGetMachPos(self):
+        ax_id = c_uint32(0)
+        pos = c_double(0)
+        except_err = 0
+        self.errCde = self.AdvMot.Acm2_AxGetMachPosition(ax_id, byref(pos))
+        self.assertEqual(except_err, self.errCde, f'{self._testMethodName} failed, errCde = {self.errCde:x}')
+
+    def test_AxPause(self):
+        ax_id = c_uint32(0)
+        except_err = 0
+        self.errCde = self.AdvMot.Acm2_AxPause(ax_id)
+        self.assertEqual(except_err, self.errCde, f'{self._testMethodName} failed, errCde = {self.errCde:x}')
+
+    def test_AxResume(self):
+        ax_id = c_uint32(0)
+        except_err = 0
+        self.errCde = self.AdvMot.Acm2_AxResume(ax_id)
+        self.assertEqual(except_err, self.errCde, f'{self._testMethodName} failed, errCde = {self.errCde:x}')
+
     def test_AxGetPosition(self):
         ax_id = c_uint32(0)
         pos_type = c_uint(POSITION_TYPE.POSITION_CMD.value)
@@ -389,6 +440,7 @@ class AdvCmnAPI_Test(unittest.TestCase):
     def test_PTTable(self):
         excepted_err = 0
         ax_id = c_uint32(0)
+        buffer = c_uint32(0)
         # Reset PT table
         self.errCde = self.AdvMot.Acm2_AxResetPTData(ax_id)
         self.assertEqual(excepted_err, self.errCde)
@@ -406,6 +458,9 @@ class AdvCmnAPI_Test(unittest.TestCase):
         for i in range(len(pos_arr)):
             self.errCde = self.AdvMot.Acm2_AxAddPTData(ax_id, pos_arr[i], time_arr[i])
             self.assertEqual(excepted_err, self.errCde)
+        self.errCde = self.AdvMot.Acm2_AxCheckPTBuffer(ax_id, byref(buffer))
+        self.assertEqual(excepted_err, self.errCde, f'{self._testMethodName} failed, errCde = {self.errCde:x}')
+        print(f'buffer:{buffer.value}')
         # Start move PT table
         self.errCde = self.AdvMot.Acm2_AxMovePT(ax_id)
         self.assertEqual(excepted_err, self.errCde)
@@ -2990,7 +3045,7 @@ class AdvCmnAPI_Test(unittest.TestCase):
         print('AX:{0} is done, event cnt is:{1}'.format(ax_id.value, ax_motion_cnt.value))
         # self.assertEqual(2, ax_motion_cnt.value)
         # Remove callback function, disable event
-        # self.errCde = self.AdvMot.Acm2_EnableCallBackFuncForOneEvent(ax_id, c_int(ADV_EVENT_SUBSCRIBE.EVENT_DISABLE.value), EmptyFunction)
+        self.errCde = self.AdvMot.Acm2_EnableCallBackFuncForOneEvent(ax_id, c_int(ADV_EVENT_SUBSCRIBE.EVENT_DISABLE.value), EmptyFunction)
         self.assertEqual(excepted_err.value, self.errCde)
 
     def test_MotionDoneEvent_MultiThreads(self):
@@ -3043,6 +3098,54 @@ class AdvCmnAPI_Test(unittest.TestCase):
         for thread in threads:
             thread.join()
         time.sleep(2)
+        # Disable event
+        ax_id = c_uint32(0)
+        self.errCde = self.AdvMot.Acm2_EnableCallBackFuncForOneEvent(ax_id.value, c_int(ADV_EVENT_SUBSCRIBE.EVENT_DISABLE.value), EmptyFunction)
+        self.assertEqual(excepted_err.value, self.errCde, '{0} failed. err={1:x}, ax_id:{2}'.format(self._testMethodName, self.errCde, ax_id.value))
+
+    def test_GroupMotionDoneEvent(self):
+        excepted_err = c_uint32(ErrorCode2.SUCCESS.value)
+        gpid = c_uint32(0)
+        ax_motion_cnt = c_uint32(0)
+        self.errCde = self.AdvMot.Acm2_EnableCallBackFuncForOneEvent(gpid, c_int(ADV_EVENT_SUBSCRIBE.GROUP_MOTION_DONE.value), EvtGpMotionDone)
+        self.assertEqual(excepted_err.value, self.errCde, '{0} failed. err={1:x}, gpid:{2}'.format(self._testMethodName, self.errCde, gpid.value))
+        # Move
+        self.test_GpLine()
+        time.sleep(2)
+        print('Gp:{0} is done, event cnt is:{1}'.format(gpid.value, ax_motion_cnt.value))
+        # self.assertEqual(2, ax_motion_cnt.value)
+        # Remove callback function, disable event
+        self.errCde = self.AdvMot.Acm2_EnableCallBackFuncForOneEvent(gpid, c_int(ADV_EVENT_SUBSCRIBE.EVENT_DISABLE.value), EmptyFunction)
+        self.assertEqual(excepted_err.value, self.errCde)
+
+    def test_Move6AxAtTheSameTime(self):
+        results = {}
+        threads = []
+        excepted_err = c_uint32(ErrorCode2.SUCCESS.value)
+        def move_PTP(axis):
+            try:
+                ax_id = c_uint32(axis)
+                abs_mode = c_uint(ABS_MODE.MOVE_REL.value)
+                distance = c_double(1000)
+                ret = self.AdvMot.Acm2_AxPTP(ax_id, abs_mode, distance)
+                results[axis] = ret
+            except Exception as e:
+                results[axis] = e
+        target_axes = [0, 1, 2, 3, 4, 5]
+        # 建立並啟動所有執行緒
+        for ax in target_axes:
+            t = threading.Thread(target=move_PTP, args=(ax,))
+            threads.append(t)
+            t.start()
+        # 等待所有執行緒完成
+        for t in threads:
+            t.join()
+        for ax in target_axes:
+            result = results.get(ax)
+            if isinstance(result, Exception):
+                self.fail(f'Axis {ax} raised an exception: {result}')
+            else:
+                self.assertEqual(excepted_err.value, result, f'Axis {ax} failed. err={result:x}')
 
     def test_SQATest(self):
         excepted_err = c_uint32(ErrorCode2.SUCCESS.value)
@@ -3075,292 +3178,337 @@ class AdvCmnAPI_Test(unittest.TestCase):
                 print('[{0}]get_cnt_data:{1}'.format(i, get_cnt_data.value))
         
 def DownloadENISuite():
-    tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_LoadENI']
+    tests = ['test_Initialize', 'test_LoadENI']
     suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
     return suite
 
 def GetMDevice():
-    tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_GetMDevice']
+    tests = ['test_Initialize', 'test_GetMDevice']
     suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
     return suite
 
 def DeviceClose():
-    tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_DevClose']
+    tests = ['test_Initialize', 'test_DevClose']
     suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
     return suite
 
 def AxMoveContinue():
-    tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_ResetAll', 'test_MoveContinue', 'test_ResetAll']
+    tests = ['test_Initialize', 'test_ResetAll', 'test_MoveContinue', 'test_ResetAll']
     suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
     return suite
 
 # def ExportMappingTable():
-#     tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_DevExportMappingTable']
+#     tests = ['test_Initialize', 'test_DevExportMappingTable']
 #     suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
 #     return suite
 
 # def ImportMappingTable():
-#     tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_DevImportMappingTable']
+#     tests = ['test_Initialize', 'test_DevImportMappingTable']
 #     suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
 #     return suite
 
 def AxPTP_Check():
-    tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_ResetAll', 'test_AxPTP', 'test_AxGetPosition', 'test_ResetAll']
+    tests = ['test_Initialize', 'test_ResetAll', 'test_AxPTP', 'test_AxGetPosition', 'test_ResetAll']
+    suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
+    return suite
+
+def DevCkAllAxReady():
+    tests = ['test_Initialize', 'test_CheckAllAxReady']
+    suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
+    return suite
+
+def AxReturnPausePos():
+    tests = ['test_Initialize', 'test_AxReturnPausePos']
+    suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
+    return suite
+
+def AxGetMachPos():
+    tests = ['test_Initialize', 'test_AxGetMachPos']
+    suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
+    return suite
+
+def AxGetMotionIOStatus():
+    tests = ['test_Initialize', 'test_AxGetMotionIO']
+    suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
+    return suite
+
+def AxResetErr():
+    tests = ['test_Initialize', 'test_AxResetErr']
+    suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
+    return suite
+
+def AxPause():
+    tests = ['test_Initialize', 'test_AxPause']
+    suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
+    return suite
+
+def AxResume():
+    tests = ['test_Initialize', 'test_AxResume']
+    suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
+    return suite
+
+def Move6AxesPTP():
+    tests = ['test_Initialize', 'test_ResetAll', 'test_Move6AxAtTheSameTime', 'test_AxGetPosition', 'test_ResetAll']
     suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
     return suite
 
 def DeviceDO():
-    tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_SetDeviceDIOProperty', 'test_GetDeviceDIOProperty', 'test_SetDeviceDO_ON']
+    tests = ['test_Initialize', 'test_SetDeviceDIOProperty', 'test_GetDeviceDIOProperty', 'test_SetDeviceDO_ON']
     suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
     return suite
 
 def GroupCreateCheck():
-    tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_RemoveGroup', 'test_CreatGroup', 'test_CheckGroupAxes', 'test_RemoveGroup']
+    tests = ['test_Initialize', 'test_RemoveGroup', 'test_CreatGroup', 'test_CheckGroupAxes', 'test_RemoveGroup']
     suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
     return suite
 
 def GetAllError():
-    tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_GetLastError_Device', 'test_GetLastError_AXIS', 'test_GetLastError_Group']
+    tests = ['test_Initialize', 'test_GetLastError_Device', 'test_GetLastError_AXIS', 'test_GetLastError_Group']
     suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
     return suite
 
 def SetAxis0SpeedLimit():
-    tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_SetMultiPropertyAndCheck_AxisSpeed', 'test_GetLastError_AXIS']
+    tests = ['test_Initialize', 'test_SetMultiPropertyAndCheck_AxisSpeed', 'test_GetLastError_AXIS']
     suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
     return suite
 
 def SetAxis0SpeedWithProfile():
-    tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_SetAxSpeedInfoAndCheck', 'test_GetLastError_AXIS']
+    tests = ['test_Initialize', 'test_SetAxSpeedInfoAndCheck', 'test_GetLastError_AXIS']
     suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
     return suite
 
 def PVTTable():
-    tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_ResetAll', 'test_PVTTable', 'test_ResetAll']
+    tests = ['test_Initialize', 'test_ResetAll', 'test_PVTTable', 'test_ResetAll']
     suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
     return suite
 
 def PTTable():
-    tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_ResetAll', 'test_PTTable', 'test_ResetAll']
+    tests = ['test_Initialize', 'test_ResetAll', 'test_PTTable', 'test_ResetAll']
     suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
     return suite
 
 def Gear0And1():
-    tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_ResetAll', 'test_Gear', 'test_ResetAll']
+    tests = ['test_Initialize', 'test_ResetAll', 'test_Gear', 'test_ResetAll']
     suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
     return suite
 
 def Gantry0And1():
-    tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_ResetAll', 'test_Gantry', 'test_ResetAll']
+    tests = ['test_Initialize', 'test_ResetAll', 'test_Gantry', 'test_ResetAll']
     suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
     return suite
 
 def GpMoveLineRel():
-    tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_ResetAll', 'test_GpLine', 'test_ResetAll']
+    tests = ['test_Initialize', 'test_ResetAll', 'test_GpLine', 'test_ResetAll']
     suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
     return suite
 
 def GpMove2DArcCW():
-    tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_ResetAll', 'test_2DArc', 'test_ResetAll']
+    tests = ['test_Initialize', 'test_ResetAll', 'test_2DArc', 'test_ResetAll']
     suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
     return suite
 
 def GpMove2DArcCW3P():
-    tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_ResetAll', 'test_2DArc3P', 'test_ResetAll']
+    tests = ['test_Initialize', 'test_ResetAll', 'test_2DArc3P', 'test_ResetAll']
     suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
     return suite
 
 def GpMove2DArcCWAngle():
-    tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_ResetAll', 'test_2DArcAngle', 'test_ResetAll']
+    tests = ['test_Initialize', 'test_ResetAll', 'test_2DArcAngle', 'test_ResetAll']
     suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
     return suite
 
 def GpMove3DArcCW():
-    tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_ResetAll', 'test_3DArcCenter', 'test_ResetAll']
+    tests = ['test_Initialize', 'test_ResetAll', 'test_3DArcCenter', 'test_ResetAll']
     suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
     return suite
 
 def GpMove3DArcCWNormVec():
-    tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_ResetAll', 'test_3DArcNormVec', 'test_ResetAll']
+    tests = ['test_Initialize', 'test_ResetAll', 'test_3DArcNormVec', 'test_ResetAll']
     suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
     return suite
 
 def GpMove3DArcCW3P():
-    tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_ResetAll', 'test_Gp3DArc3P', 'test_ResetAll']
+    tests = ['test_Initialize', 'test_ResetAll', 'test_Gp3DArc3P', 'test_ResetAll']
     suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
     return suite
 
-def GpMove3DArcCW3P():
-    tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_ResetAll', 'test_3DArcAngle', 'test_ResetAll']
+def GpMove3DArcAngle():
+    tests = ['test_Initialize', 'test_ResetAll', 'test_3DArcAngle', 'test_ResetAll']
     suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
     return suite
 
 def GpMoveHelixCenter():
-    tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_ResetAll', 'GpHelixCenter', 'test_ResetAll']
+    tests = ['test_Initialize', 'test_ResetAll', 'GpHelixCenter', 'test_ResetAll']
     suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
     return suite
 
 def GpMoveHelix3P():
-    tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_ResetAll', 'test_Helix3P', 'test_ResetAll']
+    tests = ['test_Initialize', 'test_ResetAll', 'test_Helix3P', 'test_ResetAll']
     suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
     return suite
 
 def GpMoveHelixAngle():
-    tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_ResetAll', 'test_HelixAngle', 'test_ResetAll']
+    tests = ['test_Initialize', 'test_ResetAll', 'test_HelixAngle', 'test_ResetAll']
     suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
     return suite
 
 def GpMoveLinePauseAndResume():
-    tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_ResetAll', 'test_GpLinePauseAndResume', 'test_ResetAll']
+    tests = ['test_Initialize', 'test_ResetAll', 'test_GpLinePauseAndResume', 'test_ResetAll']
     suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
     return suite
 
 def GpChangeVelWhenMove():
-    tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_ResetAll', 'test_GpStop', 'test_ResetAll']
+    tests = ['test_Initialize', 'test_ResetAll', 'test_GpStop', 'test_ResetAll']
     suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
     return suite
 
 def GpAddLoadPath():
-    tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_ResetAll', 'test_GpAddPath', 'test_ResetAll']
+    tests = ['test_Initialize', 'test_ResetAll', 'test_GpAddPath', 'test_ResetAll']
     suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
     return suite
 
 def GpLoadPath():
-    tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_ResetAll', 'test_GpLoadPath', 'test_ResetAll']
+    tests = ['test_Initialize', 'test_ResetAll', 'test_GpLoadPath', 'test_ResetAll']
     suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
     return suite
 
 def ECATLoadConnect5074_5057SO():
-    tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_ResetAll', 'test_LoadConnect5074And5057SO', 'test_DisConnectAll', 'test_ResetAll']
+    tests = ['test_Initialize', 'test_ResetAll', 'test_LoadConnect5074And5057SO', 'test_DisConnectAll', 'test_ResetAll']
     suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
     return suite
 
 def SetAndCheck5057SO():
-    tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_ResetAll', 'test_LoadConnect5074And5057SO', 'test_Set5057SODO', 'test_DisConnectAll', 'test_ResetAll']
+    tests = ['test_Initialize', 'test_ResetAll', 'test_LoadConnect5074And5057SO', 'test_Set5057SODO', 'test_DisConnectAll', 'test_ResetAll']
     suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
     return suite
 
 def SetAndCheck5057SOByte():
-    tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_ResetAll', 'test_LoadConnect5074And5057SO', 'Set5057DOByByte', 'test_DisConnectAll', 'test_ResetAll']
+    tests = ['test_Initialize', 'test_ResetAll', 'test_LoadConnect5074And5057SO', 'Set5057DOByByte', 'test_DisConnectAll', 'test_ResetAll']
     suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
     return suite
 
 def GetSubdeviceInfo():
-    tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_ResetAll', 'test_LoadConnect5074And5057SO', 'test_GetSubdeviceInfo', 'test_DisConnectAll', 'test_ResetAll']
+    tests = ['test_Initialize', 'test_ResetAll', 'test_LoadConnect5074And5057SO', 'test_GetSubdeviceInfo', 'test_DisConnectAll', 'test_ResetAll']
     suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
     return suite
 
 def GetMaindeviceInfo():
-    tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_ResetAll', 'test_LoadConnect5074And5057SO', 'test_GetMainDeviceInfo', 'test_DisConnectAll', 'test_ResetAll']
+    tests = ['test_Initialize', 'test_ResetAll', 'test_LoadConnect5074And5057SO', 'test_GetMainDeviceInfo', 'test_DisConnectAll', 'test_ResetAll']
     suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
     return suite
 
 def SetValueByPDO():
-    tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_ResetAll', 'test_LoadConnect5074And5057SO', 'test_WriteAndReadByPDO', 'test_DisConnectAll', 'test_ResetAll']
+    tests = ['test_Initialize', 'test_ResetAll', 'test_LoadConnect5074And5057SO', 'test_WriteAndReadByPDO', 'test_DisConnectAll', 'test_ResetAll']
     suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
     return suite
 
 def SetAOGetAI():
-    tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_ResetAll', 'test_LoadConnect5074And5057SO', 'test_Set4820AOData', 'test_DisConnectAll', 'test_ResetAll']
+    tests = ['test_Initialize', 'test_ResetAll', 'test_LoadConnect5074And5057SO', 'test_Set4820AOData', 'test_DisConnectAll', 'test_ResetAll']
     suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
     return suite
 
 def GetCommuError():
-    tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_ResetAll', 'test_LoadConnect5074And5057SO', 'test_ReadCommErrCnt', 'test_DisConnectAll', 'test_ResetAll']
+    tests = ['test_Initialize', 'test_ResetAll', 'test_LoadConnect5074And5057SO', 'test_ReadCommErrCnt', 'test_DisConnectAll', 'test_ResetAll']
     suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
     return suite
 
 def SetCntProperty():
-    tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_ResetAll', 'test_SetCNTProperty', 'test_ResetAll']
+    tests = ['test_Initialize', 'test_ResetAll', 'test_SetCNTProperty', 'test_ResetAll']
     suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
     return suite 
 
 def SetCMPProperty():
-    tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_ResetAll', 'test_SetCMPProperty', 'test_ResetAll']
+    tests = ['test_Initialize', 'test_ResetAll', 'test_SetCMPProperty', 'test_ResetAll']
     suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
     return suite
 
 def RunCMPCNTPulse():
-    tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_ResetAll', 'test_RunCMP_Pulse', 'test_ResetAll']
+    tests = ['test_Initialize', 'test_ResetAll', 'test_RunCMP_Pulse', 'test_ResetAll']
     suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
     return suite
 
 def RunCMPCNTToggle():
-    tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_ResetAll', 'test_RunCMP_Toggle', 'test_ResetAll']
+    tests = ['test_Initialize', 'test_ResetAll', 'test_RunCMP_Toggle', 'test_ResetAll']
     suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
     return suite
 
 def RunCMPAutoPulse():
-    tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_ResetAll', 'test_RunCMPAutoPulseWidth', 'test_ResetAll']
+    tests = ['test_Initialize', 'test_ResetAll', 'test_RunCMPAutoPulseWidth', 'test_ResetAll']
     suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
     return suite
 
 def EventMotionDone():
-    tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_ResetAll', 'test_MotionDoneEvent', 'test_ResetAll']
+    tests = ['test_Initialize', 'test_ResetAll', 'test_MotionDoneEvent', 'test_ResetAll']
     suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
     return suite
 
 def SQATest():
-    tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_ResetAll', 'test_SQATest']
+    tests = ['test_Initialize', 'test_ResetAll', 'test_SQATest']
     suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
     return suite
 
 def MotionDoneEventMultiThreads():
-    tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_ResetAll', 'test_MotionDoneEvent_MultiThreads', 'test_ResetAll']
+    tests = ['test_Initialize', 'test_ResetAll', 'test_MotionDoneEvent_MultiThreads', 'test_ResetAll']
+    suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
+    return suite
+
+def GroupMotionDone():
+    tests = ['test_Initialize', 'test_ResetAll', 'test_GroupMotionDoneEvent', 'test_ResetAll']
     suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
     return suite
 
 def RunCMPDiff():
-    tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_ResetAll', 'test_RunCMPDiff', 'test_ResetAll']
+    tests = ['test_Initialize', 'test_ResetAll', 'test_RunCMPDiff', 'test_ResetAll']
     suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
     return suite
 
 def RunCMPLTC():
-    tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_ResetAll', 'test_RunCMPLTC', 'test_ResetAll']
+    tests = ['test_Initialize', 'test_ResetAll', 'test_RunCMPLTC', 'test_ResetAll']
     suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
     return suite
 
 def Run2CntLinkedCMP():
-    tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_ResetAll', 'test_Set2CntInCMP', 'test_ResetAll']
+    tests = ['test_Initialize', 'test_ResetAll', 'test_Set2CntInCMP', 'test_ResetAll']
     suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
     return suite
 
 def Run2CntLinkedCMPDifferentTable():
-    tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_ResetAll', 'test_Set2CntInCMPWithDifferentTable', 'test_ResetAll']
+    tests = ['test_Initialize', 'test_ResetAll', 'test_Set2CntInCMPWithDifferentTable', 'test_ResetAll']
     suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
     return suite
 
 def Run2CntLinkedCMPDeviation():
-    tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_ResetAll', 'test_Set2CntInCMPWithDeviation', 'test_ResetAll']
+    tests = ['test_Initialize', 'test_ResetAll', 'test_Set2CntInCMPWithDeviation', 'test_ResetAll']
     suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
     return suite
 
 def Run2CntLinkedCMPDiff():
-    tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_ResetAll', 'test_2CntInCMPDiffTable', 'test_ResetAll']
+    tests = ['test_Initialize', 'test_ResetAll', 'test_2CntInCMPDiffTable', 'test_ResetAll']
     suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
     return suite
 
 def Run2CntLinkedCMPDiffWithDifferentTable():
-    tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_ResetAll', 'test_2CntInCMPDiffWithDifferentTable', 'test_ResetAll']
+    tests = ['test_Initialize', 'test_ResetAll', 'test_2CntInCMPDiffWithDifferentTable', 'test_ResetAll']
     suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
     return suite
 
 def Run2CntLinkedCMPDiffWithDeviation():
-    tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_ResetAll', 'test_2CntInCMPDiffWithDeviation', 'test_ResetAll']
+    tests = ['test_Initialize', 'test_ResetAll', 'test_2CntInCMPDiffWithDeviation', 'test_ResetAll']
     suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
     return suite    
 
 def Run2CntCMPLTCAuto():
-    tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_ResetAll', 'test_2CntCMPLTCAuto', 'test_ResetAll']
+    tests = ['test_Initialize', 'test_ResetAll', 'test_2CntCMPLTCAuto', 'test_ResetAll']
     suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
     return suite
 
 def Run2CntCMPDiffAuto():
-    tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_ResetAll', 'test_2CntCMPDiffAuto', 'test_ResetAll']
+    tests = ['test_Initialize', 'test_ResetAll', 'test_2CntCMPDiffAuto', 'test_ResetAll']
     suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
     return suite
 
 def GetExtData():
-    tests = ['test_GetAvailableDevs', 'test_Initialize', 'test_ResetAll', 'test_MPG', 'test_ResetAll']
+    tests = ['test_Initialize', 'test_ResetAll', 'test_MPG', 'test_ResetAll']
     suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
     return suite
 
@@ -3374,6 +3522,8 @@ if __name__ == '__main__':
     # unittest.main()
     # Test case with self-defined order
     runner = unittest.TextTestRunner()
+    # for i in range(5000):
+        # get_available_devs = runner.run(JustGetAvailableDevices())
     # get_available_devs = runner.run(JustGetAvailableDevices())
     # get_device = runner.run(GetMDevice())
     # ax_ptp = runner.run(AxPTP_Check())
@@ -3381,8 +3531,16 @@ if __name__ == '__main__':
     # gp_create = runner.run(GroupCreateCheck())
     # get_all_error = runner.run(GetAllError())
     # ax_move_continue = runner.run(AxMoveContinue())
+    # move_6_axes_ptp = runner.run(Move6AxesPTP())
     # set_ax_speed_limit = runner.run(SetAxis0SpeedLimit())
     # set_ax_profile = runner.run(SetAxis0SpeedWithProfile())
+    # dev_check_all_ax_ready = runner.run(DevCkAllAxReady())
+    # ax_return_pause_pos = runner.run(AxReturnPausePos())
+    # ax_reset_err = runner.run(AxResetErr())
+    ax_get_motion_io_status = runner.run(AxGetMotionIOStatus())
+    # ax_get_m_ach_pos = runner.run(AxGetMachPos())
+    # ax_pause = runner.run(AxPause())
+    # ax_resume = runner.run(AxResume())
     # pvt_table = runner.run(PVTTable())
     # pt_table = runner.run(PTTable())
     # gear_0_1 = runner.run(Gear0And1())
@@ -3394,6 +3552,7 @@ if __name__ == '__main__':
     # gp_3D_arc = runner.run(GpMove3DArcCW())
     # gp_3D_norm_vec = runner.run(GpMove3DArcCWNormVec())
     # gp_3D_3P = runner.run(GpMove3DArcCW3P())
+    # gp_3D_angle = runner.run(GpMove3DArcAngle())
     # gp_helix_center = runner.run(GpMoveHelixCenter())
     # gp_helix_3P = runner.run(GpMoveHelix3P())
     # gp_helix_angle = runner.run(GpMoveHelixAngle())
@@ -3412,7 +3571,7 @@ if __name__ == '__main__':
     # set_cnt_property = runner.run(SetCntProperty())
     # set_cmp_property = runner.run(SetCMPProperty())
     # run_cmp_cnt_pulse = runner.run(RunCMPCNTPulse())
-    run_cmp_diff = runner.run(RunCMPDiff())
+    # run_cmp_diff = runner.run(RunCMPDiff())
     # run_cmp_auto_pulse = runner.run(RunCMPAutoPulse())
     # run_cmp_cnt_toggle = runner.run(RunCMPCNTToggle())
     # run_cmp_ltc = runner.run(RunCMPLTC())
@@ -3427,6 +3586,7 @@ if __name__ == '__main__':
     # evt_motion_done = runner.run(EventMotionDone())
     # sqa_test = runner.run(SQATest())
     # evt_motion_multi = runner.run(MotionDoneEventMultiThreads())
+    # gp_motion_done_event = runner.run(GroupMotionDone())
     # get_ext_data = runner.run(GetExtData())
     # total_run_arr = [get_available_devs, get_device, export_mapping_table, import_mapping_table, ax_ptp,
     #                  device_do, gp_create, get_all_error, ax_move_continue, set_ax_speed_limit,

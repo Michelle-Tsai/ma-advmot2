@@ -14,3 +14,5 @@
 #    under the License.
 from .AdvCmnAPI_CM2 import AdvCmnAPI_CM2
 from .AdvMotApi_CM2 import *
+from .AdvCmnAPI_CM2 import AdvCmnAPI
+from .AdvCmnAPI_CM2 import AmcLogAPI

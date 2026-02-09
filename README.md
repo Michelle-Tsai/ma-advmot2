@@ -32,6 +32,8 @@ $ ls /lib | grep pcie
 ### For PCIE-1245:
 1. PCIE1245s.sys
 2. PCIE1245.dll
+### For AMC Core:
+1. AMC_Core.dll
 
 You can check the installation using the following commands.
 ```shell
@@ -41,6 +43,7 @@ ls C:\Windows\System32\ | findstr PCIE1203
 # Available Devices
 * <a href="https://www.advantech.com/en/products/7d3c9775-8c30-4f65-83ec-755bee93b1d4/pcie-1203/mod_bb3ec42a-e9b1-4839-8b26-96551d894bb9">Advantech PCIE-1203M</a>
 * <a href="https://www.advantech.com/zh-tw/products/e37baca6-8e5d-40f4-83c6-6bf379307dcf/pcie-1245/mod_212c4df1-455d-4153-8293-e0a216690702">Advantech PCIE-1245</a>
+* AMC Core
 # API
 ## How to use?
 Due to our driver running with admin/root authentication, it's important to execute the project with admin/root privileges.
@@ -460,7 +463,6 @@ Due to our driver running with admin/root authentication, it's important to exec
     + <a href="#Acm_AxSetCmpAuto"><code>Acm_AxSetCmpAuto</code></a>
     + <a href="#Acm_AxGetCmpData"><code>Acm_AxGetCmpData</code></a>
     + <a href="#Acm_AxSetCmpData"><code>Acm_AxSetCmpData</code></a>
-    + <a href="#Acm_AxChangeCmpIndex"><code>Acm_AxChangeCmpIndex</code></a>
     + <a href="#Acm_AxSetCmpBufferData"><code>Acm_AxSetCmpBufferData</code></a>
     + <a href="#Acm_AxResetCmpData"><code>Acm_AxResetCmpData</code></a>
     + <a href="#Acm_AxGetCmpBufferStatus"><code>Acm_AxGetCmpBufferStatus</code></a>
@@ -5996,13 +5998,6 @@ U32 Acm_AxGetCmpData(HAND AxisHandle, PF64 CmpPosition)
 
 ```cpp
 U32 Acm_AxSetCmpData(HAND AxisHandle, F64 CmpPosition)
-```
-
-#### Acm_AxChangeCmpIndex
-<a name="Acm_AxChangeCmpIndex" />
-
-```cpp
-U32 Acm_AxChangeCmpIndex(HAND AxisHandle, U32 CmpIndex)
 ```
 
 #### Acm_AxSetCmpBufferData

@@ -564,3 +564,86 @@ class PORT_TYPE(Enum):
     PORT_CNT = 4
     PORT_INPUT = 5
     PORT_OUTPUT = 6
+
+class AX_BATCH_MODE(Enum):
+    AX_BATCH_MODE_DISABLE = 0
+    AX_BATCH_MODE_ENABLE = 1
+
+class GP_PATH_MODE(Enum):
+    PATH_MODE_DISABLE = 0
+    PATH_BUFFER_MODE = 1
+    PATH_BLENDING_MODE = 2
+    PATH_FLY_MODE = 3
+    PATH_SPEED_FORWARD_MODE = 4
+
+class PATH_MOVE_MODE(Enum):
+    BLENDING_DISABLE = 0
+    BLENDING_ENABLE = 1
+
+class PWM_CONTROL_MODE(Enum):
+    PWM_MODE_FIXED_FREQ = 0
+    PWM_MODE_FIXED_WIDTH = 1
+    PWM_MODE_FIXED_DUTY = 2
+
+class DAQ_TRANS_TYPE(Enum):
+    TRANSTYPE_UNKNOWN = -1
+    TRANSTYPE_UNSIGNED = 0
+    TRANSTYPE_SIGNED = 1
+
+class ADV_PORT_TYPE(Enum):
+    ADV_PORT_DO = 0
+    ADV_PORT_DI = 1
+    ADV_PORT_AO = 2
+    ADV_PORT_AI = 3
+    ADV_PORT_DOEX = 4
+    ADV_PORT_DIEX = 5
+    ADV_PORT_CNT = 6
+    ADV_PORT_INPUT = 7
+    ADV_PORT_OUTPUT = 8
+
+class ADV_HANDLE_TYPE(Enum):
+    NodeHd_Type = 0xF0
+    HdType_Dev = 0xF1
+    HdType_Axis = 0xF2
+    HdType_Group = 0xF3
+    HdType_AxInGp = 0xF4
+    HdType_MasDev = 0xF5
+    HdType_SlvDev = 0xF6
+    HdType_Cyl = 0xF7
+    HdType_LatchCH = 0xF8
+
+class AMC_API_LOG_DATA_TYPE(Enum):
+    LogCommand = 0
+    LogResponse = 1
+
+class AMC_API_LOG_STATE(Enum):
+    API_LOG_STOPPED = 0
+    API_LOG_RUNNING = 1
+    API_LOG_STOPPING = 2
+
+class AMC_DATA_LOG_STATE(Enum):
+    LOG_STATE_IDLE = 0
+    LOG_STATE_WAITING_FOR_TRIGGER = 1
+    LOG_STATE_RUNNING = 2
+    LOG_STATE_STOP = 3
+    LOG_STATE_FINISHED = 4
+    LOG_STATE_WRITE_FAIL = 5
+    LOG_STATE_BUFFER_OVERFLOW = 6
+    LOG_STATE_ERROR = 7
+
+class AMC_DATA_LOG_SOURCE_TYPE(Enum):
+    LOG_SOURCE_NONE = 0
+    LOG_SOURCE_MOTION_AXIS = 1
+    LOG_SOURCE_IO = 2
+
+class AMC_DATA_LOG_COMMAND(Enum):
+    CMD_NONE = 0
+    CMD_START_LOG = 1
+    CMD_STOP_LOG = 2
+    CMD_RESET_LOG = 3
+
+class AMC_DATA_LOG_COMMAND_STATUE(Enum):
+    CMD_STATE_IDLE = 0
+    CMD_STATE_PENDGING = 1
+    CMD_STATE_SUCCESS = 2
+    CMD_STATE_ERROR = 3

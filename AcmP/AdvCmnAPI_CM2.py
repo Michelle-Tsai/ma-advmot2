@@ -907,6 +907,20 @@ class AdvCmnAPI_CM2:
         pass
 
     try:
+        Acm2_ChLinkSWCmp = lib.Acm2_ChLinkSWCmp
+        Acm2_ChLinkSWCmp.argtypes = [c_uint32, c_uint32]
+        Acm2_ChLinkSWCmp.restype = c_uint32
+    except:
+        pass
+
+    try:
+        Acm2_ChGetLinkedSWCmp = lib.Acm2_ChGetLinkedSWCmp
+        Acm2_ChGetLinkedSWCmp.argtypes = [c_uint32, POINTER(c_uint32)]
+        Acm2_ChGetLinkedSWCmp.restype = c_uint32
+    except:
+        pass
+
+    try:
         Acm2_ChEnableCmp = lib.Acm2_ChEnableCmp
         Acm2_ChEnableCmp.argtypes = [c_uint32, c_uint32]
         Acm2_ChEnableCmp.restype = c_uint32
@@ -971,7 +985,7 @@ class AdvCmnAPI_CM2:
 
     try:
         Acm2_ChSetMultiCmpTable = lib.Acm2_ChSetMultiCmpTable
-        Acm2_ChSetMultiCmpTable.argtypes = [c_uint32, c_uint, c_uint32]
+        Acm2_ChSetMultiCmpTable.argtypes = [c_uint32, POINTER(c_double), c_uint32]
         Acm2_ChSetMultiCmpTable.restype = c_uint32
     except:
         pass
@@ -2413,13 +2427,6 @@ class AdvCmnAPI:
         Acm_AxSetCmpTable = lib.Acm_AxSetCmpTable
         Acm_AxSetCmpTable.argtypes = [c_void_p, POINTER(c_double), c_int32]
         Acm_AxSetCmpTable.restype = c_uint32
-    except:
-        pass
-
-    try:
-        Acm_AxChangeCmpIndex = lib.Acm_AxChangeCmpIndex
-        Acm_AxChangeCmpIndex.argtypes = [c_void_p, c_uint32]
-        Acm_AxChangeCmpIndex.restype = c_uint32
     except:
         pass
 
@@ -4373,6 +4380,34 @@ class AdvCmnAPI:
         Acm_DevResetCmpFIFO = lib.Acm_DevResetCmpFIFO
         Acm_DevResetCmpFIFO.argtypes = [c_void_p, c_uint16]
         Acm_DevResetCmpFIFO.restype = c_uint32
+    except:
+        pass
+
+    try:
+        Acm_ChLinkSWCmpObject = lib.Acm_ChLinkSWCmpObject
+        Acm_ChLinkSWCmpObject.argtypes = [c_void_p, c_uint16, c_uint, POINTER(c_uint32), c_uint32]
+        Acm_ChLinkSWCmpObject.restype = c_uint32
+    except:
+        pass
+
+    try:
+        Acm_ChGetLinkedSWCmpObject = lib.Acm_ChGetLinkedSWCmpObject
+        Acm_ChGetLinkedSWCmpObject.argtypes = [c_void_p, c_uint16, POINTER(c_uint), POINTER(c_uint32), POINTER(c_uint32)]
+        Acm_ChGetLinkedSWCmpObject.restype = c_uint32
+    except:
+        pass
+
+    try:
+        Acm_DaqDoLinkSWCmpObject = lib.Acm_DaqDoLinkSWCmpObject
+        Acm_DaqDoLinkSWCmpObject.argtypes = [c_void_p, c_uint32, c_uint16]
+        Acm_DaqDoLinkSWCmpObject.restype = c_uint32
+    except:
+        pass
+
+    try:
+        Acm_DaqDoGetLinkedSWCmpObject = lib.Acm_DaqDoGetLinkedSWCmpObject
+        Acm_DaqDoGetLinkedSWCmpObject.argtypes = [c_void_p, POINTER(c_uint32), c_uint16]
+        Acm_DaqDoGetLinkedSWCmpObject.restype = c_uint32
     except:
         pass
 

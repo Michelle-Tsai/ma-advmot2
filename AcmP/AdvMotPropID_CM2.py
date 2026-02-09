@@ -610,6 +610,13 @@ class PropertyID2(Enum):
     CFG_CH_DaqCmpDeviation = CFG_CH_CmpDO_ID + 26
     CFG_CH_DaqCmpLinkCounter = CFG_CH_CmpDO_ID + 27
     CFG_CH_DaqCmpTRIGAEndposiForce = CFG_CH_CmpDO_ID + 30
+    CFG_CH_DaqSWCmpDeviation = CFG_CH_CmpDO_ID + 40
+    CFG_CH_DaqSWCmpDoEnable = CFG_CH_CmpDO_ID + 41
+    CFG_CH_DaqSWCmpDoOutputMode = CFG_CH_CmpDO_ID + 42
+    CFG_CH_DaqSWCmpDoLogic = CFG_CH_CmpDO_ID + 43
+    CFG_CH_DaqSWCmpDoPulseWidth = CFG_CH_CmpDO_ID + 44
+    CFG_CH_DaqSWCmpDoDelay = CFG_CH_CmpDO_ID + 45
+    CFG_CH_DaqSWCmpMethod = CFG_CH_CmpDO_ID + 46
     FT_CH_DaqLtcLinkObjectType = FT_CH_LtcDI_ID + 0
     CFG_CH_DaqLtcLinkAxis = CFG_CH_LtcDI_ID + 0
     CFG_CH_DaqLtcAxisEnable = CFG_CH_LtcDI_ID + 1
@@ -711,11 +718,6 @@ class PropertyID(Enum):
     FT_Ax_ID = 301
     PAR_Ax_ID = 401
     CFG_Ax_ID = 501
-    FT_Gp_ID = 601
-    PAR_Gp_ID = 701
-    CFG_Gp_ID = 801
-    PAR_RB_ID = 1000
-    CFG_RB_ID = 1200
     FT_CH_ID = 1300
     PAR_CH_ID = 1400
     CFG_CH_ID = 1500
@@ -1333,6 +1335,21 @@ class PropertyID(Enum):
     CFG_CH_DaqCntOverflowMode = CFG_CH_ID + 203
     CFG_CH_DaqCntCmpEnable = CFG_CH_ID + 204
     CFG_CH_DaqCntCmpMethod = CFG_CH_ID + 205
+
+    CFG_CH_DaqSWCmpDeviation = CFG_CH_ID + 210
+    CFG_CH_DaqSWCmpDoEnable = CFG_CH_ID + 211
+    CFG_CH_DaqSWCmpDoOutputMode = CFG_CH_ID + 212
+    CFG_CH_DaqSWCmpDoLogic = CFG_CH_ID + 213
+    CFG_CH_DaqSWCmpDoPulseWidth = CFG_CH_ID + 214
+    CFG_CH_DaqSWCmpDoDelay = CFG_CH_ID + 215
+    CFG_CH_DaqSWCmpMethod = CFG_CH_ID + 216
+
+class PropertyGpID(Enum):
+    FT_Gp_ID = 601
+    PAR_Gp_ID = 701
+    CFG_Gp_ID = 801
+    PAR_RB_ID = 1000
+    CFG_RB_ID = 1200
     # Group parameter
     PAR_GpVelLow = (PAR_Gp_ID + 0)
     PAR_GpVelHigh = (PAR_Gp_ID + 1)

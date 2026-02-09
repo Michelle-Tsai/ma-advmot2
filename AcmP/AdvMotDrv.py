@@ -601,6 +601,17 @@ class ADV_PORT_TYPE(Enum):
     ADV_PORT_INPUT = 7
     ADV_PORT_OUTPUT = 8
 
+class ADV_HANDLE_TYPE(Enum):
+    NodeHd_Type = 0xF0
+    HdType_Dev = 0xF1
+    HdType_Axis = 0xF2
+    HdType_Group = 0xF3
+    HdType_AxInGp = 0xF4
+    HdType_MasDev = 0xF5
+    HdType_SlvDev = 0xF6
+    HdType_Cyl = 0xF7
+    HdType_LatchCH = 0xF8
+
 class AMC_API_LOG_DATA_TYPE(Enum):
     LogCommand = 0
     LogResponse = 1

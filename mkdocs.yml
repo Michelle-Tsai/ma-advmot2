@@ -1,0 +1,47 @@
+site_name: Advantech AcmP SDK documentation
+use_directory_urls: false
+
+theme:
+  name: material
+  locale: en
+  # 若要在完全無網路的環境 (Air-gapped) 離線開啟，建議關閉外部字體載入
+  font: false
+  logo: assets/logo.svg
+  favicon: assets/logo.png
+  palette:
+    primary: blue
+  features:
+    - content.code.copy
+    - search.highlight
+
+# 設定側邊欄導覽列
+nav:
+  - About: index.md
+  - Installation: install.md
+  - Examples(CM 1.0): examples_cm1.md
+  - Examples(CM 2.0): examples_cm2.md
+
+# 啟用 Markdown 擴充功能（程式碼高亮、排版等）
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+      auto_title: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - admonition
+  - pymdownx.details
+  - attr_list
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+
+copyright: Copyright &copy; 1983-2026 Advantech Co., Ltd.
+
+extra:
+  generator: false
+
+plugins:
+  - search

@@ -28,14 +28,18 @@ class AmcDataLogAPI_Test(unittest.TestCase):
     def tearDown(self):
         self.errCde = 0
 
-    def initial(self):
+    def getDevices(self):
         except_err = 0
         self.errCde = self.AdvMot.Acm2_GetAvailableDevs(self.devlist, self.maxEnt, byref(self.outEnt))
         self.assertEqual(except_err, self.errCde, '{0} failed'.format(self._testMethodName))
         for i in range(self.outEnt.value):
-            print('Dev number:{0:x}'.format(self.devlist[i].dwDeviceNum))
+            print(f'index:{i}, Dev number:{self.devlist[i].dwDeviceNum:x}')
+
+    def initial(self):
+        except_err = 0
         self.errCde = self.AdvMot.Acm2_DevInitialize()
         self.assertEqual(except_err, self.errCde, '{0} failed'.format(self._testMethodName))
+        self.__class__.devID = 0
         
     def axPTP(self):
         except_err = 0
@@ -92,27 +96,27 @@ class AmcDataLogAPI_Test(unittest.TestCase):
         logHeader = b'Data Log Test from python'
         getLogHeader = create_string_buffer(256)
 
-        self.errCde = self.AdvAmc.Amc_DataLogSetLog(self.log_ch, byref(dataLogSource), self.log_index)
+        self.errCde = self.AdvAmc.Amc_DataLogSetLog(self.devID, self.log_ch, byref(dataLogSource), self.log_index)
         self.assertEqual(except_err, self.errCde, '{0} failed.'.format(self._testMethodName))
-        self.errCde = self.AdvAmc.Amc_DataLogGetLog(self.log_ch, byref(getDataLogSource), self.log_index)
+        self.errCde = self.AdvAmc.Amc_DataLogGetLog(self.devID, self.log_ch, byref(getDataLogSource), self.log_index)
         self.assertEqual(except_err, self.errCde, '{0} failed.'.format(self._testMethodName))
         print(f'count:{getDataLogSource.count}, type:{getDataLogSource.type}, cmd_pos:{getDataLogSource.items.smItems.cmd_pos}')
         
-        self.errCde = self.AdvAmc.Amc_DataLogSetLogOption(self.log_ch, byref(dataLogOption))
+        self.errCde = self.AdvAmc.Amc_DataLogSetLogOption(self.devID, self.log_ch, byref(dataLogOption))
         self.assertEqual(except_err, self.errCde, '{0} failed.'.format(self._testMethodName))
-        self.errCde = self.AdvAmc.Amc_DataLogGetLogOption(self.log_ch, byref(getDataLogOption))
+        self.errCde = self.AdvAmc.Amc_DataLogGetLogOption(self.devID, self.log_ch, byref(getDataLogOption))
         self.assertEqual(except_err, self.errCde, '{0} failed.'.format(self._testMethodName))
         print(f'isRotateFile:{getDataLogOption.isRotateFile}, maxLogFileCount:{getDataLogOption.maxLogFileCount}, samplingTimeMilliseconds:{getDataLogOption.samplingTimeMilliseconds}')
 
-        self.errCde = self.AdvAmc.Amc_DataLogSetLogFilePath(self.log_ch, self.dirPath, self.fileName)
+        self.errCde = self.AdvAmc.Amc_DataLogSetLogFilePath(self.devID, self.log_ch, self.dirPath, self.fileName)
         self.assertEqual(except_err, self.errCde, '{0} failed.'.format(self._testMethodName))
-        self.errCde = self.AdvAmc.Amc_DataLogGetLogFilePath(self.log_ch, getDirPath, getFileName)
+        self.errCde = self.AdvAmc.Amc_DataLogGetLogFilePath(self.devID, self.log_ch, getDirPath, getFileName)
         self.assertEqual(except_err, self.errCde, '{0} failed.'.format(self._testMethodName))
         print(f'dirPath:{getDirPath.value.decode('utf-8', errors='ignore')}, fileName:{getFileName.value.decode('utf-8', errors='ignore')}')
 
-        self.errCde = self.AdvAmc.Amc_DataLog_SetLogHeader(self.log_ch, logHeader)
+        self.errCde = self.AdvAmc.Amc_DataLog_SetLogHeader(self.devID, self.log_ch, logHeader)
         self.assertEqual(except_err, self.errCde, '{0} failed.'.format(self._testMethodName))
-        self.errCde = self.AdvAmc.Amc_DataLogGetLogHeader(self.log_ch, getLogHeader)
+        self.errCde = self.AdvAmc.Amc_DataLogGetLogHeader(self.devID, self.log_ch, getLogHeader)
         self.assertEqual(except_err, self.errCde, '{0} failed.'.format(self._testMethodName))
         print(f'logHeader:{getLogHeader.value.decode('utf-8', errors='ignore')}')
 
@@ -125,37 +129,37 @@ class AmcDataLogAPI_Test(unittest.TestCase):
         getFileName = create_string_buffer(256)
         getLogHeader = create_string_buffer(256)
 
-        self.errCde = self.AdvAmc.Amc_DataLogGetLog(self.log_ch, byref(getDataLogSource), self.log_index)
+        self.errCde = self.AdvAmc.Amc_DataLogGetLog(self.devID, self.log_ch, byref(getDataLogSource), self.log_index)
         self.assertEqual(except_err, self.errCde, '{0} failed.'.format(self._testMethodName))
         print(f'count:{getDataLogSource.count}, type:{getDataLogSource.type}, cmd_pos:{getDataLogSource.items.smItems.cmd_pos}')
 
-        self.errCde = self.AdvAmc.Amc_DataLogGetLogOption(self.log_ch, byref(getDataLogOption))
+        self.errCde = self.AdvAmc.Amc_DataLogGetLogOption(self.devID, self.log_ch, byref(getDataLogOption))
         self.assertEqual(except_err, self.errCde, '{0} failed.'.format(self._testMethodName))
         print(f'isRotateFile:{getDataLogOption.isRotateFile}, maxLogFileCount:{getDataLogOption.maxLogFileCount}, samplingTimeMilliseconds:{getDataLogOption.samplingTimeMilliseconds}')
 
-        self.errCde = self.AdvAmc.Amc_DataLogGetLogFilePath(self.log_ch, getDirPath, getFileName)
+        self.errCde = self.AdvAmc.Amc_DataLogGetLogFilePath(self.devID, self.log_ch, getDirPath, getFileName)
         self.assertEqual(except_err, self.errCde, '{0} failed.'.format(self._testMethodName))
         print(f'dirPath:{getDirPath.value.decode('utf-8', errors='ignore')}, fileName:{getFileName.value.decode('utf-8', errors='ignore')}')
 
-        self.errCde = self.AdvAmc.Amc_DataLogGetLogHeader(self.log_ch, getLogHeader)
+        self.errCde = self.AdvAmc.Amc_DataLogGetLogHeader(self.devID, self.log_ch, getLogHeader)
         self.assertEqual(except_err, self.errCde, '{0} failed.'.format(self._testMethodName))
         print(f'logHeader:{getLogHeader.value.decode('utf-8', errors='ignore')}')
 
     def getLogStatus(self):
         except_err = 0
         getDataLogStatus = AMC_DATA_LOG_STATUS()
-        self.errCde = self.AdvAmc.Amc_DataLogGetStatus(self.log_ch, byref(getDataLogStatus))
+        self.errCde = self.AdvAmc.Amc_DataLogGetStatus(self.devID, self.log_ch, byref(getDataLogStatus))
         self.assertEqual(except_err, self.errCde, '{0} failed.'.format(self._testMethodName))
         print(f'state:{getDataLogStatus.state}, stopRequest:{getDataLogStatus.stopRequest}')
 
     def startLog(self):
         except_err = 0
-        self.errCde = self.AdvAmc.Amc_DataLogStartLog(self.log_ch)
+        self.errCde = self.AdvAmc.Amc_DataLogStartLog(self.devID, self.log_ch)
         self.assertEqual(except_err, self.errCde, '{0} failed.'.format(self._testMethodName))
 
     def stopLog(self):
         except_err = 0
-        self.errCde = self.AdvAmc.Amc_DataLogStopLog(self.log_ch)
+        self.errCde = self.AdvAmc.Amc_DataLogStopLog(self.devID, self.log_ch)
         self.assertEqual(except_err, self.errCde, '{0} failed.'.format(self._testMethodName))
 
     def getfileNames(self):
@@ -166,7 +170,7 @@ class AmcDataLogAPI_Test(unittest.TestCase):
             fileBufferSize = c_uint32(1024)
             getFilePath = create_string_buffer(fileBufferSize.value)
             getFileCnt = c_uint32(0)
-            self.errCde = self.AdvAmc.Amc_DataLog_GetRotatedLogFilePaths(self.log_ch, getFilePath, byref(fileBufferSize), byref(getFileCnt))
+            self.errCde = self.AdvAmc.Amc_DataLog_GetRotatedLogFilePaths(self.devID, self.log_ch, getFilePath, byref(fileBufferSize), byref(getFileCnt))
             self.assertEqual(except_err, self.errCde, '{0} failed.'.format(self._testMethodName))
             print(f'getFileCnt:{getFileCnt.value}')
             if getFileCnt.value > 0:
@@ -211,9 +215,9 @@ class AmcDataLogAPI_Test(unittest.TestCase):
             currSize = bufferSize
             fileBuffer = create_string_buffer(bufferSize.value)
             if global_isRotate is True:
-                self.errCde = self.AdvAmc.Amc_DataLogGetLogFile(filePath.encode('utf-8'), fileBuffer, byref(bufferSize))
+                self.errCde = self.AdvAmc.Amc_DataLogGetLogFile(self.devID, self.log_ch, filePath.encode('utf-8'), fileBuffer, byref(bufferSize))
             else:
-                self.errCde = self.AdvAmc.Amc_DataLogGetLogFile(filePath, fileBuffer, byref(bufferSize))
+                self.errCde = self.AdvAmc.Amc_DataLogGetLogFile(self.devID, self.log_ch, filePath, fileBuffer, byref(bufferSize))
             self.assertEqual(except_err, self.errCde, '{0} failed.'.format(self._testMethodName))
             if self.errCde == ErrorCode2.MemAllocateFailed:
                 print(f'Initial buffer too small. Required: {bufferSize} bytes')
@@ -222,9 +226,9 @@ class AmcDataLogAPI_Test(unittest.TestCase):
                 currSize = bufferSize
                 fileBuffer = create_string_buffer(currSize)
                 if global_isRotate is True:
-                    self.errCde = self.AdvAmc.Amc_DataLogGetLogFile(filePath.encode('utf-8'), fileBuffer, byref(bufferSize))
+                    self.errCde = self.AdvAmc.Amc_DataLogGetLogFile(self.devID, self.log_ch, filePath.encode('utf-8'), fileBuffer, byref(bufferSize))
                 else:
-                    self.errCde = self.AdvAmc.Amc_DataLogGetLogFile(filePath, fileBuffer, byref(bufferSize))
+                    self.errCde = self.AdvAmc.Amc_DataLogGetLogFile(self.devID, self.log_ch, filePath, fileBuffer, byref(bufferSize))
                 self.assertEqual(except_err, self.errCde, '{0} failed.'.format(self._testMethodName))
             if self.errCde == ErrorCode2.SUCCESS:
                 if global_isRotate is True:
@@ -250,14 +254,14 @@ class AmcDataLogAPI_Test(unittest.TestCase):
 
     def resetLog(self):
         except_err = 0
-        self.errCde = self.AdvAmc.Amc_DataLogResetLog(self.log_ch)
+        self.errCde = self.AdvAmc.Amc_DataLogResetLog(self.devID, self.log_ch)
         self.assertEqual(except_err, self.errCde, '{0} failed.'.format(self._testMethodName))
 
     def sleep(self):
         time.sleep(5)
 
 def Initial():
-    tests = ['initial']
+    tests = ['getDevices', 'initial']
     suite = unittest.TestSuite(map(AmcDataLogAPI_Test, tests))
     return suite
 

@@ -1,6 +1,14 @@
 # Change log
 All notable changes to this project will be documented in this file.
 
+## [0.1.11] - 2026-08-07
+### Modified
+- AMC Data Log with DevID
+### Added
+- Add mkdocs to generate API documentation for offline use
+- Reorganized documentations
+- Generated README.md by using python
+
 ## [0.1.10] - 2026-02-03
 ### Modified
 - Remove Acm_AxChangeCmpIndex

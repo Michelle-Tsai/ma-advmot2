@@ -4399,14 +4399,14 @@ class AdvCmnAPI:
 
     try:
         Acm_DaqDoLinkSWCmpObject = lib.Acm_DaqDoLinkSWCmpObject
-        Acm_DaqDoLinkSWCmpObject.argtypes = [c_void_p, c_uint32, c_uint16]
+        Acm_DaqDoLinkSWCmpObject.argtypes = [c_void_p, c_uint16, c_uint32]
         Acm_DaqDoLinkSWCmpObject.restype = c_uint32
     except:
         pass
 
     try:
         Acm_DaqDoGetLinkedSWCmpObject = lib.Acm_DaqDoGetLinkedSWCmpObject
-        Acm_DaqDoGetLinkedSWCmpObject.argtypes = [c_void_p, POINTER(c_uint32), c_uint16]
+        Acm_DaqDoGetLinkedSWCmpObject.argtypes = [c_void_p, c_uint16, POINTER(c_uint32)]
         Acm_DaqDoGetLinkedSWCmpObject.restype = c_uint32
     except:
         pass
@@ -4847,7 +4847,7 @@ class AmcLogAPI:
 # API Log
     try:
         Amc_SetApiLog = lib.Amc_SetApiLog
-        Amc_SetApiLog.argtypes = [c_char_p, c_char_p, POINTER(AMC_API_LOG_OPT), c_size_t]
+        Amc_SetApiLog.argtypes = [c_char_p, c_char_p, POINTER(AMC_API_LOG_OPT), c_uint64]
         Amc_SetApiLog.restype = c_uint32
     except:
         pass
@@ -4887,7 +4887,7 @@ class AmcLogAPI:
 
     try:
         Amc_ApiLogToString = lib.Amc_ApiLogToString
-        Amc_ApiLogToString.argtypes = [POINTER(AMC_API_LOG_HEADER), POINTER(c_uint8), c_char_p, c_size_t]
+        Amc_ApiLogToString.argtypes = [POINTER(AMC_API_LOG_HEADER), POINTER(c_uint8), c_char_p, c_uint64]
         Amc_ApiLogToString.restype = c_uint32
     except:
         pass

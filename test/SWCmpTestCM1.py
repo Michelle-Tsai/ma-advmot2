@@ -95,11 +95,11 @@ class SWCmp_TestCM1(unittest.TestCase):
         clearVal = c_uint32(0xFFFFFFFF)
         getLinkedDo = c_uint32(0)
         # 清除軟體比較觸發通道綁定的Do
-        self.errCde = self.AdvMot.Acm_DaqDoLinkSWCmpObject(self.devHandle, clearVal, SWCmpChId)
+        self.errCde = self.AdvMot.Acm_DaqDoLinkSWCmpObject(self.devHandle, SWCmpChId, clearVal)
         if self.errCde != self.except_err.value:
             self._PrintResult(False, f'Clear SWCmp:{SWCmpChId.value}, Acm_DaqDoLinkSWCmpObject failed:{self.errCde:x}')
             self.assertEqual(self.except_err.value, self.errCde, f'Clear SWCmp:{SWCmpChId.value}, Acm_DaqDoLinkSWCmpObject failed:{self.errCde:x}')
-        self.errCde = self.AdvMot.Acm_DaqDoGetLinkedSWCmpObject(self.devHandle, byref(getLinkedDo), SWCmpChId)
+        self.errCde = self.AdvMot.Acm_DaqDoGetLinkedSWCmpObject(self.devHandle, SWCmpChId, byref(getLinkedDo))
         if self.errCde != self.except_err.value:
             self._PrintResult(False, f'SWCmpCh:{SWCmpChId.value} Acm_DaqDoGetLinkedSWCmpObject failed:{self.errCde:x}')
             self.assertEqual(self.except_err.value, self.errCde, f'SWCmpCh:{SWCmpChId.value} Acm_DaqDoGetLinkedSWCmpObject failed:{self.errCde:x}')
@@ -108,11 +108,11 @@ class SWCmp_TestCM1(unittest.TestCase):
 
     def _LinkedDo(self, SWCmpChId, DoChId):
         getLinkedDo = c_uint32(0)
-        self.errCde = self.AdvMot.Acm_DaqDoLinkSWCmpObject(self.devHandle, DoChId, SWCmpChId)
+        self.errCde = self.AdvMot.Acm_DaqDoLinkSWCmpObject(self.devHandle, SWCmpChId, DoChId)
         if self.errCde != self.except_err.value:
             self._PrintResult(False, f'Set SWCmpCh:{SWCmpChId.value} failed:{self.errCde:x}')
             self.assertEqual(self.except_err.value, self.errCde, f'Set SWCmpCh:{SWCmpChId.value} failed:{self.errCde:x}')
-        self.errCde = self.AdvMot.Acm_DaqDoGetLinkedSWCmpObject(self.devHandle, byref(getLinkedDo), SWCmpChId)
+        self.errCde = self.AdvMot.Acm_DaqDoGetLinkedSWCmpObject(self.devHandle, SWCmpChId, byref(getLinkedDo))
         if self.errCde != self.except_err.value:
             self._PrintResult(False, f'Get SWCmpCh:{SWCmpChId.value} failed:{self.errCde:x}')
             self.assertEqual(self.except_err.value, self.errCde, f'Get SWCmpCh:{SWCmpChId.value} failed:{self.errCde:x}')
@@ -186,13 +186,13 @@ class SWCmp_TestCM1(unittest.TestCase):
             self._PrintResult(True, f'Set {self.AdvPpt(ppt.value).name} value:{getVal.value} successed')
 
     def _SetProperty(self, ppt, setVal, id, hType):
-        getVal = c_uint32(0)
+        getVal = c_double(0)
         if hType == ADV_HANDLE_TYPE.HdType_Axis.value:
-            self.errCde = self.AdvMot.Acm_SetU32Property(self.axHandArr[id.value], ppt, setVal)
+            self.errCde = self.AdvMot.Acm_SetF64Property(self.axHandArr[id.value], ppt, setVal)
             if self.errCde != self.except_err.value:
                 self._PrintResult(False, f'Set {self.AdvPpt(ppt.value).name} failed:{self.errCde:x}')
                 self.assertEqual(self.except_err.value, self.errCde, f'Set {self.AdvPpt(ppt.value).name} failed:{self.errCde:x}')
-            self.errCde = self.AdvMot.Acm_GetU32Property(self.axHandArr[id.value], ppt, byref(getVal))
+            self.errCde = self.AdvMot.Acm_GetF64Property(self.axHandArr[id.value], ppt, byref(getVal))
             if self.errCde != self.except_err.value:
                 self._PrintResult(False, f'Get {self.AdvPpt(ppt.value).name} failed:{self.errCde:x}')
                 self.assertEqual(self.except_err.value, self.errCde, f'Get {self.AdvPpt(ppt.value).name} failed:{self.errCde:x}')
@@ -247,9 +247,9 @@ class SWCmp_TestCM1(unittest.TestCase):
             if self.except_err.value != self.errCde:
                 self._PrintResult(False, f'Get ax:{axid.value} state failed:{self.errCde:x}')
                 self.assertEqual(self.except_err.value, self.errCde, f'Get ax:{axid.value} state failed:{self.errCde:x}')
-            time.sleep(0.5)
+            time.sleep(0.1)
             self.errCde = self.AdvMot.Acm_AxGetState(self.axHandArr[axid.value], byref(getState))
-            time.sleep(0.5)
+            time.sleep(0.1)
             if posType.value == POSITION_TYPE.POSITION_CMD.value:
                 self.errCde = self.AdvMot.Acm_AxGetCmdPosition(self.axHandArr[axid.value], byref(getPos))
             elif posType.value == POSITION_TYPE.POSITION_ACT.value:
@@ -259,10 +259,10 @@ class SWCmp_TestCM1(unittest.TestCase):
     def _AxSetSpeed(self, axid):
         pptArr = [c_uint32(self.AdvPpt.PAR_AxVelLow.value), c_uint32(self.AdvPpt.PAR_AxVelHigh.value),
                   c_uint32(self.AdvPpt.PAR_AxAcc.value), c_uint32(self.AdvPpt.PAR_AxDec.value)]
-        setVal = [c_double(1000), c_double(4000), c_double(5000), c_double(1000)]
+        setVal = [c_double(1000), c_double(1000), c_double(1000), c_double(1000)]
         for i in range(len(pptArr)):
             print(f'{Fore.CYAN}[Set]{Fore.LIGHTBLUE_EX}[Ax:{axid.value} {self.AdvPpt(pptArr[i].value).name}:{setVal[i].value}]')
-            self._SetProperty(pptArr[i], setVal[i], axid, ADV_HANDLE_TYPE.HdType_Axis)
+            self._SetProperty(pptArr[i], setVal[i], axid, ADV_HANDLE_TYPE.HdType_Axis.value)
 
     def _AxPTP(self, axid, mode, targetPos, posType):
         getPos = c_double(-1)
@@ -446,11 +446,11 @@ class SWCmp_TestCM1(unittest.TestCase):
         else:
             ppt = [c_uint32(self.AdvPpt.CFG_CH_DaqSWCmpDoOutputMode.value), c_uint32(self.AdvPpt.CFG_CH_DaqSWCmpDeviation.value),
                 c_uint32(self.AdvPpt.CFG_CH_DaqSWCmpDoPulseWidth.value)]
-            pptSetVal = [c_double(COMPARE_OUTPUT_MODE.CMP_PULSE.value), c_double(500), c_double(0.5*1000*1000)]
+            pptSetVal = [c_double(COMPARE_OUTPUT_MODE.CMP_PULSE.value), c_double(500), c_double(1*1000*1000)]
             defaultPptVal = [c_double(COMPARE_OUTPUT_MODE.CMP_PULSE.value), c_double(0), c_double(0)]
         # SW Cmp behavior:  --- ON ---      --- Off ---
         setCmpTableArr = [c_double(5000)]
-        endPos = c_double(5200)
+        endPos = c_double(6000)
         axMoveMode = ABS_MODE.MOVE_REL.value
         for ax in range(global_run_swcmpch):
             swCmpCh = c_uint16(ax)
@@ -707,11 +707,11 @@ class SWCmp_TestCM1(unittest.TestCase):
         else:
             ppt = [c_uint32(self.AdvPpt.CFG_CH_DaqSWCmpDoOutputMode.value), c_uint32(self.AdvPpt.CFG_CH_DaqSWCmpDeviation.value),
                 c_uint32(self.AdvPpt.CFG_CH_DaqSWCmpDoPulseWidth.value)]
-            pptSetVal = [c_double(COMPARE_OUTPUT_MODE.CMP_PULSE.value), c_double(500), c_double(0.5*1000*1000)]
+            pptSetVal = [c_double(COMPARE_OUTPUT_MODE.CMP_PULSE.value), c_double(1000), c_double(0.5*1000*1000)]
             defaultPptVal = [c_double(COMPARE_OUTPUT_MODE.CMP_PULSE.value), c_double(0), c_double(0)]
-        endPos = c_double(31000)
+        endPos = c_double(40000)
         axMoveMode = ABS_MODE.MOVE_REL.value
-        startPos = c_double(5000)
+        startPos = c_double(1000)
         autoEndPos = c_double(30000)
         interval = c_double(5000)
         for ax in range(global_run_swcmpch):
@@ -767,7 +767,7 @@ class SWCmp_TestCM1(unittest.TestCase):
             # 設置軟體比較觸發自動觸發
             print(f'{Fore.CYAN}[Set]{Fore.LIGHTBLUE_EX}[Software compare data]')
             print(f'{Fore.LIGHTBLUE_EX}Start pos:{startPos.value}, interval:{interval.value}, end pos:{autoEndPos.value}')
-            self.errCde = self.AdvMot.Acm_AxSetCmpAuto(self.axHandArr[ax], startPos, endPos, interval)
+            self.errCde = self.AdvMot.Acm_AxSetCmpAuto(self.axHandArr[ax], startPos, autoEndPos, interval)
             if self.errCde != self.except_err.value:
                 self._PrintResult(False, f'Acm_AxSetCmpAuto failed:{self.errCde:x}')
                 self.assertEqual(self.except_err.value, self.errCde, f'Acm_AxSetCmpAuto failed:{self.errCde:x}')
@@ -1119,7 +1119,7 @@ if __name__ == '__main__':
     # run_ax_single_table_pulse = runner.run(SWCmpTestSingleAxisTablePulse())
     # run_ax_single_buffer_pulse = runner.run(SWCmpTestSingleAxisBufferPulse())
     # run_ax_single_auto_pulse = runner.run(SWCmpTestSingleAutoPulse())
-    run_axes_table_toggle = runner.run(SWCmpTest2AxesTableToggle())
+    # run_axes_table_toggle = runner.run(SWCmpTest2AxesTableToggle())
     run_axes_table_pulse = runner.run(SWCmpTest2AxesTablePulse())
-    run_axes_buffer_toggle = runner.run(SWCmpTest2AxesBufferToggle())
-    run_axes_buffer_pulse = runner.run(SWCmpTest2AxesBufferPulse())
+    # run_axes_buffer_toggle = runner.run(SWCmpTest2AxesBufferToggle())
+    # run_axes_buffer_pulse = runner.run(SWCmpTest2AxesBufferPulse())

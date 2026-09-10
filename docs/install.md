@@ -13,6 +13,9 @@ $ pip install AcmP
 
 * **Windows**
     * Shared driver: `ADVMOT.dll`
+        * For PCI-1245: `PCI1245.sys`, `PCI1245.dll`
+        * For PCI-1285: `PCI1285.sys`, `PCI1285.dll`
+        * For PCI-1203: `PCI1203.sys`, `PCI1203.dll`
         * For PCIE-1203M: `PCIE1203Ms.sys`, `PCIE1203M.dll`
         * For PCIE-1245: `PCIE1245s.sys`, `PCIE1245.dll`
         * For AMC Core: `AMC_Core.dll`
@@ -21,6 +24,9 @@ $ pip install AcmP
         ```powershell
         ls C:\Windows\ -Recurse -Filter *ADVMOT* -ErrorAction SilentlyContinue
         ls C:\Windows\ -Recurse -Filter *PCIE1203* -ErrorAction SilentlyContinue
+        ls C:\Windows\ -Recurse -Filter *PCI1203* -ErrorAction SilentlyContinue
+        ls C:\Windows\ -Recurse -Filter *PCI1245* -ErrorAction SilentlyContinue
+        ls C:\Windows\ -Recurse -Filter *PCI1285* -ErrorAction SilentlyContinue
         ```
 
 * **Linux**

@@ -1,6 +1,11 @@
 # Change log
 All notable changes to this project will be documented in this file.
 
+## [0.1.12] - 2026-09-10
+### Modified
+- Acm_DaqDoGetLinkedSWCmpObject, Acm_DaqDoLinkSWCmpObject change order of parameter
+- Modified README.md
+
 ## [0.1.11] - 2026-08-07
 ### Modified
 - AMC Data Log with DevID

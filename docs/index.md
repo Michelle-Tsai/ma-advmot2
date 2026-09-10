@@ -7,6 +7,9 @@ This documentation is for Advantech python SDK - AcmP
 
 ## Available Devices
 
+* [Advantech PCI-1245](https://www.advantech.com/zh-tw/products/e37baca6-8e5d-40f4-83c6-6bf379307dcf/pci-1245/mod_f9cb4a51-0b3b-46c4-a847-edaeafb279eb)
+* [Advantech PCI-1285](https://www.advantech.com/zh-tw/products/e37baca6-8e5d-40f4-83c6-6bf379307dcf/pci-1285/mod_28c57210-33f3-4118-b4c4-79e3c4df0168)
+* [Advantech PCI-1203](https://www.advantech.com/zh-tw/products/7d3c9775-8c30-4f65-83ec-755bee93b1d4/pci-1203/mod_8a5fd662-913c-4bb4-b7d4-a01cb12edcfb)
 * [Advantech PCIE-1203M](https://www.advantech.com/en/products/7d3c9775-8c30-4f65-83ec-755bee93b1d4/pcie-1203/mod_bb3ec42a-e9b1-4839-8b26-96551d894bb9)
 * [Advantech PCIE-1245](https://www.advantech.com/zh-tw/products/e37baca6-8e5d-40f4-83c6-6bf379307dcf/pcie-1245/mod_212c4df1-455d-4153-8293-e0a216690702)
 * AMC Core

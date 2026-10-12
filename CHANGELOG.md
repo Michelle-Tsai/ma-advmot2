@@ -1,6 +1,12 @@
 # Change log
 All notable changes to this project will be documented in this file.
 
+## [0.1.13] - 2026-10-12
+### Add
+- Add pyi for pylance
+### Sync
+- Sync 1.0 & 2.0 APIs
+
 ## [0.1.12] - 2026-09-10
 ### Modified
 - Acm_DaqDoGetLinkedSWCmpObject, Acm_DaqDoLinkSWCmpObject change order of parameter

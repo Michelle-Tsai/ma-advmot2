@@ -1830,4 +1830,3 @@ class AMCDataLogErrorCode(IntEnum):
     MemoryFailed = (ParameterError + 5)
     ThreadError = (ParameterError + 6)
     SharedMemoryError = (ParameterError + 7)
-    # BufferTooSmall = (ParameterError + 8)

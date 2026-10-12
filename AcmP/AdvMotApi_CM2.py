@@ -129,6 +129,16 @@ class MOTION_IO(Structure):
         ('RESETREADY', c_uint8)
     ]
 
+MAX_CONTEXT_LINES = 5
+MAX_LINE_STR_LEN = 64
+class VALIDATE_RESULT(Structure):
+    _fields_ = [
+        ('index', c_int),
+        ('context', (c_char*MAX_LINE_STR_LEN)*MAX_CONTEXT_LINES),
+        ('context_count', c_int),
+        ('context_error_line', c_int)
+    ]
+
 class PATH_STATUS(Structure):
     # _pack_ = 1
     _fields_ = [
@@ -239,6 +249,19 @@ class PATH_DO_PRM(Structure):
         ('DO_Output_Time', c_double)
     ]
 
+class TRIG_PRM(Structure):
+    _fields_ = [
+        ('TriggerType', c_uint32),
+        ('CompareMethod', c_int32),
+        ('TriggerValue', c_double),
+        ('Range', c_double),
+        ('TriggerAxis', c_uint32),
+        ('Index', c_uint32),
+        ('SubIndex', c_uint32),
+        ('RingNo', c_uint32),
+        ('SubDeviceID', c_uint32)
+    ]
+
 class PATH_DI_WAIT_MODE0(Structure):
     # _pack_ = 1
     _fields_ = [
@@ -333,6 +356,16 @@ class PATH_VAR_PRM(Structure):
         ('CmpMethod', c_uint32),
         ('CmpValue', c_double),
         ('ValueRange', c_double)
+    ]
+
+class MULTI_SDO_REQ(Structure):
+    _fields_ = [
+        ('SubDeviceID', c_uint16),
+        ('Index', c_uint16),
+        ('SubIndex', c_uint16),
+        ('Type', c_uint16),
+        ('Data', c_uint32),
+        ('ErrorCode', c_uint32)
     ]
 
 class PATH_OPERATOR_PRM(Structure):

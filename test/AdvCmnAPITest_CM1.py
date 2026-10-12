@@ -8,7 +8,6 @@ import threading
 from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI
 from AcmP.AdvMotApi_CM2 import *
 from AcmP.AdvMotDrv import *
-from AcmP.MotionInfo import *
 from AcmP.AdvMotPropID_CM2 import PropertyID
 from AcmP.AdvMotErr_CM2 import ErrorCode
 

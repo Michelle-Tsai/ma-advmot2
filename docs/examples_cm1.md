@@ -9,7 +9,6 @@ U32 Acm_GetAvailableDevs(DEVLIST *DeviceList, U32 MaxEntries, PU32 OutEntries)
 from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI
 from AcmP.AdvMotApi_CM2 import *
 from AcmP.AdvMotDrv import *
-from AcmP.MotionInfo import *
 from AcmP.AdvMotPropID_CM2 import PropertyID
 from AcmP.AdvMotErr_CM2 import ErrorCode
 
@@ -36,10 +35,20 @@ errCde = AdvMot.Acm_DevClose(byref(devHandle))
 BOOL Acm_GetErrorMessage(U32 ErrorCode, PI8 lpszError,  U32 nMaxError)
 ```
 
+#### Acm_GetNewErrorMessage
+```cpp
+U32 Acm_GetNewErrorMessage(U32 ErrorCode2, PI8 lpszError, U32 nMaxError)
+```
+
 #### Acm_DevOpen
 
 ```cpp
 U32 Acm_DevOpen(U32 DeviceNumber, PHAND DeviceHandle)
+```
+
+#### Acm_DevECATOpen
+```cpp
+U32 Acm_DevECATOpen(U32 DeviceNumber, U16 Ring0SlaveCount, U16 Ring1SlaveCount, U16 Timeout, PHAND DeviceHandle)
 ```
 
 #### Acm_DevReOpen
@@ -879,7 +888,6 @@ U32 Acm_AxOpen(HAND DeviceHandle, U16 PhyAxis, PHAND AxisHandle)
 from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI
 from AcmP.AdvMotApi_CM2 import *
 from AcmP.AdvMotDrv import *
-from AcmP.MotionInfo import *
 from AcmP.AdvMotPropID_CM2 import PropertyID
 from AcmP.AdvMotErr_CM2 import ErrorCode
 

@@ -78,7 +78,6 @@ U32 Acm_GetAvailableDevs(DEVLIST *DeviceList, U32 MaxEntries, PU32 OutEntries)
 from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI
 from AcmP.AdvMotApi_CM2 import *
 from AcmP.AdvMotDrv import *
-from AcmP.MotionInfo import *
 from AcmP.AdvMotPropID_CM2 import PropertyID
 from AcmP.AdvMotErr_CM2 import ErrorCode
 
@@ -948,7 +947,6 @@ U32 Acm_AxOpen(HAND DeviceHandle, U16 PhyAxis, PHAND AxisHandle)
 from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI
 from AcmP.AdvMotApi_CM2 import *
 from AcmP.AdvMotDrv import *
-from AcmP.MotionInfo import *
 from AcmP.AdvMotPropID_CM2 import PropertyID
 from AcmP.AdvMotErr_CM2 import ErrorCode
 
@@ -2628,19 +2626,15 @@ U32 Acm2_DevAllClose()
 from ctypes import *
 from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI_CM2 as AdvMot
 from AcmP.AdvMotApi_CM2 import DEVLIST
-from AcmP.MotionInfo import DEVICEINFO
 
 number_hex = '0x63000000'
 number_int = int(number_hex, 16)
 device_number = c_uint32(number_int)
 dev_list = (DEVLIST*10)()
-device_info = DEVICEINFO()
 out_ent = c_uint32(0)
 errCde = c_uint32(0)
 ## Get Available
 errCde = AdvMot.Acm2_GetAvailableDevs(dev_list, 10, byref(out_ent))
-## Then open
-errCde = AdvMot.Acm2_DevOpen(device_number, byref(device_info))
 ## Close device
 errCde = AdvMot.Acm2_DevAllClose()
 ```

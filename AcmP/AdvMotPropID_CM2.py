@@ -39,10 +39,12 @@ class PropertyID2(Enum):
     FT_CH_Proc_ID = 40000
     PAR_CH_Proc_ID = 41000
     CFG_CH_Proc_ID = 42000
+    # Device Feature
     FT_DevIpoTypeMap = (FT_Dev_ID + 0)
     FT_DevAxesCount = (FT_Dev_ID + 1)
     FT_DevFunctionMap = (FT_Dev_ID + 2)
     FT_DevOverflowCntr = (FT_Dev_ID + 3)
+    # Main device config
     FT_MDeviceCyclicCnt_R0 = (FT_Dev_ID + 4)
     FT_MDeviceCyclicCnt_R1 = (FT_Dev_ID + 5)
     FT_DevMDAQTypeMap = (FT_Dev_ID + 6)
@@ -62,6 +64,7 @@ class PropertyID2(Enum):
     FT_DevLatchMap = (FT_Dev_ID + 20)
     FT_DevExtDriveMap = (FT_Dev_ID + 21)
     FT_SubVersion = (FT_Dev_ID + 22)
+    # DAQ function
     FT_DaqDiMaxChan = (FT_Dev_ID + 50)
     FT_DaqDoMaxChan = (FT_Dev_ID + 51)
     FT_DaqAiRangeMap = (FT_Dev_ID + 52)
@@ -78,8 +81,13 @@ class PropertyID2(Enum):
     FT_DevHSDIFilterBasicTime = (FT_Dev_ID + 63)
     FT_DevHSDODelayBasicTime = (FT_Dev_ID + 64)
     FT_DevHSDOPWMBasicTime = (FT_Dev_ID + 65)
+    # Compare Channel
     FT_DevCmpMaxChan = (FT_Dev_ID + 70)
+    # Latch Channel
     FT_DevLtcMaxChan = (FT_Dev_ID + 80)
+    # Ring Channel
+    FT_DevRingMaxChan = (FT_Dev_ID + 90)
+    # Device Config
     CFG_DevBoardID = (CFG_Dev_ID + 0)
     CFG_DevRingID = (CFG_Dev_ID + 1)
     CFG_DevBaseAddress = (CFG_Dev_ID + 2)
@@ -111,6 +119,7 @@ class PropertyID2(Enum):
     CFG_DevLogMsg = (CFG_Dev_ID + 28)
     CFG_DevErrorReact = (CFG_Dev_ID + 29)
     CFG_DevCompensateTableEnable = (CFG_Dev_ID + 30)
+    # Main device config
     CFG_MDeviceBaudRate_R0 = (CFG_Dev_ID + 31)
     CFG_MDeviceBaudRate_R1 = (CFG_Dev_ID + 32)
     CFG_MDeviceComErrRate_R0 = (CFG_Dev_ID + 33)
@@ -121,6 +130,7 @@ class PropertyID2(Enum):
     CFG_MDeviceIoComContiErr_R1 = (CFG_Dev_ID + 38)
     CFG_MDeviceDataComContiErr_R0 = (CFG_Dev_ID + 39)
     CFG_MDeviceDataComContiErr_R1 = (CFG_Dev_ID + 40)
+    # DAQ function
     CFG_DaqAiChanType = (CFG_Dev_ID + 50)
     CFG_DaqAiRanges = (CFG_Dev_ID + 51)
     CFG_DaqMaiRanges = (CFG_Dev_ID + 52)
@@ -184,6 +194,7 @@ class PropertyID2(Enum):
     CFG_DevMotionCyclicWarnThreshold = (CFG_Dev_ID + 117)
     CFG_DevIoCyclicWarnThreshold = (CFG_Dev_ID + 118)
     CFG_DevSubSystemID = (CFG_Dev_ID + 119)
+    # Modbus server configs
     CFG_ModbusServerID = (CFG_Dev_ID + 120)
     CFG_Modbus485Baud = (CFG_Dev_ID + 121)
     CFG_Modbus485Parity = (CFG_Dev_ID + 122)
@@ -205,6 +216,7 @@ class PropertyID2(Enum):
     CFG_DevFsv = (CFG_Dev_ID + 138)
     CFG_DevFsvType = (CFG_Dev_ID + 139)
     CFG_DevFsvAssign = (CFG_Dev_ID + 140)
+    # Axis Feature
     FT_AxFunctionMap = (FT_Ax_ID + 0)
     FT_AxMaxVel = (FT_Ax_ID + 1)
     FT_AxMaxAcc = (FT_Ax_ID + 2)
@@ -250,6 +262,7 @@ class PropertyID2(Enum):
     FT_AxPVTMap = (FT_Ax_ID + 42)
     FT_AxCmdFilterMap = (FT_Ax_ID + 43)
     FT_AxParameterDecimalScale = (FT_Ax_ID + 44)
+    # Axis Parameter
     PAR_AxVelLow = (PAR_Ax_ID + 0)
     PAR_AxVelHigh = (PAR_Ax_ID + 1)
     PAR_AxAcc = (PAR_Ax_ID + 2)
@@ -257,7 +270,7 @@ class PropertyID2(Enum):
     PAR_AxJerk = (PAR_Ax_ID + 4)
     # // PAR_AxHomeExMode = (PAR_Ax_ID + 5)
     # // PAR_AxHomeExSwitchMode = (PAR_Ax_ID + 6)
-    # // PAR_AxHomeExCrossDistance     = (PAR_Ax_ID + 7)
+    # // PAR_AxHomeExCrossDistance = (PAR_Ax_ID + 7)
     PAR_AxHomeCrossDistance = (PAR_Ax_ID + 7)
     PAR_AxJerkL = (PAR_Ax_ID + 8)
     PAR_AxJogVelLow = (PAR_Ax_ID + 9)
@@ -275,8 +288,8 @@ class PropertyID2(Enum):
     PAR_AxDriverModelNumber = (PAR_Ax_ID + 37)
     PAR_AxDriverSerialNumber = (PAR_Ax_ID + 38)
     PAR_AxDriverActualTor = (PAR_Ax_ID + 39)
-    # // PAR_AxDriverVendorID         	  = (PAR_Ax_ID + 40)
-    # // PAR_AxDriverReserved2          	  = (PAR_Ax_ID + 41)
+    # // PAR_AxDriverVendorID = (PAR_Ax_ID + 40)
+    # // PAR_AxDriverReserved2 = (PAR_Ax_ID + 41)
     PAR_AxJerkFactor = (PAR_Ax_ID + 42)
     PAR_AxHomeJerkFactor = (PAR_Ax_ID + 43)
     PAR_AxTargetPosition = (PAR_Ax_ID + 44)	
@@ -302,6 +315,7 @@ class PropertyID2(Enum):
     PAR_AxMPGCounterValue = (PAR_Ax_ID + 64)
     PAR_AxPosTorqueLmt = (PAR_Ax_ID + 65)
     PAR_AxNegTorqueLmt = (PAR_Ax_ID + 66)
+    # Axis Config
     CFG_AxPPU = (CFG_Ax_ID + 50)
     CFG_AxPhyID = (CFG_Ax_ID + 51)
     CFG_AxMaxVel = (CFG_Ax_ID + 52)
@@ -528,6 +542,15 @@ class PropertyID2(Enum):
     CFG_AxFsvType = (CFG_Ax_ID + 275)
     CFG_AxFsvAssign = (CFG_Ax_ID + 276)
     CFG_AxHomeResetMode = (CFG_Ax_ID + 277)
+    CFG_AxZAxisCompensateSource = (CFG_Ax_ID + 278)
+    CFG_Ax2DZAxisCompensateTableEnable = (CFG_Ax_ID + 279)
+    CFG_AxCompensateCmdFilterMode = (CFG_Ax_ID + 280)
+    CFG_AxCompensateCmdFilterFactor = (CFG_Ax_ID + 281)
+    CFG_AxCompensatePluse = (CFG_Ax_ID + 282)
+    CFG_AxAddonAxid = (CFG_Ax_ID + 283)
+    CFG_AxRemoveAddonAxid = (CFG_Ax_ID + 284)
+    CFG_AxHomeModeTimeOut = (CFG_Ax_ID + 285)
+    # Daq DI
     CFG_CH_DaqDiInvertEnable = CFG_CH_DaqDI_ID + 0
     CFG_CH_DaqDiLowFilter = CFG_CH_DaqDI_ID + 1
     CFG_CH_DaqDiHighFilter = CFG_CH_DaqDI_ID + 2
@@ -539,6 +562,7 @@ class PropertyID2(Enum):
     CFG_CH_DaqDiAssignPDOIndex = CFG_CH_DaqDI_ID + 8
     CFG_CH_DaqDiAssignPDOSubIndex = CFG_CH_DaqDI_ID + 9
     CFG_CH_DaqDiFilterEnable = CFG_CH_DaqDI_ID + 10
+    # Daq DO
     CFG_CH_DaqDoFsvEnable = CFG_CH_DaqDO_ID + 0
     CFG_CH_DaqDoFuncSelect = CFG_CH_DaqDO_ID + 1
     CFG_CH_DaqDoOutputMode = CFG_CH_DaqDO_ID + 2
@@ -550,6 +574,7 @@ class PropertyID2(Enum):
     CFG_CH_DaqDoAssignPDOIndex = CFG_CH_DaqDO_ID + 8
     CFG_CH_DaqDoAssignPDOSubIndex = CFG_CH_DaqDO_ID + 9
     CFG_CH_DaqDoFsv = CFG_CH_DaqDO_ID + 10
+    # Daq AI
     CFG_CH_DaqAiRange = CFG_CH_DaqAI_ID + 0
     CFG_CH_DaqAiEnable = CFG_CH_DaqAI_ID + 1
     CFG_CH_DaqAiIntegrationTime = CFG_CH_DaqAI_ID + 2
@@ -565,9 +590,10 @@ class PropertyID2(Enum):
     CFG_CH_DaqAiBurnOutValue = CFG_CH_DaqAI_ID + 12
     CFG_CH_DaqAiBurnOutEnable = CFG_CH_DaqAI_ID + 13
     CFG_CH_DaqAiCJCOffset = CFG_CH_DaqAI_ID + 14
+    # Daq AO
     CFG_CH_DaqAoRange = CFG_CH_DaqAO_ID + 0	
     CFG_CH_DaqAoFsv = CFG_CH_DaqAO_ID + 1
-    CFG_CH_DaqAoStartup = CFG_CH_DaqAO_ID + 2
+    CFG_CH_DaqAoStartupValue = CFG_CH_DaqAO_ID + 2
     CFG_CH_DaqAoEnable = CFG_CH_DaqAO_ID + 3
     CFG_CH_DaqAoAssignSubDeviceID = CFG_CH_DaqAO_ID + 4
     CFG_CH_DaqAoAssignPDOIndex = CFG_CH_DaqAO_ID + 5
@@ -580,6 +606,7 @@ class PropertyID2(Enum):
     CFG_CH_DaqAoStartupEnable = CFG_CH_DaqAO_ID + 12
     CFG_CH_DaqAoSlewRateEnable = CFG_CH_DaqAO_ID + 13
     CFG_CH_DaqAoSlewRate = CFG_CH_DaqAO_ID + 14
+    # Comparator DO
     FT_CH_DaqCmpDoLinkObjectType = FT_CH_CmpDO_ID + 0
     PAR_CH_CmpDoDataSettingMode = PAR_CH_CmpDO_ID + 0
     PAR_CH_CmpDoNumberOfParts = PAR_CH_CmpDO_ID + 1
@@ -617,6 +644,7 @@ class PropertyID2(Enum):
     CFG_CH_DaqSWCmpDoPulseWidth = CFG_CH_CmpDO_ID + 44
     CFG_CH_DaqSWCmpDoDelay = CFG_CH_CmpDO_ID + 45
     CFG_CH_DaqSWCmpMethod = CFG_CH_CmpDO_ID + 46
+    # Latch DI
     FT_CH_DaqLtcLinkObjectType = FT_CH_LtcDI_ID + 0
     CFG_CH_DaqLtcLinkAxis = CFG_CH_LtcDI_ID + 0
     CFG_CH_DaqLtcAxisEnable = CFG_CH_LtcDI_ID + 1
@@ -630,10 +658,12 @@ class PropertyID2(Enum):
     CFG_CH_DaqLtcEnable = CFG_CH_LtcDI_ID + 8
     CFG_CH_DaqLtcMinDist = CFG_CH_LtcDI_ID + 9
     CFG_CH_DaqLtcPinSelect = CFG_CH_LtcDI_ID + 10
+    # Counter
     CFG_CH_DaqCntEnable = CFG_CH_DaqCnt_ID + 0
     CFG_CH_DaqCntInitValue = CFG_CH_DaqCnt_ID + 1
     CFG_CH_DaqCntMaxValue = CFG_CH_DaqCnt_ID + 2
     CFG_CH_DaqCntOverflowMode = CFG_CH_DaqCnt_ID + 3
+    # Pulse-in counter
     CFG_CH_DaqCntPulseInMode = CFG_CH_DaqCnt_ID + 10
     CFG_CH_DaqCntPulseInDirReverse = CFG_CH_DaqCnt_ID + 11
     CFG_CH_DaqCntPulseInMaxFreq = CFG_CH_DaqCnt_ID + 12
@@ -646,11 +676,14 @@ class PropertyID2(Enum):
     # //CFG_CH_DaqCntLatchEdge = CFG_CH_DaqCnt_ID + 31
     # //CFG_CH_DaqCntLatchLogic = CFG_CH_DaqCnt_ID + 32
     # //CFG_CH_DaqCntLatchMinDist = CFG_CH_DaqCnt_ID + 33
+    # External drive counter
     CFG_CH_ExtPulseNum = CFG_CH_ExtDrive_ID + 0
     CFG_CH_ExtPulseInMode = CFG_CH_ExtDrive_ID + 1
+    # Proc.
     CFG_CH_DevProcessMonitorEnable = CFG_CH_Proc_ID + 0
     CFG_CH_DevAresAutoRun = CFG_CH_Proc_ID + 1
     CFG_CH_DevAresRestart = CFG_CH_Proc_ID + 2
+    # Group Parameter
     PAR_GpVelLow = (PAR_Gp_ID + 0)
     PAR_GpVelHigh = (PAR_Gp_ID + 1)
     PAR_GpAcc = (PAR_Gp_ID + 2)
@@ -663,6 +696,7 @@ class PropertyID2(Enum):
     PAR_GpJerkFactor = (PAR_Gp_ID + 9)
     PAR_GpJerkValue = (PAR_Gp_ID + 10)
     PAR_GpDLValue = (PAR_Gp_ID + 11)
+    # Group Config
     CFG_GpMaxVel = (CFG_Gp_ID + 0)
     CFG_GpMaxAcc = (CFG_Gp_ID + 1)
     CFG_GpMaxDec = (CFG_Gp_ID + 2)
@@ -688,6 +722,7 @@ class PropertyID2(Enum):
     CFG_GpFsv = (CFG_Gp_ID + 25)
     CFG_GpFsvType = (CFG_Gp_ID + 26)
     CFG_GpFsvAssign = (CFG_Gp_ID + 27)
+    # Robot
     CFG_RbLengthArm1 = (CFG_RB_ID + 0)
     CFG_RbLengthArm2 = (CFG_RB_ID + 1)
     CFG_RbLengthArm3 = (CFG_RB_ID + 2)
@@ -718,6 +753,11 @@ class PropertyID(Enum):
     FT_Ax_ID = 301
     PAR_Ax_ID = 401
     CFG_Ax_ID = 501
+    FT_Gp_ID = 601
+    PAR_Gp_ID = 701
+    CFG_Gp_ID = 801
+    PAR_RB_ID = 1000
+    CFG_RB_ID = 1200
     FT_CH_ID = 1300
     PAR_CH_ID = 1400
     CFG_CH_ID = 1500
@@ -767,6 +807,8 @@ class PropertyID(Enum):
     FT_DevCmpMaxChan = (FT_Dev_ID + 70)
     # Latch channel
     FT_DevLtcMaxChan = (FT_Dev_ID + 80)
+    # Ring Channel
+    FT_DevRingMaxChan = (FT_Dev_ID + 90)
     # Device config
     CFG_DevBoardID = (CFG_Dev_ID + 0)
     CFG_DevRingID = (CFG_Dev_ID + 1)
@@ -1042,6 +1084,7 @@ class PropertyID(Enum):
     CFG_AxEzCount = (CFG_Ax_ID + 91)
     CFG_AxBacklashEnable = (CFG_Ax_ID + 92)
     CFG_AxBacklashPulses = (CFG_Ax_ID + 93)
+    CFG_AxBacklashDistance = (CFG_Ax_ID + 93)
     CFG_AxVibrationEnable = (CFG_Ax_ID + 94)
     CFG_AxVibrationReverseTime = (CFG_Ax_ID + 95)
     CFG_AxVibrationForwardTime = (CFG_Ax_ID + 96)
@@ -1230,6 +1273,14 @@ class PropertyID(Enum):
     CFG_AxFsvType = (CFG_Ax_ID + 275)
     CFG_AxFsvAssign = (CFG_Ax_ID + 276)
     CFG_AxHomeResetMode = (CFG_Ax_ID + 277)
+    CFG_AxZAxisCompensateSource = (CFG_Ax_ID + 278)
+    CFG_Ax2DZAxisCompensateTableEnable = (CFG_Ax_ID + 279)
+    CFG_AxCompensateCmdFilterMode = (CFG_Ax_ID + 280)
+    CFG_AxCompensateCmdFilterFactor = (CFG_Ax_ID + 281)
+    CFG_AxCompensatePluse = (CFG_Ax_ID + 282)
+    CFG_AxAddonAxid = (CFG_Ax_ID + 283)
+    CFG_AxRemoveAddonAxid = (CFG_Ax_ID + 284)
+    CFG_AxHomeModeTimeOut = (CFG_Ax_ID + 285)
     # Add for EtherCAT
     CFG_CH_DaqDiInvertEnable = CFG_CH_ID + 0
     CFG_CH_DaqDiLowFilter = CFG_CH_ID + 1
@@ -1307,35 +1358,40 @@ class PropertyID(Enum):
     CFG_CH_DaqLtcLogic = CFG_CH_ID + 72
     CFG_CH_DaqLtcFilter = CFG_CH_ID + 73
     CFG_CH_DaqLtcTrigSel = CFG_CH_ID + 74
+    CFG_CH_DaqLtcMinDist = CFG_CH_ID + 75
+    CFG_CH_DaqLtcEnable = CFG_CH_ID + 76
     CFG_CH_DevProcessMonitorEnable = CFG_CH_ID + 80
     CFG_CH_DevAresAutoRun = CFG_CH_ID + 81
     CFG_CH_DevAresRestart = CFG_CH_ID + 82
     CFG_CH_DaqDiEmgEnable = CFG_CH_ID + 83
     CFG_CH_DaqDiEmgLogic = CFG_CH_ID + 84
+    CFG_CH_DaqCmpDeviation = CFG_CH_ID + 85
     CFG_CH_DaqCmpTRIGAEndposiForce = CFG_CH_ID + 90
-    # Add for EtherCAT counter
     # Pulse-in counter
     CFG_CH_DaqCntPulseInMode = CFG_CH_ID + 100
-    CFG_CH_DaqCntPulseInLogic = CFG_CH_ID + 101
+    CFG_CH_DaqCntPulseInDirReverse = CFG_CH_ID + 101
     CFG_CH_DaqCntPulseInMaxFreq = CFG_CH_ID + 102
-    # comparator counter
+    CFG_CH_DaqCntPulseInLogic = CFG_CH_ID + 103
+    CFG_CH_DaqCntPulseInFilter = CFG_CH_ID + 104
+    # Comparator counter
     CFG_CH_DaqCntMultiCmpDeviation = CFG_CH_ID + 110
-    # latch counter
+    # Latch counter
     CFG_CH_DaqCntLatchEnable = CFG_CH_ID + 120
     CFG_CH_DaqCntLatchEdge = CFG_CH_ID + 121
     CFG_CH_DaqCntLatchLogic = CFG_CH_ID + 122
     CFG_CH_DaqCntLatchMinDist = CFG_CH_ID + 123
-    # external driver counter
+    CFG_CH_DaqCntLatchFilter = CFG_CH_ID + 124
+    CFG_CH_DaqCntLatchPinSelect = CFG_CH_ID + 125
+    # External drive counter
     CFG_CH_DaqCntExtPulseNum = CFG_CH_ID + 130
     CFG_CH_DaqCntExtPulseInMode = CFG_CH_ID + 131
-    # ADAM-5000 only configurations
+    # ADAM-5000-only configurations
     CFG_CH_DaqCntEnable = CFG_CH_ID + 200
     CFG_CH_DaqCntInitValue = CFG_CH_ID + 201
     CFG_CH_DaqCntMaxValue = CFG_CH_ID + 202
     CFG_CH_DaqCntOverflowMode = CFG_CH_ID + 203
     CFG_CH_DaqCntCmpEnable = CFG_CH_ID + 204
     CFG_CH_DaqCntCmpMethod = CFG_CH_ID + 205
-
     CFG_CH_DaqSWCmpDeviation = CFG_CH_ID + 210
     CFG_CH_DaqSWCmpDoEnable = CFG_CH_ID + 211
     CFG_CH_DaqSWCmpDoOutputMode = CFG_CH_ID + 212
@@ -1350,7 +1406,7 @@ class PropertyGpID(Enum):
     CFG_Gp_ID = 801
     PAR_RB_ID = 1000
     CFG_RB_ID = 1200
-    # Group parameter
+    # Group Parameter
     PAR_GpVelLow = (PAR_Gp_ID + 0)
     PAR_GpVelHigh = (PAR_Gp_ID + 1)
     PAR_GpAcc = (PAR_Gp_ID + 2)
@@ -1361,10 +1417,9 @@ class PropertyGpID(Enum):
     PAR_GpIsPathDec = (PAR_Gp_ID + 7)
     PAR_GpRefPlane = (PAR_Gp_ID + 8)
     PAR_GpJerkFactor = (PAR_Gp_ID + 9)
-    # Add for PCI-1240
     PAR_GpJerkValue = (PAR_Gp_ID + 10)
     PAR_GpDLValue = (PAR_Gp_ID + 11)
-    # Group config
+    # Group Config
     CFG_GpMaxVel = (CFG_Gp_ID + 0)
     CFG_GpMaxAcc = (CFG_Gp_ID + 1)
     CFG_GpMaxDec = (CFG_Gp_ID + 2)
@@ -1374,6 +1429,7 @@ class PropertyGpID(Enum):
     CFG_GpGroupID = (CFG_Gp_ID + 6)
     CFG_GpBldTime = (CFG_Gp_ID + 7)
     CFG_GpSFEnable = (CFG_Gp_ID + 8)
+    CFG_GpPathDoPauseReact = (CFG_Gp_ID + 9)
     CFG_GpVectorEnable = (CFG_Gp_ID + 13)
     CFG_GpSpdFwdVelEn = (CFG_Gp_ID + 14)
     CFG_GpCornerAngleFloor = (CFG_Gp_ID + 15)
@@ -1412,3 +1468,10 @@ class PropertyGpID(Enum):
     PAR_RbDec = (PAR_RB_ID + 3)
     PAR_RbJerk = (PAR_RB_ID + 4)
     PAR_RbRefPlane = (PAR_RB_ID + 5)
+
+class GM_PATTERN_ID(Enum):
+    GM_PATTERN_ID_RefPlane = 1
+    GM_PATTERN_ID_UNIT = 2
+    GM_PATTERN_ID_Coordinate = 3
+    GM_PATTERN_ID_PathControl = 4
+    GM_PATTERN_ID_DistanceMode = 5

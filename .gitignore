@@ -1,3 +1,5 @@
 ﻿AcmP.egg-*/
 dist/
 site/
+.vscode
+*/__pycache__

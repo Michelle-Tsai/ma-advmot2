@@ -13,17 +13,14 @@ from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI_CM2
 from AcmP.AdvCmnAPI_CM2 import AmcLogAPI
 from AcmP.AdvMotDrv import *
 from AcmP.AdvMotApi_CM2 import *
-from AcmP.MotionInfo import *
 from AcmP.AdvMotPropID_CM2 import PropertyID2
 from AcmP.AdvMotErr_CM2 import ErrorCode2
 from colorama import init, Fore, Style
-
 global_link_type = 0
 global_run_swcmpch = 1
 global_use_buffer_api = False
 global_run_do_mode = COMPARE_OUTPUT_MODE.CMP_TOGGLE
 init(autoreset=True, strip=False)
-
 class SWCmp_Test(unittest.TestCase):
     def setUp(self):
         self.maxEnt = 10

@@ -1,6 +1,15 @@
 from enum import Enum, IntEnum
 
-class ADV_OBJ_TYPE(Enum):
+
+class _CEnum(IntEnum):
+    """可直接傳給 ctypes 參數 / struct 欄位的 enum（IntEnum），
+    str() / f-string 仍維持 Enum 的顯示方式，例如 'POSITION_TYPE.POSITION_CMD'。
+    舊寫法 POSITION_TYPE.POSITION_CMD.value 依然可用。"""
+    __str__ = Enum.__str__
+    __format__ = Enum.__format__
+
+
+class ADV_OBJ_TYPE(_CEnum):
     ADV_DEVICE = 0
     ADV_AXIS = 1
     ADV_GROUP = 2
@@ -15,19 +24,19 @@ class ADV_OBJ_TYPE(Enum):
     ADV_MDAQ_CHANNEL = 11
     ADV_EXT_DRIVE_CHANNEL = 12
 
-class DO_ONOFF(Enum):
+class DO_ONOFF(_CEnum):
     DO_OFF = 0
     DO_ON = 1
 
-class ECAT_ID_TYPE(Enum):
+class ECAT_ID_TYPE(_CEnum):
     SUBDEVICE_ID = 0
     SUBDEVICE_POS = 1
 
-class ABS_MODE(Enum):
+class ABS_MODE(_CEnum):
     MOVE_REL = 0
     MOVE_ABS = 1
 
-class MOTION_DIRECTION(Enum):
+class MOTION_DIRECTION(_CEnum):
     DIRECTION_POS = 0
     DIRECTION_NEG = 1
 
@@ -87,44 +96,44 @@ class HOME_MODE(IntEnum):
     CIA402_MODE36 = (100 + 36)
     CIA402_MODE37 = (100 + 37)
 
-class AXIS_STATUS_TYPE(Enum):
+class AXIS_STATUS_TYPE(_CEnum):
     AXIS_STATE = 0
     MOTION_STATUS = 1
 
-class POSITION_TYPE(Enum):
+class POSITION_TYPE(_CEnum):
     POSITION_CMD = 0
     POSITION_ACT = 1
 
-class VELOCITY_TYPE(Enum):
+class VELOCITY_TYPE(_CEnum):
     VELOCITY_CMD = 0
     VELOCITY_ACT = 1
 
-class GP_LINE_MODE(Enum):
+class GP_LINE_MODE(_CEnum):
     LINE_REL = 0
     LINE_ABS = 1
     DIRECT_REL = 2
     DIRECT_ABS = 3
 
-class ARC_DIRECTION(Enum):
+class ARC_DIRECTION(_CEnum):
     ARC_CW = 0
     ARC_CCW = 1
 
-class PATH_MOVE_MODE_CM2(Enum):
+class PATH_MOVE_MODE_CM2(_CEnum):
     BUFFER_MODE = 0
     BLENDING_MODE = 1
     FLY_MODE = 2
     SPEED_FORWARD_MODE = 3
 
-class MOTION_STOP_MODE(Enum):
+class MOTION_STOP_MODE(_CEnum):
     MOTION_STOP_MODE_DEC = 0
     MOTION_STOP_MODE_EMG = 1
 
-class EXT_DRIVE_MODE(Enum):
+class EXT_DRIVE_MODE(_CEnum):
     JOG_STOP_MODE = 0
     JOG_MODE = 1
     MPG_MODE = 2
 
-class ADV_EVENT_SUBSCRIBE(Enum):
+class ADV_EVENT_SUBSCRIBE(_CEnum):
     EVENT_DISABLE = -1
     AXIS_MOTION_DONE = 0
     AXIS_COMPARE = 1
@@ -149,11 +158,11 @@ class ADV_EVENT_SUBSCRIBE(Enum):
     DEVICE_COMM_RECOVERY = 308
     DEVICE_IO_COMM_RECOVERY = 309
 
-class DAQ_DATA_TYPE(Enum):
+class DAQ_DATA_TYPE(_CEnum):
     RAW_DATA = 0
     SCALED_DATA = 1
 
-class AXIS_STATE(Enum):
+class AXIS_STATE(_CEnum):
     STA_AX_DISABLE = 0
     STA_AX_READY = 1
     STA_AX_STOPPING = 2
@@ -171,7 +180,7 @@ class AXIS_STATE(Enum):
     STA_AX_WAIT_VEL = 14
     STA_AX_EXT_JOG_READY = 15
 
-class GROUP_STATE(Enum):
+class GROUP_STATE(_CEnum):
     STA_GP_DISABLE = 0
     STA_GP_READY = 1
     STA_GP_STOPPING = 2
@@ -185,7 +194,7 @@ class GROUP_STATE(Enum):
     WIN_STA_GP_EXT_MPG = 10
     WIN_STA_GP_EXT_JOG_MOVING = 11
 
-class SUB_DEV_STATE(Enum):
+class SUB_DEV_STATE(_CEnum):
     # unknown state
     EC_SLAVE_STATE_UNKNOWN = 0x00
     # INIT state (no mailbox communication, no IO)
@@ -202,7 +211,7 @@ class SUB_DEV_STATE(Enum):
     # Acknowledge/Error bit (no actual state)
     EC_SLAVE_STATE_ACK_ERR = 0x10
 
-class ECAT_TYPE(Enum):
+class ECAT_TYPE(_CEnum):
     ECAT_TYPE_I8 = 1
     ECAT_TYPE_U8 = 2
     ECAT_TYPE_I16 = 3
@@ -216,7 +225,7 @@ class ECAT_TYPE(Enum):
     ECAT_TYPE_F32 = 11
     ECAT_TYPE_F64 = 12
 
-class MOTION_PATH_CMD(Enum):
+class MOTION_PATH_CMD(_CEnum):
     EndPath = 0
     Abs2DLine = 1
     Rel2DLine = 2
@@ -358,7 +367,7 @@ class MOTION_PATH_CMD(Enum):
     SlaveDoControl = 137
     SubDeviceDoControl = 137
 
-class PULSE_IN_MODE(Enum):
+class PULSE_IN_MODE(_CEnum):
     AB_1X = 0
     AB_2X = 1
     AB_4X = 2
@@ -366,11 +375,11 @@ class PULSE_IN_MODE(Enum):
     I_PULSE_DIR = 4
     I_PULSE_GATE = 5
 
-class PULSE_IN_LOGIC(Enum):
+class PULSE_IN_LOGIC(_CEnum):
     NO_INV_DIR = 0
     INV_DIR = 1
 
-class PULSE_IN_SOURCE(Enum):
+class PULSE_IN_SOURCE(_CEnum):
     EXTERNAL_FEEBACK = 0
     COMMAND_PULSE = 1
 
@@ -390,12 +399,12 @@ class PULSE_OUT_REVERSE(IntEnum):
     PULSE_OUT_PIN_NORMAL = 0x00
     PULSE_OUT_PIN_REVERSE = 0x01
 
-class DEVICE_ERROR_REACT(Enum):
+class DEVICE_ERROR_REACT(_CEnum):
     ERR_ACT_DISABLE = 0
     ERR_IMMED_STOP = 1
     ERR_DEC_TO_STOP = 2
 
-class MOVE_DIRECTION(Enum):
+class MOVE_DIRECTION(_CEnum):
     DIR_POSITIVE = 0
     DIR_NEGATIVE = 1
 
@@ -409,7 +418,7 @@ class DI_FILTER(IntEnum):
     MP_IN4_JOGP_FILTER = 0x0040
     MP_IN5_JOGN_FILTER = 0x0080
 
-class COMPARE_SOURCE(Enum):
+class COMPARE_SOURCE(_CEnum):
     SRC_COMMAND_POSITION = 0
     SRC_ACTUAL_POSITION = 1
     SRC_ORG_POSITION = 2
@@ -417,21 +426,21 @@ class COMPARE_SOURCE(Enum):
     SRC_LMTN_POSITION = 4
     SRC_EZ_POSITION = 5
 
-class COMPARE_OUTPUT_MODE(Enum):
+class COMPARE_OUTPUT_MODE(_CEnum):
     CMP_PULSE = 0
     CMP_TOGGLE = 1
     CMP_PWM = 2
     CMP_PWM_TOGGLE = 3
 
-class COMPARE_ENABLE(Enum):
+class COMPARE_ENABLE(_CEnum):
     CMP_DISABLE = 0
     CMP_ENABLE = 1
 
-class COMPARE_LOGIC(Enum):
+class COMPARE_LOGIC(_CEnum):
     CP_ACT_LOW = 0
     CP_ACT_HIGH = 1
 
-class COMPARE_PULSE_WIDTH(Enum):
+class COMPARE_PULSE_WIDTH(_CEnum):
     CP_5US = 0
     CP_10US = 1
     CP_20US = 2
@@ -441,13 +450,13 @@ class COMPARE_PULSE_WIDTH(Enum):
     CP_500US = 6
     CP_1000US = 7
 
-class COMPARE_METHOD(Enum):
+class COMPARE_METHOD(_CEnum):
     GREATER_POSITION = 0
     SMALLER_POSITION = 1
     DIRECTIONLESS = 2
     UNDEFINED = 3
 
-class LATCH_BUF_EDGE(Enum):
+class LATCH_BUF_EDGE(_CEnum):
     LATCH_BUF_RISING_EDGE = 0
     LATCH_BUF_FALLING_EDGE = 1
     LATCH_BUF_BOTH_EDGE = 2
@@ -480,12 +489,12 @@ class EVENT_TYPE(IntEnum):
     AX_COMPARE = 0x1E
     EVT_TIMEOUT = 0xFFFF
 
-class REFERENCE_PLANE(Enum):
+class REFERENCE_PLANE(_CEnum):
     XY_PLANE = 0
     YZ_PLANE = 1
     XZ_PLANE = 2
 
-class PWM_FREQ(Enum):
+class PWM_FREQ(_CEnum):
     MaxPWMFreq = 250000
     MinPWMFreq = 1
 
@@ -544,19 +553,19 @@ class AO_RANGE(IntEnum):
     CFG_DAQ_AO_0MA_TO_20MA = 0x00000010
     CFG_DAQ_AO_4MA_TO_20MA = 0x00000011
 
-class DEVICE_DO_MODE(Enum):
+class DEVICE_DO_MODE(_CEnum):
     DISABLE_DO = 0
     ENABLE_GENERAL_DO = 1
     ENABLE_COMPARATOR_DO = 2
 
-class UPDATE_STATE(Enum):
+class UPDATE_STATE(_CEnum):
     UPGRADE_RETRY = 1
     UPGRADE_DONE = 2
     UPGRADE_FILE_EXIST = 3
     UPGRADE_FAILED = 4
     UPGRADE_NEXT = 5
 
-class PORT_TYPE(Enum):
+class PORT_TYPE(_CEnum):
     PORT_DO = 0
     PORT_DI = 1
     PORT_AO = 2
@@ -565,32 +574,32 @@ class PORT_TYPE(Enum):
     PORT_INPUT = 5
     PORT_OUTPUT = 6
 
-class AX_BATCH_MODE(Enum):
+class AX_BATCH_MODE(_CEnum):
     AX_BATCH_MODE_DISABLE = 0
     AX_BATCH_MODE_ENABLE = 1
 
-class GP_PATH_MODE(Enum):
+class GP_PATH_MODE(_CEnum):
     PATH_MODE_DISABLE = 0
     PATH_BUFFER_MODE = 1
     PATH_BLENDING_MODE = 2
     PATH_FLY_MODE = 3
     PATH_SPEED_FORWARD_MODE = 4
 
-class PATH_MOVE_MODE(Enum):
+class PATH_MOVE_MODE(_CEnum):
     BLENDING_DISABLE = 0
     BLENDING_ENABLE = 1
 
-class PWM_CONTROL_MODE(Enum):
+class PWM_CONTROL_MODE(_CEnum):
     PWM_MODE_FIXED_FREQ = 0
     PWM_MODE_FIXED_WIDTH = 1
     PWM_MODE_FIXED_DUTY = 2
 
-class DAQ_TRANS_TYPE(Enum):
+class DAQ_TRANS_TYPE(_CEnum):
     TRANSTYPE_UNKNOWN = -1
     TRANSTYPE_UNSIGNED = 0
     TRANSTYPE_SIGNED = 1
 
-class ADV_PORT_TYPE(Enum):
+class ADV_PORT_TYPE(_CEnum):
     ADV_PORT_DO = 0
     ADV_PORT_DI = 1
     ADV_PORT_AO = 2
@@ -601,7 +610,7 @@ class ADV_PORT_TYPE(Enum):
     ADV_PORT_INPUT = 7
     ADV_PORT_OUTPUT = 8
 
-class ADV_HANDLE_TYPE(Enum):
+class ADV_HANDLE_TYPE(_CEnum):
     NodeHd_Type = 0xF0
     HdType_Dev = 0xF1
     HdType_Axis = 0xF2
@@ -612,16 +621,16 @@ class ADV_HANDLE_TYPE(Enum):
     HdType_Cyl = 0xF7
     HdType_LatchCH = 0xF8
 
-class AMC_API_LOG_DATA_TYPE(Enum):
+class AMC_API_LOG_DATA_TYPE(_CEnum):
     LogCommand = 0
     LogResponse = 1
 
-class AMC_API_LOG_STATE(Enum):
+class AMC_API_LOG_STATE(_CEnum):
     API_LOG_STOPPED = 0
     API_LOG_RUNNING = 1
     API_LOG_STOPPING = 2
 
-class AMC_DATA_LOG_STATE(Enum):
+class AMC_DATA_LOG_STATE(_CEnum):
     LOG_STATE_IDLE = 0
     LOG_STATE_WAITING_FOR_TRIGGER = 1
     LOG_STATE_RUNNING = 2
@@ -631,18 +640,18 @@ class AMC_DATA_LOG_STATE(Enum):
     LOG_STATE_BUFFER_OVERFLOW = 6
     LOG_STATE_ERROR = 7
 
-class AMC_DATA_LOG_SOURCE_TYPE(Enum):
+class AMC_DATA_LOG_SOURCE_TYPE(_CEnum):
     LOG_SOURCE_NONE = 0
     LOG_SOURCE_MOTION_AXIS = 1
     LOG_SOURCE_IO = 2
 
-class AMC_DATA_LOG_COMMAND(Enum):
+class AMC_DATA_LOG_COMMAND(_CEnum):
     CMD_NONE = 0
     CMD_START_LOG = 1
     CMD_STOP_LOG = 2
     CMD_RESET_LOG = 3
 
-class AMC_DATA_LOG_COMMAND_STATUE(Enum):
+class AMC_DATA_LOG_COMMAND_STATUE(_CEnum):
     CMD_STATE_IDLE = 0
     CMD_STATE_PENDGING = 1
     CMD_STATE_SUCCESS = 2

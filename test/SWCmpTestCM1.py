@@ -11,7 +11,6 @@ sys.stdout.reconfigure(encoding='utf-8')
 from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI
 from AcmP.AdvMotApi_CM2 import *
 from AcmP.AdvMotDrv import *
-from AcmP.MotionInfo import *
 from AcmP.AdvMotPropID_CM2 import PropertyID, PropertyGpID
 from AcmP.AdvMotErr_CM2 import ErrorCode
 from colorama import init, Fore

@@ -8,7 +8,7 @@ from AcmP.AdvMotDrv import *
 from AcmP.AdvMotApi_CM2 import *
 from AcmP.AdvMotPropID_CM2 import PropertyID2
 from AcmP.AdvMotErr_CM2 import ErrorCode2
-from ctypes import create_string_buffer
+from ctypes import *
 
 class AmcLogAPI_Test(unittest.TestCase):
     def setUp(self):

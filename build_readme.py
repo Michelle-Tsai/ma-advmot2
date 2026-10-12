@@ -5,7 +5,8 @@ DOC_FILES = [
     "docs/index.md",
     "docs/install.md",
     "docs/examples_cm1.md",
-    "docs/examples_cm2.md"
+    "docs/examples_cm2.md",
+    "docs/examples_log.md"
 ]
 
 OUTPUT_FILE = "README.md"

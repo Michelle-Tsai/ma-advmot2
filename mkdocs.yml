@@ -20,6 +20,7 @@ nav:
   - Installation: install.md
   - Examples(CM 1.0): examples_cm1.md
   - Examples(CM 2.0): examples_cm2.md
+  - Examples(Log): examples_log.md
 
 # 啟用 Markdown 擴充功能（程式碼高亮、排版等）
 markdown_extensions:

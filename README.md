@@ -104,10 +104,20 @@ errCde = AdvMot.Acm_DevClose(byref(devHandle))
 BOOL Acm_GetErrorMessage(U32 ErrorCode, PI8 lpszError,  U32 nMaxError)
 ```
 
+##### Acm_GetNewErrorMessage
+```cpp
+U32 Acm_GetNewErrorMessage(U32 ErrorCode2, PI8 lpszError, U32 nMaxError)
+```
+
 ##### Acm_DevOpen
 
 ```cpp
 U32 Acm_DevOpen(U32 DeviceNumber, PHAND DeviceHandle)
+```
+
+##### Acm_DevECATOpen
+```cpp
+U32 Acm_DevECATOpen(U32 DeviceNumber, U16 Ring0SlaveCount, U16 Ring1SlaveCount, U16 Timeout, PHAND DeviceHandle)
 ```
 
 ##### Acm_DevReOpen
@@ -289,6 +299,34 @@ U32 Acm_DevLoadConfig(HAND DeviceHandle, PI8 ConfigPath)
 U32 Acm_DevSlaveFwDownload(HAND DeviceHandle, U16 RingNo, U16 Position, PI8 FileName, PI8 FilePath, U32 Password)
 ```
 
+##### Acm_DevDownloadCAMTable
+```cpp
+U32 Acm_DevDownloadCAMTable (HAND DeviceHandle, U32 CamTableID, PF64 pMasterArray, PF64 pSlaveArray, PF64 pPointRangeArray, PF64 pPointSlopeArray, U32 ArrayElements)
+```
+
+##### Acm_DevConfigCAMTable
+```cpp
+U32 Acm_DevConfigCAMTable(HAND DeviceHandle, U32 CamTableID, U32 Periodic, U32 MasterAbsolute, U32 SlaveAbsolute)
+```
+
+##### Acm_DevReadMailBox
+
+```cpp
+U32 Acm_DevReadMailBox(HAND Handle, U16 par_id, U32 data_index, U32 data_count, PU32 DataBuffer)
+```
+
+##### Acm_DevReadMultiMailBox
+
+```cpp
+U32 Acm_DevReadMultiMailBox(HAND Handle, U8 object_id, PU16 par_id, PU32 DataBuffer, PU32 ErrorBuffer, U32 ArrayElements)
+```
+
+##### Acm_DevWriteMailBox
+
+```cpp
+U32 Acm_DevWriteMailBox(HAND Handle, U16 par_id, U32 data_index, U32 data_count, PU32 DataBuffer)
+```
+
 ##### Acm_DevWriteDPMData
 
 ```cpp
@@ -313,6 +351,22 @@ U32 Acm_WriteRingBuffer(HAND Handle, U32 cmd_id, U32 data_index, U32 data_cnt, P
 U32 Acm_ReadRingBuffer(HAND Handle, PU32 cmd_id, PU32 data_index, U32 data_cnt, PU32 dataBuffer)
 ```
 
+##### Acm_LoadENI
+
+```cpp
+U32 Acm_LoadENI(HAND DeviceHandle, PI8 FilePath)
+```
+
+##### Acm_DevConnect
+```cpp
+U32 Acm_DevConnect(HAND DeviceHandle, U16 RingNo)
+```
+
+##### Acm_DevDisConnect
+```cpp
+U32 Acm_DevDisConnect(HAND DeviceHandle, U16 RingNo)
+```
+
 ##### Acm_DevGetComStatus
 
 ```cpp
@@ -325,10 +379,52 @@ U32 Acm_DevGetComStatus(HAND DeviceHandle, U16 RingNo, PU16 pStatus)
 U32 Acm_DevGetErrorTable(HAND DeviceHandle, U16 RingNo, PU32 ErrorTableArray, PU32 ArrayElements)
 ```
 
+##### Acm_DevGetMasInfo
+
+```cpp
+U32 Acm_DevGetMasInfo(HAND DeviceHandle, PVOID pMasInfo, PU16 SlaveIPArray, PU32 SlvCnt)
+```
+
+##### Acm_DevGetMasStates
+
+```cpp
+U32 Acm_DevGetMasStates(HAND DeviceHandle, U16 RingNo, PU16 SlvCounters, PU16 SlvStates)
+```
+
+##### Acm_DevGetSlaveInfo
+
+```cpp
+U32 Acm_DevGetSlaveInfo(HAND DeviceHandle, U16 RingNo, U16 SlaveIP, PVOID pInfo)
+```
+
+##### Acm_DevGetModuleInfo
+
+```cpp
+U32 Acm_DevGetModuleInfo(HAND DeviceHandle, U16 RingNo, U16 SlaveIP, PU32 ModIDArray, PU32 ModCnt)
+```
+
 ##### Acm_DevGetIOInfo
 
 ```cpp
 U32 Acm_DevGetIOInfo(HAND DeviceHandle, U16 RingNo, U16 SlaveIP, U16 Slot, U8 DataType, PVOID pInfo)
+```
+
+##### Acm_DevGetSlaveDataCnt
+
+```cpp
+U32 Acm_DevGetSlaveDataCnt(HAND DeviceHandle, U16 RingNo, U16 SlaveIP, U8 DataType, PU32 DataCnt)
+```
+
+##### Acm_DevGetSlaveFwVersion
+
+```cpp
+U32 Acm_DevGetSlaveFwVersion(HAND DeviceHandle, U16 RingNo, U16 SlaveIP, OUT PI8 VersionInfo)
+```
+
+##### Acm_DevSetSlaveID
+
+```cpp
+U32 Acm_DevSetSlaveID(HAND DeviceHandle, U16 RingNo, U16 SlaveIP, U16 SlaveNewIP)
 ```
 
 ##### Acm_CheckVersion
@@ -421,10 +517,1559 @@ U32 Acm_MasGetSlaveInfo(HAND DeviceHandle, U16 RingNo, U16 SlaveIP, PU32 pInfo)
 U32 Acm_MasLogComStatus(HAND DeviceHandle, U16 RingNo)
 ```
 
-##### Acm_DevDownloadScanData
+##### Acm_AxOpen
 
 ```cpp
-U32 Acm_DevDownloadScanData(HAND DeviceHandle, PDEV_PRE_SCAN_DATA pScanDataArray, U32 ArrayLength)
+U32 Acm_AxOpen(HAND DeviceHandle, U16 PhyAxis, PHAND AxisHandle)
+```
+
+```python
+from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI
+from AcmP.AdvMotApi_CM2 import *
+from AcmP.AdvMotDrv import *
+from AcmP.AdvMotPropID_CM2 import PropertyID
+from AcmP.AdvMotErr_CM2 import ErrorCode
+
+## Initialize
+maxDevCnt = 10
+maxDevList = (DEVLIST * maxDevCnt)()
+maxDev = c_uint32(0)
+errCde = c_uint32(ErrorCode.SUCCESS.value)
+devHandle = c_void_p()
+axid = c_uint16(0)
+axHand = c_void_p()
+
+errCde = AdvMot.Acm_GetAvailableDevs(maxDevList, maxDevCnt, byref(maxDev))
+for i in range(maxDev.value):
+    print('{index:<5} 0x{devNum:x} {devName}'.format(index=i,
+    devNum=maxDevList[i].dwDeviceNum, devName=maxDevList[i].szDeviceName))
+## Open Device
+errCde = AdvMot.Acm_DevOpen(devNum.value, byref(devHandle))
+## Open Axis
+errCde = AdvMot.Acm_AxOpen(devHandle, axid, byref(axHand))
+## Close Axis
+errCde = AdvMot.Acm_AxClose(axHand)
+## Close Device
+errCde = AdvMot.Acm_DevClose(byref(devHandle))
+```
+
+##### Acm_AxOpenbyID
+
+```cpp
+U32 Acm_AxOpenbyID(HAND DeviceHandle, U16 SlaveID, U8 SubID, PHAND AxisHandle)
+```
+
+##### Acm_AxClose
+
+```cpp
+U32 Acm_AxClose(PHAND AxisHandle)
+```
+
+##### Acm_AxSetSvOn
+
+```cpp
+U32 Acm_AxSetSvOn(HAND AxisHandle, U32 OnOff)
+```
+
+##### Acm_AxResetAlm
+
+```cpp
+U32 Acm_AxResetAlm(HAND AxisHandle, U32 OnOff)
+```
+
+##### Acm_AxMoveRel
+
+```cpp
+U32 Acm_AxMoveRel(HAND AxisHandle, F64 Distance)
+```
+
+##### Acm_AxMoveRel_T
+
+```cpp
+U32 Acm_AxMoveRel_T(HAND AxisHandle, F64 Distance, F64 Time, F64 Factor)
+```
+
+##### Acm_AxMoveRel_SD
+
+```cpp
+U32 Acm_AxMoveRel_SD(HAND AxisHandle, F64 Distance, F64 SDDistance)
+```
+
+##### Acm_AxMoveRel_EC
+
+```cpp
+U32 Acm_AxMoveRel_EC(HAND AxisHandle, F64 Position)
+```
+
+##### Acm_AxMoveAbs
+
+```cpp
+U32 Acm_AxMoveAbs(HAND AxisHandle, F64 Position)
+```
+
+##### Acm_AxMoveAbs_T
+
+```cpp
+U32 Acm_AxMoveAbs_T(HAND AxisHandle, F64 Position, F64 Time, F64 Factor)
+```
+
+##### Acm_AxMoveAbs_SD
+
+```cpp
+U32 Acm_AxMoveAbs_SD(HAND AxisHandle, F64 Position, F64 SDPosition)
+```
+
+##### Acm_AxMoveAbs_EC
+
+```cpp
+U32 Acm_AxMoveAbs_EC(HAND AxisHandle, F64 Position)
+```
+
+##### Acm_AxMoveVel
+
+```cpp
+U32 Acm_AxMoveVel(HAND AxisHandle, U16 Direction)
+```
+
+##### Acm_AxStopDec
+
+```cpp
+U32 Acm_AxStopDec(HAND AxisHandle)
+```
+
+##### Acm_AxStopEmg
+
+```cpp
+U32 Acm_AxStopEmg(HAND AxisHandle)
+```
+
+##### Acm_AxMoveImpose
+
+```cpp
+U32 Acm_AxMoveImpose(HAND AxisHandle, F64 Position, F64 NewVel)
+```
+
+##### Acm_AxHome
+
+```cpp
+U32 Acm_AxHome(HAND AxisHandle, U32 HomeMode, U32 DirMode)
+```
+
+##### Acm_AxMoveHome
+
+```cpp
+U32 Acm_AxMoveHome(HAND AxisHandle, U32 HomeMode, U32 Dir)
+```
+
+##### Acm_AxMoveGantryHome
+
+```cpp
+U32 Acm_AxMoveGantryHome(HAND AxisHandle, U32 HomeMode, U32 Dir)
+```
+
+##### Acm_AxPauseMotion
+```cpp
+U32 Acm_AxPauseMotion(HAND AxisHandle)
+```
+
+##### Acm_AxResumeMotion
+```
+U32 Acm_AxResumeMotion(HAND AxisHandle)
+```
+
+##### Acm_AxChangeVel
+
+```cpp
+U32 Acm_AxChangeVel(HAND AxisHandle, F64 NewVel)
+```
+
+##### Acm_AxChangePos
+
+```cpp
+U32 Acm_AxChangePos(HAND AxisHandle, F64 NewPos)
+```
+
+##### Acm_AxChangeVelByRate
+
+```cpp
+U32 Acm_AxChangeVelByRate(HAND AxisHandle, U32 Rate)
+```
+
+##### Acm_AxResetError
+
+```cpp
+U32 Acm_AxResetError(HAND AxisHandle)
+```
+
+##### Acm_AxEnableTrig
+```cpp
+U32 Acm_AxEnableTrig(HAND AxisHandle, TRIG_PRM TrigPrm)
+```
+
+##### Acm_AxGetState
+
+```cpp
+U32 Acm_AxGetState(HAND AxisHandle, PU16 State)
+```
+
+##### Acm_AxGetMotionIO
+
+```cpp
+U32 Acm_AxGetMotionIO(HAND AxisHandle, PU32 Status)
+```
+
+##### Acm_AxGetMotionStatus
+
+```cpp
+U32 Acm_AxGetMotionStatus(HAND AxisHandle, PU32 Status)
+```
+
+##### Acm_AxGetCmdPosition
+
+```cpp
+U32 Acm_AxGetCmdPosition(HAND AxisHandle, PF64 Position)
+```
+
+##### Acm_AxGetMachPosition
+
+```cpp
+U32 Acm_AxGetMachPosition(HAND AxisHandle, PF64 Position)
+```
+
+##### Acm_AxSetCmdPosition
+
+```cpp
+U32 Acm_AxSetCmdPosition(HAND AxisHandle, F64 Position)
+```
+
+##### Acm_AxGetActualPosition
+
+```cpp
+U32 Acm_AxGetActualPosition(HAND AxisHandle, PF64 Position)
+```
+
+##### Acm_AxSetActualPosition
+
+```cpp
+U32 Acm_AxSetActualPosition(HAND AxisHandle, F64 Position)
+```
+
+##### Acm_AxGetCmdVelocity
+
+```cpp
+U32 Acm_AxGetCmdVelocity(HAND AxisHandle, PF64 Velocity)
+```
+
+##### Acm_AxGetActVelocity
+
+```cpp
+U32 Acm_AxGetActVelocity(HAND AxisHandle, PF64 Velocity)
+```
+
+##### Acm_AxGetLagCounter
+
+```cpp
+U32 Acm_AxGetLagCounter(HAND AxisHandle, PF64 Position)
+```
+
+##### Acm_AxSetExtDrive
+
+```cpp
+U32 Acm_AxSetExtDrive(HAND AxisHandle, U16 ExtDrvMode)
+```
+
+##### Acm_AxDoSetBit
+
+```cpp
+U32 Acm_AxDoSetBit(HAND AxisHandle, U16	DoChannel, U8 BitData)
+```
+
+##### Acm_AxDiSetBit
+
+```cpp
+U32 Acm_AxDiSetBit(HAND AxisHandle, U16	DiChannel, U8 BitData)
+```
+
+##### Acm_AxDoGetBit
+
+```cpp
+U32 Acm_AxDoGetBit(HAND AxisHandle, U16	DoChannel, PU8 BitData)
+```
+
+##### Acm_AxDiGetBit
+
+```cpp
+U32 Acm_AxDiGetBit(HAND AxisHandle, U16	DiChannel, PU8 BitData)
+```
+
+##### Acm_AxDoSetByte
+
+```cpp
+U32 Acm_AxDoSetByte(HAND AxisHandle, U16 DoPort, U8 ByteData)
+```
+
+##### Acm_AxDoGetByte
+
+```cpp
+U32 Acm_AxDoGetByte(HAND AxisHandle, U16 DoPort, PU8 ByteData)
+```
+
+##### Acm_AxDiGetByte
+
+```cpp
+U32 Acm_AxDiGetByte(HAND AxisHandle, U16 DiPort, PU8 ByteData)
+```
+
+##### Acm_AxSimStartSuspendVel
+
+```cpp
+U32 Acm_AxSimStartSuspendVel(HAND AxisHandle, U16 DriDir)
+```
+
+##### Acm_AxSimStartSuspendRel
+
+```cpp
+U32 Acm_AxSimStartSuspendRel(HAND AxisHandle,F64 Distance)
+```
+
+##### Acm_AxSimStartSuspendAbs
+
+```cpp
+U32 Acm_AxSimStartSuspendAbs(HAND AxisHandle,F64 EndPoint)
+```
+
+##### Acm_AxSimStart
+
+```cpp
+U32 Acm_AxSimStart(HAND AxisHandle)
+```
+
+##### Acm_AxSimStop
+
+```cpp
+U32 Acm_AxSimStop(HAND AxisHandle)
+```
+
+##### Acm_AxGetLatchData
+
+```cpp
+U32 Acm_AxGetLatchData(HAND AxisHandle, U32 PositionNo, PF64 Position)
+```
+
+##### Acm_AxStartSoftLatch
+
+```cpp
+U32 Acm_AxStartSoftLatch(U32 AxisHandle)
+```
+
+##### Acm_AxResetLatch
+
+```cpp
+U32 Acm_AxResetLatch(HAND AxisHandle)
+```
+
+##### Acm_AxGetLatchFlag
+
+```cpp
+U32 Acm_AxGetLatchFlag(HAND AxisHandle, PU8 LatchFlag)
+```
+
+##### Acm_AxTriggerLatch
+
+```cpp
+U32 Acm_AxTriggerLatch(HAND AxisHandle)
+```
+
+##### Acm_AxReadLatchBuffer
+
+```cpp
+U32 Acm_AxReadLatchBuffer(HAND AxisHandle, PF64 LatchDataArray, PU32 DataCnt)
+```
+
+##### Acm_AxResetLatchBuffer
+
+```cpp
+U32 Acm_AxResetLatchBuffer(HAND AxisHandle)
+```
+
+##### Acm_AxGetLatchBufferStatus
+
+```cpp
+U32 Acm_AxGetLatchBufferStatus(HAND AxisHandle, PU32 RemainCnt, PU32 SpaceCnt)
+```
+
+##### Acm_AxGearInAx
+
+```cpp
+U32 Acm_AxGearInAx(HAND AxisHandle, HAND MasAxisHandle, I32 Numerator, I32 Denominator, U32 RefSrc, U32 Absolute)
+```
+
+##### Acm_AxTangentInGp
+
+```cpp
+U32 Acm_AxTangentInGp(HAND AxisHandle, HAND MasGroupHandle, PI16 StartVectorArray, U8 Working_plane, I16 Direction)
+```
+
+##### Acm_AxGantryInAx
+
+```cpp
+U32	Acm_AxGantryInAx(HAND AxisHandle, HAND MasAxisHandle, I16 RefMasterSrc, I16 direction)
+```
+
+##### Acm_AxSyncOut
+```cpp
+U32 Acm_AxSyncOut(HAND FollowingAxisHandle)
+```
+
+##### Acm_AxPhaseAx
+
+```cpp
+U32 Acm_AxPhaseAx(HAND AxisHandle, F64 Acc, F64 Dec, F64 PhaseSpeed, F64 PhaseDist)
+```
+
+##### Acm_AxSetChannelCmpSetting
+
+```cpp
+U32 Acm_AxSetChannelCmpSetting(HAND AxisHandle, U16 ChannelID, U32 CmpSrc, U32 CmpMethod, U32 CmpPulseMode, U32 CmpPulseWidth)
+```
+
+##### Acm_AxGetChannelCmpSetting
+
+```cpp
+U32 Acm_AxGetChannelCmpSetting(HAND AxisHandle, U16 ChannelID, PU32 CmpSrc, PU32 CmpMethod, PU32 CmpPulseMode, PU32 CmpPulseWidth)
+```
+
+##### Acm_AxResetChannelCmp
+
+```cpp
+U32 Acm_AxResetChannelCmp(HAND AxisHandle, U16 ChannelID)
+```
+
+##### Acm_AxAddChannelCmpDatas
+
+```cpp
+U32 Acm_AxAddChannelCmpDatas(HAND AxisHandle, U16 ChannelID, PF64 TableArray, U32 ArrayCount)
+```
+
+##### Acm_AxGetChannelCmpData
+
+```cpp
+U32 Acm_AxGetChannelCmpData(HAND AxisHandle, U16 ChannelID, PF64 CmpData)
+```
+
+##### Acm_AxLoadChannelNextData
+
+```cpp
+U32 Acm_AxLoadChannelNextData(HAND AxisHandle, U16 ChannelID)
+```
+
+##### Acm_AxGetCmpbufferRemainCount
+
+```cpp
+U32 Acm_AxGetCmpbufferRemainCount(HAND AxisHandle, U16 ChannelID,PU32 DataCount)
+```
+
+##### Acm_AxSetCmpAuto
+
+```cpp
+U32 Acm_AxSetCmpAuto(HAND AxisHandle, F64 Start, F64 End, F64 Interval)
+```
+
+##### Acm_AxGetCmpData
+
+```cpp
+U32 Acm_AxGetCmpData(HAND AxisHandle, PF64 CmpPosition)
+```
+
+##### Acm_AxSetCmpData
+
+```cpp
+U32 Acm_AxSetCmpData(HAND AxisHandle, F64 CmpPosition)
+```
+
+##### Acm_AxSetCmpBufferData
+
+```cpp
+U32 Acm_AxSetCmpBufferData(HAND AxisHandle, PF64 TableArray, I32 ArrayCount)
+```
+
+##### Acm_AxResetCmpData
+
+```cpp
+U32 Acm_AxResetCmpData(HAND AxisHandle)
+```
+
+##### Acm_AxGetCmpBufferStatus
+
+```cpp
+U32 Acm_AxGetCmpBufferStatus(HAND AxisHandle, PU32 CurIndex, PU32 RemainCnt, PU32 SpaceCnt)
+```
+
+##### Acm_AxGetCmpCounter
+```cpp
+U32 Acm_AxGetCmpCounter(HAND AxisHandle, PU32 CmpCounter)
+```
+
+##### Acm_AxResetMPGOffset
+
+```cpp
+U32 Acm_AxResetMPGOffset(HAND AxisHandle)
+```
+
+##### Acm_AxMovePTPBufferRel
+
+```cpp
+U32 Acm_AxMovePTPBufferRel(HAND AxisHandle, U16 MotionMode, PF64 PositionArray, PF64 FLArray, PF64 FHArray, PU16 TSArray, U32 ArrayLength)
+```
+
+##### Acm_AxMovePTPBufferAbs
+
+```cpp
+U32 Acm_AxMovePTPBufferAbs(HAND AxisHandle, U16 MotionMode, PF64 PositionArray, PF64 FLArray, PF64 FHArray, PU16 TSArray, U32 ArrayLength)
+```
+
+##### Acm_AxEnableCompensation
+
+```cpp
+U32 Acm_AxEnableCompensation(HAND AxisHandle,F64 ZStartPos)
+```
+
+##### Acm_AxGetCompensationValue
+
+```cpp
+U32 Acm_AxGetCompensationValue(HAND AxisHandle, F64 XData, F64 YData, PF64 PCompensationValue)
+```
+
+##### Acm_AxSetCompenPara
+
+```cpp
+U32 Acm_AxSetCompenPara(HAND AxisHandle, HAND GroupHandle, U32 XScanDataCnt, U32 YScanDataCnt, U32 CompMode)
+```
+
+##### Acm_AxDIStartMoveAbs
+
+```cpp
+U32 Acm_AxDIStartMoveAbs(HAND AxisHandle, U16 DIChannel, F64 Position)
+```
+
+##### Acm_AxDIStartMoveRel
+
+```cpp
+U32 Acm_AxDIStartMoveRel(HAND AxisHandle, U16 DIChannel, F64 Distance)
+```
+
+##### Acm_AxDIStartMoveVel
+
+```cpp
+U32 Acm_AxDIStartMoveVel(HAND AxisHandle, U16 DIChannel, U16 Direction)
+```
+
+##### Acm_AxDisableDIStart
+
+```cpp
+U32 Acm_AxDisableDIStart(HAND AxisHandle)
+```
+
+##### Acm_AxSetPWMTableOnTime
+
+```cpp
+U32 Acm_AxSetPWMTableOnTime(HAND AxisHandle, PU32 TimeTableArray, I32 ArrayCount)
+```
+
+##### Acm_AxGetINxStopStatus
+
+```cpp
+U32 Acm_AxGetINxStopStatus(HAND AxisHandle,PU32 Stop_Flag)
+```
+
+##### Acm_AxResetINxStopStatus
+
+```cpp
+U32 Acm_AxResetINxStopStatus(HAND AxisHandle)
+```
+
+##### Acm_AxJog
+
+```cpp
+U32 Acm_AxJog(HAND AxisHandle,U16 Direction)
+```
+
+##### Acm_AxSetCmpDO
+
+```cpp
+U32 Acm_AxSetCmpDO(HAND AxisHandle,U32 OFForON)
+```
+
+##### Acm_AxDownloadTorqueTable
+
+```cpp
+U32 Acm_AxDownloadTorqueTable(HAND AxisHandle, PF64 PositionArray, PF64 TorqueArray, U32 ArrayElements)
+```
+
+##### Acm_AxLoadTorqueTableFile
+
+```cpp
+U32 Acm_AxLoadTorqueTableFile(HAND AxisHandle, PI8 FilePath, PU32 PointsCount)
+```
+
+##### Acm_AxResetPVTTable
+
+```cpp
+U32 Acm_AxResetPVTTable(HAND AxisHandle)
+```
+
+##### Acm_AxLoadPVTTable
+
+```cpp
+U32 Acm_AxLoadPVTTable(HAND AxisHandle, PF64 Position, PF64 Velocity, PF64 Time, U32 ArrayElements)
+```
+
+##### Acm_AxCalculatePVTTableContinuous
+
+```cpp
+U32 Acm_AxCalculatePVTTableContinuous(HAND AxisHandle, PF64 Position, PF64 Velocity, PF64 JerkFactor, PF64 MaxVel, PF64 Acc, PF64 Dec, U32 ArrayElements, PF64 Time)
+```
+
+##### Acm_AxLoadPVTTableContinuous
+
+```cpp
+U32 Acm_AxLoadPVTTableContinuous(HAND AxisHandle, PF64 Position, PF64 Velocity, PF64 JerkFactor, PF64 MaxVel, PF64 Acc, PF64 Dec, F64 TimeDelay, U32 ArrayElements)
+```
+
+##### Acm_AxStartPVT
+
+```cpp
+U32 Acm_AxStartPVT(HAND AxisHandle, U8 Repeat)
+```
+
+##### Acm_AxStartAllPVT
+
+```cpp
+U32 Acm_AxStartAllPVT(PHAND AxisHandle, U8 Repeat, U32 ArrayElements)
+```
+
+##### Acm_AxCheckPTBuffer
+
+```cpp
+U32 Acm_AxCheckPTBuffer(HAND AxisHandle, PU16 Freespace)
+```
+
+##### Acm_AxAddPTData
+
+```cpp
+U32 Acm_AxAddPTData(HAND AxisHandle, F64 Position, F64 Time)
+```
+
+##### Acm_AxStartPT
+
+```cpp
+U32 Acm_AxStartPT(HAND AxisHandle, U8 Repeat)
+```
+
+##### Acm_AxStartAllPT
+
+```cpp
+U32 Acm_AxStartAllPT(PHAND AxisHandle, U8 Repeat, U32 ArrayElements)
+```
+
+##### Acm_AxResetPTData
+
+```cpp
+U32 Acm_AxResetPTData(HAND AxisHandle)
+```
+
+##### Acm_AxAddPVAData
+
+```cpp
+U32 Acm_AxAddPVAData(HAND AxisHandle, F64 Position, PF64 VelArray, PF64 AccArray, PF64 DecArray, U32 ArrayElements)
+```
+
+##### Acm_GpOpen
+
+```cpp
+U32 Acm_GpOpen(HAND DevHandle,PHAND GpHandle,USHORT GpID)
+```
+
+##### Acm_GpGetAxesInGroup
+```cpp
+U32 Acm_GpGetAxesInGroup(HAND GroupHandle, PU32 AxisArray, PU32 ArrayElements)
+```
+
+##### Acm_GpGetState
+```cpp
+U32 Acm_GpGetState(HAND GroupHandle, PU16 State)
+```
+
+##### Acm_GpAddAxis
+
+```cpp
+U32 Acm_GpAddAxis(PHAND GpHandle,HAND AxHandle)
+```
+
+##### Acm_GpRemAxis
+
+```cpp
+U32 Acm_GpRemAxis(HAND GroupHandle, HAND AxisHandle)
+```
+
+##### Acm_GpClose
+
+```cpp
+U32 Acm_GpClose(PHAND GroupHandle)
+```
+
+##### Acm_GpGetState
+
+```cpp
+U32 Acm_GpGetState(HAND GroupHandle, PU16 State)
+```
+
+##### Acm_GpResetError
+
+```cpp
+U32 Acm_GpResetError(HAND GroupHandle)
+```
+
+##### Acm_GpIpoMask
+
+```cpp
+U32 Acm_GpIpoMask(HAND GroupHandle, HAND AxHandle, U32 Mask)
+```
+
+##### Acm_GpChangePos
+```cpp
+U32 Acm_GpChangePos(HAND GroupHandle, U32 Mode, PF64 DistanceArray, PU32 pArrayElements)
+```
+
+##### Acm_GpMoveLinearRel
+
+```cpp
+U32 Acm_GpMoveLinearRel(HAND GroupHandle, PF64 DistanceArray, PU32 ArrayElements)
+```
+
+##### Acm_GpMoveLinearAbs
+
+```cpp
+U32 Acm_GpMoveLinearAbs(HAND GroupHandle, PF64 PositionArray, PU32 ArrayElements)
+```
+
+##### Acm_GpMoveDirectRel
+
+```cpp
+U32 Acm_GpMoveDirectRel(HAND GroupHandle, PF64 DistanceArray, PU32 ArrayElements)
+```
+
+##### Acm_GpMoveDirectAbs
+
+```cpp
+U32 Acm_GpMoveDirectAbs(HAND GroupHandle, PF64 PositionArray, PU32 ArrayElements)
+```
+
+##### Acm_GpMoveCircularRel
+
+```cpp
+U32 Acm_GpMoveCircularRel(HAND GroupHandle, PF64 CenterArray, PF64 EndArray, PU32 ArrayElements, I16 Direction)
+```
+
+##### Acm_GpMoveCircularAbs
+
+```cpp
+U32 Acm_GpMoveCircularAbs(HAND GroupHandle, PF64 CenterArray, PF64 EndArray, PU32 ArrayElements, I16 Direction)
+```
+
+##### Acm_GpMoveCircularRel_3P
+
+```cpp
+U32 Acm_GpMoveCircularRel_3P(HAND GroupHandle, PF64	RefArray, PF64 EndArray, PU32 pArrayElements, I16 Direction)
+
+```
+
+##### Acm_GpMoveCircularAbs_3P
+
+```cpp
+U32 Acm_GpMoveCircularAbs_3P(HAND GroupHandle, PF64	RefArray, PF64 EndArray, PU32 pArrayElements, I16 Direction)
+```
+
+##### Acm_GpMoveCircularRel_Angle
+
+```cpp
+U32 Acm_GpMoveCircularRel_Angle(HAND GroupHandle, PF64 CenterArray, U16 Degree, PU32 ArrayElements, I16 Direction)
+
+```
+
+##### Acm_GpMoveCircularAbs_Angle
+
+```cpp
+U32 Acm_GpMoveCircularAbs_Angle(HAND GroupHandle, PF64 CenterArray, U16 Degree, PU32 ArrayElements, I16 Direction)
+```
+
+##### Acm_GpMoveArcRel_Angle
+
+```cpp
+U32 Acm_GpMoveArcRel_Angle(HAND GroupHandle, PF64 CenterArray, F64 Degree, PU32 ArrayElements, I16 Direction)
+```
+
+##### Acm_GpMoveArcAbs_Angle
+
+```cpp
+U32 Acm_GpMoveArcAbs_Angle(HAND GroupHandle, PF64 CenterArray, F64 Degree, PU32 ArrayElements, I16 Direction)
+```
+
+##### Acm_GpMove3DArcAbs
+
+```cpp
+U32 Acm_GpMove3DArcAbs(HAND GroupHandle, PF64 CenterArray, PF64 EndArray, PU32 pArrayElements, I16 Direction)
+```
+
+##### Acm_GpMove3DArcRel
+
+```cpp
+U32 Acm_GpMove3DArcRel(HAND GroupHandle, PF64 CenterArray, PF64 EndArray, PU32 pArrayElements, I16 Direction)
+
+```
+
+##### Acm_GpMove3DArcAbs_V
+
+```cpp
+U32 Acm_GpMove3DArcAbs_V(HAND GroupHandle, PF64 CenterArray, PF64 NVectorArray, F64 Degree, PU32 pArrayElements, I16 Direction)
+```
+
+##### Acm_GpMove3DArcRel_V
+
+```cpp
+U32 Acm_GpMove3DArcRel_V(HAND GroupHandle, PF64 CenterArray, PF64 NVectorArray, F64 Degree, PU32 pArrayElements, I16 Direction)
+```
+
+##### Acm_GpMove3DArcAbs_3P
+
+```cpp
+U32 Acm_GpMove3DArcAbs_3P(HAND GroupHandle, PF64 RefArray, PF64 EndArray, PU32 pArrayElements, I16 Direction, U16 cycCount)
+```
+
+##### Acm_GpMove3DArcRel_3P
+
+```cpp
+U32 Acm_GpMove3DArcRel_3P(HAND GroupHandle, PF64 RefArray, PF64 EndArray, PU32 pArrayElements, I16 Direction, U16 cycCount)
+```
+
+##### Acm_GpMove3DArcAbs_3PAngle
+
+```cpp
+U32 Acm_GpMove3DArcAbs_3PAngle(HAND GroupHandle, PF64 RefPoint_1, PF64 RefPoint_2, PU32 pArrayElements, I16 Direction, F64 Degree)
+```
+
+##### Acm_GpMove3DArcRel_3PAngle
+
+```cpp
+U32 Acm_GpMove3DArcRel_3PAngle(HAND GroupHandle, PF64 RefPoint_1, PF64 RefPoint_2, PU32 pArrayElements, I16 Direction, F64 Degree)
+
+```
+
+##### Acm_GpMoveHelixAbs
+
+```cpp
+U32 Acm_GpMoveHelixAbs(HAND GroupHandle, PF64 CenterArray, PF64 EndArray, PU32 pArrayElements, I16 Direction)
+```
+
+##### Acm_GpMoveHelixRel
+
+```cpp
+U32 Acm_GpMoveHelixRel(HAND GroupHandle, PF64 CenterArray, PF64 EndArray, PU32 pArrayElements, I16 Direction)
+```
+
+##### Acm_GpMoveSpiral
+```cpp
+U32 Acm_GpMoveSpiral(HAND GroupHandle, F64 fStartRadius, F64 fGrowthRate, F64 fStartAngle_deg, F64 fSweepAngle_deg, I16 Direction)
+```
+
+##### Acm_GpMoveSpiralCenRel
+```cpp
+U32 Acm_GpMoveSpiralCenRel(HAND GroupHandle, PF64 CenterArray, PU32 ArrayElements, F64 fPitch, F64 fSweepAngle_deg, I16 Direction)
+```
+
+##### Acm_GpMoveSpiralCenAbs
+```cpp
+U32 Acm_GpMoveSpiralCenAbs(HAND GroupHandle, PF64 CenterArray, PU32 ArrayElements, F64 fPitch, F64 fSweepAngle_deg, I16 Direction)
+```
+
+##### Acm_GpMoveSpiralByRange
+```cpp
+U32 Acm_GpMoveSpiralByRange(HAND GroupHandle, F64 fRstart, F64 fRend, F64 fTurns)
+```
+
+##### Acm_GpMoveSpiralCenPitchRel
+```cpp
+U32 Acm_GpMoveSpiralCenPitchRel(HAND GroupHandle, PF64 CenterArray, PF64 RefEndArray, PU32 ArrayElements, F64 fPitch, I16 Direction)
+```
+
+##### Acm_GpMoveSpiralCenPitchAbs
+```cpp
+U32 Acm_GpMoveSpiralCenPitchAbs(HAND GroupHandle, PF64 CenterArray, PF64 RefEndArray, PU32 ArrayElements, F64 fPitch, I16 Direction)
+```
+
+##### Acm_GpMoveSpiralCenEndPitchRel
+```cpp
+U32 Acm_GpMoveSpiralCenEndPitchRel(HAND GroupHandle, PF64 CenterArray, PF64 EndArray, PU32 ArrayElements, F64 fPitch, I16 Direction)
+```
+
+##### Acm_GpMoveSpiralCenEndPitchAbs
+```cpp
+U32 Acm_GpMoveSpiralCenEndPitchAbs(HAND GroupHandle, PF64 CenterArray, PF64 EndArray, PU32 ArrayElements, F64 fPitch, I16 Direction)
+```
+
+##### Acm_GpMoveHelixAbs_3P
+
+```cpp
+U32 Acm_GpMoveHelixAbs_3P(HAND GroupHandle, PF64 RefArray, PF64 EndArray, PU32 pArrayElements, I16 Direction)
+```
+
+##### Acm_GpMove3DArcRel_3PAngle
+
+```cpp
+U32 Acm_GpMove3DArcRel_3PAngle(HAND GroupHandle, PF64 RefPoint_1, PF64 RefPoint_2, PU32 pArrayElements, I16 Direction, F64 Degree)
+```
+
+##### Acm_GpMoveHelixAbs
+
+```cpp
+U32 Acm_GpMoveHelixAbs(HAND GroupHandle, PF64 CenterArray, PF64 EndArray, PU32 pArrayElements, I16 Direction)
+```
+
+##### Acm_GpMoveHelixRel
+
+```cpp
+U32 Acm_GpMoveHelixRel(HAND GroupHandle, PF64 CenterArray, PF64 EndArray, PU32 pArrayElements, I16 Direction)
+```
+
+##### Acm_GpMoveHelixAbs_3P
+
+```cpp
+U32 Acm_GpMoveHelixAbs_3P(HAND GroupHandle, PF64 RefArray, PF64 EndArray, PU32 pArrayElements, I16 Direction)
+```
+
+##### Acm_GpMoveHelixRel_3P
+
+```cpp
+U32 Acm_GpMoveHelixRel_3P(HAND GroupHandle, PF64 RefArray, PF64 EndArray, PU32 pArrayElements, I16 Direction)
+```
+
+##### Acm_GpMoveHelixRel_Angle
+
+```cpp
+U32 Acm_GpMoveHelixRel_Angle(HAND GroupHandle, PF64	CenterArray, PF64 EndArray, PU32 pArrayElements, I16 Direction)
+```
+
+##### Acm_GpMoveHelixAbs_Angle
+
+```cpp
+U32 Acm_GpMoveHelixAbs_Angle(HAND GroupHandle, PF64	CenterArray, PF64 EndArray, PU32 pArrayElements, I16 Direction)
+```
+
+##### Acm_GpMoveEllipticalRel
+
+```cpp
+U32 Acm_GpMoveEllipticalRel(HAND GroupHandle, PF64 CenterArray, PF64 EndArray, PU32 pArrayElements, I16 Direction, F64 RatioSemiAxes)
+```
+
+##### Acm_GpMoveEllipticalAbs
+
+```cpp
+U32 Acm_GpMoveEllipticalAbs(HAND GroupHandle, PF64 CenterArray, PF64 EndArray, PU32 pArrayElements, I16 Direction, F64 RatioSemiAxes)
+```
+
+##### Acm_GpLoadPath
+
+```cpp
+U32 Acm_GpLoadPath(HAND GroupHandle, PI8 FilePath, PHAND PathHandle, PU32 pTotalCount)
+```
+
+##### Acm_GpUnloadPath
+
+```cpp
+U32 Acm_GpUnloadPath(HAND GroupHandle, PHAND PathHandle)
+```
+
+##### Acm_GpMovePath
+
+```cpp
+U32 Acm_GpMovePath(HAND GroupHandle, HAND PathHandle)
+```
+
+##### Acm_GpMoveAllPath
+
+```cpp
+U32 Acm_GpMoveAllPath(PHAND GroupHandle, U32 ArrayElements)
+```
+
+##### Acm_GpAddPath
+
+```cpp
+U32 Acm_GpAddPath(HAND GroupHandle, U16 MoveCmd, U16 MoveMode, F64 FH, F64 FL, PF64 EndPoint_DataArray, PF64 CenPoint_DataArray, PU32 ArrayElements)
+```
+
+##### Acm_GpLookAheadPath
+
+```cpp
+U32 Acm_GpLookAheadPath(HAND GroupHandle, U16 BufferSize, PI8 OutputFile)
+```
+
+##### Acm_GpResetPath
+
+```cpp
+U32 Acm_GpResetPath (PHAND GroupHandle)
+```
+
+##### Acm_GpGetPathStatus
+
+```cpp
+U32 Acm_GpGetPathStatus(HAND GroupHandle, PU32 pCurIndex, PU32 pCurCmdFunc, PU32 pRemainCount, PU32 pFreeSpaceCount)
+```
+
+##### Acm_GpMoveSelPath
+
+```cpp
+U32 Acm_GpMoveSelPath(HAND GroupHandle, HAND PathHandle, U32 StartIndex, U32 EndIndex, U8 Repeat)
+```
+
+##### Acm_GpGetPathIndexStatus
+
+```cpp
+U32 Acm_GpGetPathIndexStatus(HAND GroupHandle, U32 Index, PU16 CmdFunc, PU16 MoveMode, PF64 FH, PF64 FL, PF64 EndPoint_DataArray, PF64 CenPoint_DataArray, PU32 ArrayElements);
+```
+
+##### Acm_GpDelay
+```cpp
+U32 Acm_GpDelay(HAND GroupHandle, U32 DelayTime)
+```
+
+##### Acm_GpPathDO
+```cpp
+U32 Acm_GpPathDO(HAND GroupHandle, PATH_DO_PRM PathDOPrm)
+```
+
+##### Acm_GpPathWaitDI
+```cpp
+U32 Acm_GpPathWaitDI(HAND GroupHandle, PATH_DI_WAIT_PRM DIWaitPrm)
+```
+
+##### Acm_GpPathWaitForAxis
+```cpp
+U32 Acm_GpPathWaitForAxis(HAND GroupHandle, PATH_AX_WAIT_PRM AxWaitPrm)
+```
+
+##### Acm_GpPathDIConditional
+```cpp
+U32 Acm_GpPathDIConditional(HAND GroupHandle, U16 MoveCmd, PATH_DI_WAIT_PRM PathDIPrm)
+```
+
+##### Acm_GpPathDOConditional
+```cpp
+U32 Acm_GpPathDOConditional(HAND GroupHandle, U16 MoveCmd, PATH_DO_PRM PathDOPrm)
+```
+
+##### Acm_GpPathAxisConditional
+```cpp
+U32 Acm_GpPathAxisConditional(HAND GroupHandle, U16 MoveCmd, PATH_AX_WAIT_PRM AxPrm)
+```
+
+##### Acm_GpPathVarConditional
+```cpp
+U32 Acm_GpPathVarConditional(HAND GroupHandle, U16 MoveCmd, PATH_VAR_PRM VarPrm)
+```
+
+##### Acm_GpPathConditional
+```cpp
+U32 Acm_GpPathConditional(HAND GroupHandle, U16 MoveCmd)
+```
+
+##### Acm_GpPathOperator
+```cpp
+U32 Acm_GpPathOperator(HAND GroupHandle, PATH_OPERATOR_PRM OperatorPrm)
+```
+
+##### Acm_GpPathStartRecordBuffer
+```cpp
+U32 Acm_GpPathStartRecordBuffer(HAND GroupHandle)
+```
+
+##### Acm_GpPathEndRecordBuffer
+```cpp
+U32 Acm_GpPathEndRecordBuffer(HAND GroupHandle, VALIDATE_RESULT* OutResult)
+```
+
+##### Acm_GpAddBSplinePath
+
+```cpp
+U32 Acm_GpAddBSplinePath(HAND GroupHandle, F64 FH, F64 FL, F64 *CtrlP0List, F64 *CtrlP1List, U32 CtrlPCount, F64 *NodeList, U32 NodeCount, U32 Degree, U32 CutPointCount)
+```
+
+##### Acm_GpAddCSplinePath
+
+```cpp
+U32 Acm_GpAddCSplinePath(HAND GroupHandle, F64 FH, F64 FL, F64 *CtrlP0List, F64 *CtrlP1List, F64 *Tightness, U32 CtrlPCount, U32 CutPointCount)
+
+```
+
+##### Acm_GpResumeMotion
+
+```cpp
+U32 Acm_GpResumeMotion(HAND GroupHandle)
+```
+
+##### Acm_GpPauseMotion
+
+```cpp
+U32 Acm_GpPauseMotion(HAND GroupHandle)
+```
+
+##### Acm_GpStopDec
+
+```cpp
+U32 Acm_GpStopDec(HAND GroupHandle)
+```
+
+##### Acm_GpStopEmg
+
+```cpp
+U32 Acm_GpStopEmg(HAND GroupHandle)
+```
+
+##### Acm_GpChangeVel
+
+```cpp
+U32 Acm_GpChangeVel(HAND GroupHandle, F64 NewVelocity)
+```
+
+##### Acm_GpChangeVelByRate
+
+```cpp
+U32 Acm_GpChangeVelByRate(HAND GroupHandle, U32 Rate)
+```
+
+##### Acm_GpGetCmdVel
+
+```cpp
+U32 Acm_GpGetCmdVel(HAND GroupHandle, PF64 CmdVel)
+```
+
+##### Acm_GpGetINxStopStatus
+
+```cpp
+U32 Acm_GpGetINxStopStatus(HAND GroupHandle,PU32 Stop_Flag)
+```
+
+##### Acm_GpResetINxStopStatus
+
+```cpp
+U32 Acm_GpResetINxStopStatus(HAND GroupHandle)
+```
+
+##### Acm_DaqDiGetByte
+
+```cpp
+U32 Acm_DaqDiGetByte(HAND DeviceHandle, U16 DiPort, PU8 ByteData)
+```
+
+##### Acm_DaqDiGetBit
+
+```cpp
+U32 Acm_DaqDiGetBit(HAND DeviceHandle, U16 DiChannel, PU8 BitData)
+```
+
+##### Acm_DaqDoSetByte
+
+```cpp
+U32 Acm_DaqDoSetByte(HAND DeviceHandle, U16 DoPort, U8	ByteData)
+```
+
+##### Acm_DaqDoSetBit
+
+```cpp
+U32 Acm_DaqDoSetBit(HAND DeviceHandle, U16 DoChannel, U8 BitData)
+```
+
+##### Acm_GpGetPausePosition
+
+```cpp
+U32 Acm_GpGetPausePosition(HAND GroupHandle, PF64 RefPausePosition)
+```
+
+##### Acm_GpSetRawData
+
+```cpp
+U32 Acm_GpSetRawData(HAND GroupHandle, U8 index, F64 RawData)
+```
+
+##### Acm_GpGetRawData
+
+```cpp
+U32 Acm_GpGetRawData(HAND GroupHandle, U8 index, PF64 RawData)
+```
+
+##### Acm_DaqDiSetBit
+
+```cpp
+U32 Acm_DaqDiSetBit(HAND DeviceHandle, U16 DiChannel, U8 BitData)
+```
+
+##### Acm_DaqDoGetByte
+
+```cpp
+U32 Acm_DaqDoGetByte(HAND DeviceHandle, U16 DoPort, PU8 ByteData)
+```
+
+##### Acm_DaqDoGetBit
+
+```cpp
+U32 Acm_DaqDoGetBit(HAND DeviceHandle, U16 DoChannel, PU8 BitData)
+```
+
+##### Acm_DaqDiGetBytes
+
+```cpp
+U32 Acm_DaqDiGetBytes(HAND DeviceHandle, U16 StartPort, U16 NumPort, PU8 ByteDataArray)
+```
+
+##### Acm_DaqDoSetBytes
+
+```cpp
+U32 Acm_DaqDoSetBytes(HAND DeviceHandle, U16 StartPort, U16 NumPort, PU8 ByteDataArray)
+```
+
+##### Acm_DaqDoGetBytes
+
+```cpp
+U32 Acm_DaqDoGetBytes(HAND DeviceHandle, U16 StartPort, U16 NumPort, PU8 ByteDataArray)
+```
+
+##### Acm_DaqAiGetRawData
+
+```cpp
+U32 Acm_DaqAiGetRawData(HAND DeviceHandle, U16 AiChannel, PU16 AiData)
+```
+
+##### Acm_DaqAiGetEngData
+
+```cpp
+U32 Acm_DaqAiGetEngData(HAND DeviceHandle, U16 AiChannel, PF32 AiData)
+```
+
+##### Acm_DaqAiGetVoltData
+
+```cpp
+U32 Acm_DaqAiGetVoltData(HAND DeviceHandle, U16	AiChannel, PF32	AiData)
+```
+
+##### Acm_DaqAiGetCurrData
+
+```cpp
+U32 Acm_DaqAiGetCurrData(HAND DeviceHandle, U16	AiChannel, PF32	AiData)
+```
+
+##### Acm_DaqAiZeroCalibration
+
+```cpp
+U32 Acm_DaqAiZeroCalibration(HAND DeviceHandle, U16	AiChannel)
+```
+
+##### Acm_DaqAiSpanCalibration
+
+```cpp
+U32 Acm_DaqAiSpanCalibration(HAND DeviceHandle, U16	AiChannel)
+```
+
+##### Acm_DaqAiGetChannelStatus
+
+```cpp
+U32 Acm_DaqAiGetChannelStatus(HAND DeviceHandle, U16 AiChannel, PU32 ChanStatus)
+```
+
+##### Acm_DaqAoSetRawData
+
+```cpp
+U32 Acm_DaqAoSetRawData(HAND DeviceHandle, U16 AoChannel, U16 AoData)
+```
+
+##### Acm_DaqAoSetEngData
+
+```cpp
+U32 Acm_DaqAoSetEngData(HAND DeviceHandle, U16 AoChannel, F32 AoData)
+```
+
+##### Acm_DaqAoSetVoltData
+
+```cpp
+U32 Acm_DaqAoSetVoltData(HAND DeviceHandle, U16	AoChannel, F32 AoData)
+```
+
+##### Acm_DaqAoSetCurrData
+
+```cpp
+U32 Acm_DaqAoSetCurrData(HAND DeviceHandle, U16	AoChannel, F32 AoData)
+```
+
+##### Acm_DaqAoGetRawData
+
+```cpp
+U32 Acm_DaqAoGetRawData(HAND DeviceHandle, U16 AoChannel, PU16 AoData)
+```
+
+##### Acm_DaqAoGetEngData
+
+```cpp
+U32 Acm_DaqAoGetEngData(HAND DeviceHandle, U16 AoChannel, PF32 AoData)
+```
+
+##### Acm_DaqAoGetVoltData
+
+```cpp
+U32 Acm_DaqAoGetVoltData(HAND DeviceHandle, U16	AoChannel, PF32 AoData)
+```
+
+##### Acm_DaqAoGetCurrData
+
+```cpp
+U32 Acm_DaqAoGetCurrData(HAND DeviceHandle, U16	AoChannel, PF32 AoData)
+```
+
+##### Acm_DaqAoSetCaliType
+
+```cpp
+U32 Acm_DaqAoSetCaliType(HAND DeviceHandle, U16	AoChannel, U16 TrimType)
+```
+
+##### Acm_DaqAoSetCaliValue
+
+```cpp
+U32 Acm_DaqAoSetCaliValue(HAND DeviceHandle, U16 AoChannel, U16 CaliData)
+```
+
+##### Acm_DaqAoCaliDone
+
+```cpp
+U32 Acm_DaqAoCaliDone(HAND DeviceHandle, U16 AoChannel, bool done)
+```
+
+##### Acm_DaqAoCaliDefault
+
+```cpp
+U32 Acm_DaqAoCaliDefault(HAND DeviceHandle, U16	AoChannel)
+```
+
+##### Acm_DaqAoGetChannelStatus
+
+```cpp
+U32 Acm_DaqAoGetChannelStatus(HAND DeviceHandle, U16 AoChannel, PU32 ChanStatus)
+```
+
+##### Acm_DaqAoLinkAxData
+```cpp
+U32 Acm_DaqAoLinkAxData(HAND DeviceHandle, U16 AoChannel, HAND AxisHandle, U16 Type, F64 Max, F64 Min)
+```
+
+##### Acm_DaqSetScaledProperty
+
+```cpp
+U32 Acm_DaqSetScaledProperty(HAND DeviceHandle, PORT_TYPE Type, U16 Channel, F32 UpperBound, F32 LowerBound, U16 Resolution, I16 TransType)
+```
+
+##### Acm_DaqGetIOLinkStatus
+
+```cpp
+U32 Acm_DaqGetIOLinkStatus(HAND DeviceHandle, PU32 pStatus)
+```
+
+##### Acm_DaqCntTriggerCmp
+
+```cpp
+U32 Acm_DaqCntTriggerCmp(HAND DeviceHandle, U16 CntChannel)
+```
+
+##### Acm_DaqCntResetLatch
+
+```cpp
+U32 Acm_DaqCntResetLatch(HAND DeviceHandle, U16 CntChannel)
+```
+
+##### Acm_DaqCntResetCmp
+
+```cpp
+U32 Acm_DaqCntResetCmp(HAND DeviceHandle, U16 CntChannel)
+```
+
+##### Acm_DaqCntResetCnt
+
+```cpp
+U32 Acm_DaqCntResetCnt(HAND DeviceHandle, U16 CntChannel)
+```
+
+##### Acm_DaqCntGetCounterData
+
+```cpp
+U32 Acm_DaqCntGetCounterData(HAND DeviceHandle, U16 CntChannel, PF64 CounterData)
+```
+
+##### Acm_DaqCntSetCounterData
+
+```cpp
+U32 Acm_DaqCntSetCounterData(HAND DeviceHandle, U16 CntChannel, F64 CounterData)
+```
+
+##### Acm_DaqCntGetCounterFrequency
+
+```cpp
+U32 Acm_DaqCntGetCounterFrequency(HAND DeviceHandle, U16 CntChannel, PF64 Frequency)
+```
+
+##### Acm_DaqCntGetExtDriveData
+
+```cpp
+U32 Acm_DaqCntGetExtDriveData(HAND DeviceHandle, U16 CntChannel, PF64 CounterData)
+```
+
+##### Acm_DaqCntSetExtDriveData
+
+```cpp
+U32 Acm_DaqCntSetExtDriveData(HAND DeviceHandle, U16 CntChannel, F64 CounterData)
+```
+
+##### Acm_DaqCntGetLatchData
+
+```cpp
+U32 Acm_DaqCntGetLatchData(HAND DeviceHandle, U16 CntChannel, PF64 LatchData)
+```
+
+##### Acm_DaqCntGetCmpData
+
+```cpp
+U32 Acm_DaqCntGetCmpData(HAND DeviceHandle, U16 CntChannel, PF64 CmpData)
+```
+
+##### Acm_DaqCntSetCmpData
+
+```cpp
+U32 Acm_DaqCntSetCmpData(HAND DeviceHandle, U16 CntChannel, F64 CmpData)
+```
+
+##### Acm_DaqCntSetCmpTable
+
+```cpp
+U32 Acm_DaqCntSetCmpTable(HAND DeviceHandle, U16 CntChannel, PF64 TableArray, I32 ArrayCount)
+```
+
+##### Acm_DaqCntSetCmpAuto
+
+```cpp
+U32 Acm_DaqCntSetCmpAuto(HAND DeviceHandle, U16 CntChannel, F64 Start, F64 End, F64 Interval)
+```
+
+##### Acm_DaqCntGetLatchBufferStatus
+
+```cpp
+U32 Acm_DaqCntGetLatchBufferStatus(HAND DeviceHandle, U16 CntChannel, PU32 RemainCnt, PU32 SpaceCnt)
+```
+
+##### Acm_DaqCntReadLatchBuffer
+
+```cpp
+U32 Acm_DaqCntReadLatchBuffer(HAND DeviceHandle, U16 CntChannel, PF64 LatchDataArray, PU32 DataCnt)
+```
+
+##### Acm_ChLinkCmpObject
+```cpp
+U32 Acm_ChLinkCmpObject(HAND DeviceHandle, U32 CmpID, ADV_OBJ_TYPE ObjType, PU32 ObjArray, U32 ArrayElement)
+```
+
+##### Acm_ChGetLinkedCmpObject
+```cpp
+U32 Acm_ChGetLinkedCmpObject(HAND DeviceHandle, U32 CmpID, ADV_OBJ_TYPE *ObjType, PU32 ObjArray, PU32 ArrayElement)
+```
+
+##### Acm_ChEnableCmp
+```cpp
+U32 Acm_ChEnableCmp(HAND DeviceHandle, U32 CmpID, U32 Enable)
+```
+
+##### Acm_ChSetCmpOut
+```cpp
+U32 Acm_ChSetCmpOut(HAND DeviceHandle, U32 CmpID, DO_ONOFF OnOff)
+```
+
+##### Acm_ChSetCmpDoOut
+```cpp
+U32 Acm_ChSetCmpDoOut(HAND DeviceHandle, U32 CmpID, DO_ONOFF OnOff)
+```
+
+##### Acm_ChGetCmpData
+```cpp
+U32 Acm_ChGetCmpData(HAND DeviceHandle, U32 CmpID, PF64 CmpData, U32 ObjectArrayCount)
+```
+
+##### Acm_ChSetCmpAuto
+```cpp
+U32 Acm_ChSetCmpAuto(HAND DeviceHandle, U32 CmpID, F64 StartPosition, F64 EndPosition, F64 Interval)
+```
+
+##### Acm_ChSetCmpBufferData
+```cpp
+U32 Acm_ChSetCmpBufferData(HAND DeviceHandle, U32 CmpID, PF64 TableArray, U32 ArrayCount)
+```
+
+##### Acm_ChSetMultiCmpBufferData
+```cpp
+U32 Acm_ChSetMultiCmpBufferData(HAND DeviceHandle, U32 CmpID, PF64 MultiCmpTable, U32 ObjectArrayCount, U32 DataArrayCount)
+```
+
+##### Acm_ChResetCmpData
+```cpp
+U32 Acm_ChResetCmpData(HAND DeviceHandle, U32 CmpID)
+```
+
+##### Acm_ChGetCmpBufferStatus
+```cpp
+U32 Acm_ChGetCmpBufferStatus(HAND DeviceHandle, U32 CmpID, PBUFFER_STATUS BufferStatus)
+```
+
+##### Acm_ChLinkLatchObject
+```cpp
+U32 Acm_ChLinkLatchObject(HAND DeviceHandle, U32 LtcID, ADV_OBJ_TYPE ObjType, PU32 ObjArray, U32 ArrayElement)
+```
+
+##### Acm_ChGetLinkedLatchObject
+```cpp
+U32 Acm_ChGetLinkedLatchObject(HAND DeviceHandle, U32 LtcID, ADV_OBJ_TYPE *ObjType, PU32 ObjArray, PU32 ArrayElement)
+```
+
+##### Acm_ChTriggerLatch
+```cpp
+U32 Acm_ChTriggerLatch(HAND DeviceHandle, U32 LtcID)
+```
+
+##### Acm_ChReadLatchBuffer
+```cpp
+U32 Acm_ChReadLatchBuffer(HAND DeviceHandle, U32 LtcID, PF64 LatchDataArray, U32 ObjectArrayCount, PU32 DataArrayCount)
+```
+
+##### Acm_ChGetLatchBufferStatus
+```cpp
+U32 Acm_ChGetLatchBufferStatus(HAND DeviceHandle, U32 LtcID, PBUFFER_STATUS BufferStatus)
+```
+
+##### Acm_ChResetLatchBuffer
+```cpp
+U32 Acm_ChResetLatchBuffer(HAND DeviceHandle, U32 LtcID)
+```
+
+##### Acm_AxPWMOut
+
+```cpp
+U32 Acm_AxPWMOut(HAND AxisHandle,U32 OFForON,U32 PulseCount)
+```
+
+##### Acm_AxGetPWMOutState
+
+```cpp
+U32 Acm_AxGetPWMOutState(HAND AxisHandle,PU32 OFForON)
 ```
 
 ##### Acm_DevMDaqConfig
@@ -679,6 +2324,26 @@ U32 Acm_DevSetLTCInSource(HAND DeviceHandle, U16 LtcID, U16 Source)
 U32 Acm_DevGetCmp(HAND DeviceHandle, U16 CmpID, PU32 CmpLogic, PU32 CmpSrc, PU32 CmpMethod, PU32 DOMode, PU32 DOWidth)
 ```
 
+##### Acm_ChLinkSWCmpObject
+```cpp
+U32 Acm_ChLinkSWCmpObject(HAND DeviceHandle, U16 SWCmpID, ADV_OBJ_TYPE ObjType, PU32 ObjArray, U32 ArrayElement)
+```
+
+##### Acm_DaqDoLinkSWCmpObject
+```cpp
+U32 Acm_DaqDoLinkSWCmpObject(HAND DeviceHandle, U16 SWCmpID, U32 DOChannel)
+```
+
+##### Acm_ChGetLinkedSWCmpObject
+```cpp
+U32 Acm_ChGetLinkedSWCmpObject(HAND DeviceHandle, U16 SWCmpID, ADV_OBJ_TYPE *ObjType, PU32 ObjArray, PU32 ArrayElement)
+```
+
+##### Acm_DaqDoGetLinkedSWCmpObject
+```cpp
+U32 Acm_DaqDoGetLinkedSWCmpObject(HAND DeviceHandle, U16 SWCmpID, PU32 DOChannel)
+```
+
 ##### Acm_DevReadLatchBuffer
 
 ```cpp
@@ -793,6 +2458,46 @@ U32 Acm_DevWriteSDOData(HAND DeviceHandle, U16 RingNo, U16 SlaveIP, U16 Index, U
 U32 Acm_DevReadSDOData(HAND DeviceHandle, U16 RingNo, U16 SlaveIP, U16 Index, U16 SubIndex, U16 Type, U16 DataSize, PVOID pValue)
 ```
 
+##### Acm_DevReadSDOData_Req
+```cpp
+U32 Acm_DevReadSDOData_Req(HAND DeviceHandle, IN U16 RingNo, IN U16 SlaveIP, IN U16 Index, IN U16 SubIndex, IN U16 Type, IN U16 DataSize)
+```
+
+##### Acm_DevReadSDOData_Res
+```cpp
+U32 Acm_DevReadSDOData_Res(HAND DeviceHandle, IN U16 RingNo, IN U16 SlaveIP, IN U16 Index, IN U16 SubIndex, IN U16 Type, IN U16 DataSize, OUT PVOID pValue)
+```
+
+##### Acm_DevWriteSDOData_Req
+```cpp
+U32 Acm_DevWriteSDOData_Req(HAND DeviceHandle, IN U16 RingNo, IN U16 SlaveIP, IN U16 Index, IN U16 SubIndex, IN U16 Type, IN U16 DataSize, IN PVOID pValue)
+```
+
+##### Acm_DevWriteSDOData_Res
+```cpp
+U32 Acm_DevWriteSDOData_Res(HAND DeviceHandle, IN U16 RingNo, IN U16 SlaveIP, IN U16 Index, IN U16 SubIndex, IN U16 Type, IN U16 DataSize)
+```
+
+##### Acm_DevReadMultiSDOData_Req
+```cpp
+U32 Acm_DevReadMultiSDOData_Req(HAND DeviceHandle, U16 RingNo, PMULTI_SDO_REQ Requests, U16 SDOCnt)
+```
+
+##### Acm_DevReadMultiSDOData_Res
+```cpp
+U32 Acm_DevReadMultiSDOData_Res(HAND DeviceHandle, U16 RingNo, PMULTI_SDO_REQ Requests, U16 SDOCnt)
+```
+
+##### Acm_DevWritePDOData
+```cpp
+U32 Acm_DevWritePDOData(HAND DeviceHandle, IN U16 RingNo, IN U16 SlaveIP, IN U16 Index, IN U16 SubIndex, IN U16 Type, IN U16 DataSize, IN PVOID pValue)
+```
+
+##### Acm_DevReadPDOData
+```cpp
+U32 Acm_DevReadPDOData(HAND DeviceHandle, IN U16 RingNo, IN U16 SlaveIP, IN U16 Index, IN U16 SubIndex, IN U16 Type, IN U16 DataSize, OUT PVOID pValue)
+```
+
 ##### Acm_DevWriteRegData
 
 ```cpp
@@ -859,22 +2564,29 @@ U32 Acm_DevZAxisCompensateTable(HAND DeviceHandle, HAND AxisHandle, HAND RelAxis
 U32 Acm_Dev2DCompensateTable(HAND DeviceHandle, HAND AxisHandle, HAND RelAxisHandle, F64 OriginPosX, F64 OriginPosY, F64 PitchX, F64 PitchY, PF64 OffsetDataX, PF64 OffsetDataY, U32 OffsetElementsX, U32 OffsetElementsY)
 ```
 
-##### Acm_DevZAxisCompensateTableEx
-
-```cpp
-U32 Acm_DevZAxisCompensateTableEx(HAND DeviceHandle, HAND AxisHandle, HAND RelAxisHandle, HAND ZAxisHandle, F64 OriginPosX, F64 OriginPosY, F64 PitchX, F64 PitchY, PF64 OffsetDataZ, U32 OffsetElementsX, U32 OffsetElementsY, U32 Direction)
-```
-
-##### Acm_Dev2DCompensateTableEx
-
-```cpp
-U32 Acm_Dev2DCompensateTableEx(HAND DeviceHandle, HAND AxisHandle, HAND RelAxisHandle, F64 OriginPosX, F64 OriginPosY, F64 PitchX, F64 PitchY, PF64 OffsetDataX, PF64 OffsetDataY, U32 OffsetElementsX, U32 OffsetElementsY, U32 Direction)
-```
-
 ##### Acm_AxGetCompensatePosition
-
 ```cpp
 U32 Acm_AxGetCompensatePosition(HAND AxisHandle, PF64 Position)
+```
+
+##### Acm_AxZAxisCompensateTable
+```cpp
+U32 Acm_AxZAxisCompensateTable(HAND AxisHandle, HAND ZAxisHandle, F64 OriginPos, F64 Pitch, PF64 OffsetDataZ, U32 OffsetElementsZ, U32 Direction)
+```
+
+##### Acm_AxGetPreview1DCompensatePosition
+```cpp
+U32 Acm_AxGetPreview1DCompensatePosition(HAND AxisHandle, F64 Position, U32 Direction, PF64 PreviewPosition)
+```
+
+##### Acm_DevGetPreview2DCompensatePosition
+```cpp
+U32 Acm_DevGetPreview2DCompensatePosition(HAND DeviceHandle, HAND AxisHandle, HAND RelAxisHandle, F64 Position, F64 RelPosition, U32 Direction, U32 RelDirection, PF64 PreviewPosition, PF64 PreviewRelPosition)
+```
+
+##### Acm_DevGetPreviewZAxisCompensatePosition
+```cpp
+U32 Acm_DevGetPreviewZAxisCompensatePosition(HAND DeviceHandle, HAND AxisHandle, HAND RelAxisHandle, HAND ZAxisHandle, F64 Position, F64 RelPosition, U32 Direction, U32 RelDirection, PF64 PreviewZPosition)
 ```
 
 ##### Acm_DevMultiTrigInitial
@@ -883,1715 +2595,128 @@ U32 Acm_AxGetCompensatePosition(HAND AxisHandle, PF64 Position)
 U32 Acm_DevMultiTrigInitial(HAND DeviceHandle, U16 RingNo, U16 SlaveIP, U16 Enable, U8 PWM, U8 LTC, U8 MPG)
 ```
 
-##### Acm_EnableOneDevEventCallBack
+##### Acm_DevOscChannelDataStart
+```cpp
+U32 Acm_DevMultiTrigInitial(HAND DeviceHandle, IN U16 RingNo, IN U16 SlaveIP, IN U16 Enable, IN U8 PWM, IN U8 LTC, IN U8 MPG)
+```
 
+##### Acm_DevOscChannelDataStart
+```cpp
+U32 Acm_DevOscChannelDataStart(HAND DeviceHandle)
+```
+
+##### Acm_DevOscChannelDataStop
+```cpp
+U32 Acm_DevOscChannelDataStop(HAND DeviceHandle)
+```
+
+##### Acm_DevGetOscChannelDataConfig
+```cpp
+U32 Acm_DevGetOscChannelDataConfig(HAND DeviceHandle, U32 ChannelID, POSC_PROFILE_PRM oscflg)
+```
+
+##### Acm_DevSetOscChannelDataConfig
+```cpp
+U32 Acm_DevSetOscChannelDataConfig(HAND DeviceHandle, U32 ChannelID, OSC_PROFILE_PRM oscflg)
+```
+
+##### Acm_DevGetOscChannelData
+```cpp
+U32 Acm_DevGetOscChannelData(HAND DeviceHandle, U32 ChannelID, U32 DataIndex, PU32 MaxCount, PF64 DataBuffer)
+```
+
+##### Acm_DevGetOscChannelStatus
+```cpp
+U32 Acm_DevGetOscChannelStatus(HAND DeviceHandle, PU32 Status)
+```
+
+##### Acm_GpEnableAxisFollow
+```cpp
+U32 Acm_GpEnableAxisFollow(HAND GroupHandle, PU32 AxisArray, PF64 OffsetValue, PF64 RatioArray)
+```
+
+##### Acm_GpStopAxisFollow
+```cpp
+U32 Acm_GpStopAxisFollow(HAND GroupHandle)
+```
+
+##### Acm_GpSetFollowWpOffset
+```cpp
+U32 Acm_GpSetFollowWpOffset(HAND GroupHandle, PF64 WpCenterPos, PF64 WpOffset)
+```
+
+##### Acm_EnableOneDevEventCallBack
 ```cpp
 U32 Acm_EnableOneDevEventCallBack(HANDLE DeviceHandle, ULONG EventID)
 ```
 
 ##### Acm_AxGetRawData
-
 ```cpp
 U32 Acm_AxGetRawData(HAND AxisHandle, U8 index, PF64 RawData)
 ```
 
 ##### Acm_AxSetRawData
-
 ```cpp
 U32 Acm_AxSetRawData(HAND AxisHandle, U8 index, F64 RawData)
 ```
 
 ##### Acm_AxReturnPausePosition
-
 ```cpp
 U32 Acm_AxReturnPausePosition(HAND AxHandle)
 ```
 
 ##### Acm_AxAddOnAx
-
 ```cpp
 U32 Acm_AxAddOnAx(HAND AxisHandle, HAND MasAxisHandle)
 ```
 
 ##### Acm_AxAddRemove
-
 ```cpp
 U32 Acm_AxAddRemove(HAND AxisHandle, HAND MasAxisHandle)
 ```
 
 ##### Acm_AxGetAddOnNum
-
 ```cpp
 U32 Acm_AxGetAddOnNum(HAND AxisHandle, PI32 num)
 ```
 
 ##### Acm_AxSetCompensateDistance
-
 ```cpp
 U32 Acm_AxSetCompensateDistance(HAND AxisHandle, F64 Distance)
 ```
 
 ##### Acm_AxGetCompensateDistance
-
 ```cpp
 U32 Acm_AxGetCompensateDistance(HAND AxisHandle, PF64 Distance)
-```
-
-##### Acm_AxOpen
-
-```cpp
-U32 Acm_AxOpen(HAND DeviceHandle, U16 PhyAxis, PHAND AxisHandle)
-```
-
-```python
-from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI
-from AcmP.AdvMotApi_CM2 import *
-from AcmP.AdvMotDrv import *
-from AcmP.AdvMotPropID_CM2 import PropertyID
-from AcmP.AdvMotErr_CM2 import ErrorCode
-
-## Initialize
-maxDevCnt = 10
-maxDevList = (DEVLIST * maxDevCnt)()
-maxDev = c_uint32(0)
-errCde = c_uint32(ErrorCode.SUCCESS.value)
-devHandle = c_void_p()
-axid = c_uint16(0)
-axHand = c_void_p()
-
-errCde = AdvMot.Acm_GetAvailableDevs(maxDevList, maxDevCnt, byref(maxDev))
-for i in range(maxDev.value):
-    print('{index:<5} 0x{devNum:x} {devName}'.format(index=i,
-    devNum=maxDevList[i].dwDeviceNum, devName=maxDevList[i].szDeviceName))
-## Open Device
-errCde = AdvMot.Acm_DevOpen(devNum.value, byref(devHandle))
-## Open Axis
-errCde = AdvMot.Acm_AxOpen(devHandle, axid, byref(axHand))
-## Close Axis
-errCde = AdvMot.Acm_AxClose(axHand)
-## Close Device
-errCde = AdvMot.Acm_DevClose(byref(devHandle))
-```
-
-##### Acm_AxOpenbyID
-
-```cpp
-U32 Acm_AxOpenbyID(HAND DeviceHandle, U16 SlaveID, U8 SubID, PHAND AxisHandle)
-```
-
-##### Acm_AxClose
-
-```cpp
-U32 Acm_AxClose(PHAND AxisHandle)
-```
-
-##### Acm_AxSetSvOn
-
-```cpp
-U32 Acm_AxSetSvOn(HAND AxisHandle, U32 OnOff)
-```
-
-##### Acm_AxResetAlm
-
-```cpp
-U32 Acm_AxResetAlm(HAND AxisHandle, U32 OnOff)
-```
-
-##### Acm_AxMoveRel
-
-```cpp
-U32 Acm_AxMoveRel(HAND AxisHandle, F64 Distance)
-```
-
-##### Acm_AxMoveRel_T
-
-```cpp
-U32 Acm_AxMoveRel_T(HAND AxisHandle, F64 Distance, F64 Time, F64 Factor)
-```
-
-##### Acm_AxMoveRel_SD
-
-```cpp
-U32 Acm_AxMoveRel_SD(HAND AxisHandle, F64 Distance, F64 SDDistance)
-```
-
-##### Acm_AxMoveRel_EC
-
-```cpp
-U32 Acm_AxMoveRel_EC(HAND AxisHandle, F64 Position)
-```
-
-##### Acm_AxMoveAbs
-
-```cpp
-U32 Acm_AxMoveAbs(HAND AxisHandle, F64 Position)
-```
-
-##### Acm_AxMoveAbs_T
-
-```cpp
-U32 Acm_AxMoveAbs_T(HAND AxisHandle, F64 Position, F64 Time, F64 Factor)
-```
-
-##### Acm_AxMoveAbs_SD
-
-```cpp
-U32 Acm_AxMoveAbs_SD(HAND AxisHandle, F64 Position, F64 SDPosition)
-```
-
-##### Acm_AxMoveAbs_EC
-
-```cpp
-U32 Acm_AxMoveAbs_EC(HAND AxisHandle, F64 Position)
-```
-
-##### Acm_AxMoveVel
-
-```cpp
-U32 Acm_AxMoveVel(HAND AxisHandle, U16 Direction)
-```
-
-##### Acm_AxStopDec
-
-```cpp
-U32 Acm_AxStopDec(HAND AxisHandle)
-```
-
-##### Acm_AxStopDecEx
-
-```cpp
-U32 Acm_AxStopDecEx(HAND AxisHandle, F64 NewDec)
-```
-
-##### Acm_AxStopEmg
-
-```cpp
-U32 Acm_AxStopEmg(HAND AxisHandle)
-```
-
-##### Acm_AxMoveImpose
-
-```cpp
-U32 Acm_AxMoveImpose(HAND AxisHandle, F64 Position, F64 NewVel)
-```
-
-##### Acm_AxHomeEx
-
-```cpp
-U32 Acm_AxHomeEx(HAND AxisHandle, U32 DirMode)
-```
-
-##### Acm_AxHome
-
-```cpp
-U32 Acm_AxHome(HAND AxisHandle, U32 HomeMode, U32 DirMode)
-```
-
-##### Acm_AxMoveHome
-
-```cpp
-U32 Acm_AxMoveHome(HAND AxisHandle, U32 HomeMode, U32 Dir)
-```
-
-##### Acm_AxMoveGantryHome
-
-```cpp
-U32 Acm_AxMoveGantryHome(HAND AxisHandle, U32 HomeMode, U32 Dir)
-```
-
-##### Acm_AxChangeVel
-
-```cpp
-U32 Acm_AxChangeVel(HAND AxisHandle, F64 NewVel)
-```
-
-##### Acm_AxChangePos
-
-```cpp
-U32 Acm_AxChangePos(HAND AxisHandle, F64 NewPos)
-```
-
-##### Acm_AxChangeVelByRate
-
-```cpp
-U32 Acm_AxChangeVelByRate(HAND AxisHandle, U32 Rate)
-```
-
-##### Acm_AxChangeVelExByRate
-
-```cpp
-U32 Acm_AxChangeVelExByRate(HAND AxisHandle, U32 Rate, F64 NewAcc, F64 NewDec);
-```
-
-##### Acm_AxResetError
-
-```cpp
-U32 Acm_AxResetError(HAND AxisHandle)
-```
-
-##### Acm_AxGetState
-
-```cpp
-U32 Acm_AxGetState(HAND AxisHandle, PU16 State)
-```
-
-##### Acm_AxGetMotionIO
-
-```cpp
-U32 Acm_AxGetMotionIO(HAND AxisHandle, PU32 Status)
-```
-
-##### Acm_AxGetMotionStatus
-
-```cpp
-U32 Acm_AxGetMotionStatus(HAND AxisHandle, PU32 Status)
-```
-
-##### Acm_AxGetCmdPosition
-
-```cpp
-U32 Acm_AxGetCmdPosition(HAND AxisHandle, PF64 Position)
-```
-
-##### Acm_AxGetMachPosition
-
-```cpp
-U32 Acm_AxGetMachPosition(HAND AxisHandle, PF64 Position)
-```
-
-##### Acm_AxSetCmdPosition
-
-```cpp
-U32 Acm_AxSetCmdPosition(HAND AxisHandle, F64 Position)
-```
-
-##### Acm_AxGetActualPosition
-
-```cpp
-U32 Acm_AxGetActualPosition(HAND AxisHandle, PF64 Position)
-```
-
-##### Acm_AxSetActualPosition
-
-```cpp
-U32 Acm_AxSetActualPosition(HAND AxisHandle, F64 Position)
-```
-
-##### Acm_AxGetCmdVelocity
-
-```cpp
-U32 Acm_AxGetCmdVelocity(HAND AxisHandle, PF64 Velocity)
-```
-
-##### Acm_AxGetActVelocity
-
-```cpp
-U32 Acm_AxGetActVelocity(HAND AxisHandle, PF64 Velocity)
-```
-
-##### Acm_AxGetLagCounter
-
-```cpp
-U32 Acm_AxGetLagCounter(HAND AxisHandle, PF64 Position)
-```
-
-##### Acm_AxSetExtDrive
-
-```cpp
-U32 Acm_AxSetExtDrive(HAND AxisHandle, U16 ExtDrvMode)
-```
-
-##### Acm_AxDoSetBit
-
-```cpp
-U32 Acm_AxDoSetBit(HAND AxisHandle, U16	DoChannel, U8 BitData)
-```
-
-##### Acm_AxDiSetBit
-
-```cpp
-U32 Acm_AxDiSetBit(HAND AxisHandle, U16	DiChannel, U8 BitData)
-```
-
-##### Acm_AxDoGetBit
-
-```cpp
-U32 Acm_AxDoGetBit(HAND AxisHandle, U16	DoChannel, PU8 BitData)
-```
-
-##### Acm_AxDiGetBit
-
-```cpp
-U32 Acm_AxDiGetBit(HAND AxisHandle, U16	DiChannel, PU8 BitData)
-```
-
-##### Acm_AxDoSetByte
-
-```cpp
-U32 Acm_AxDoSetByte(HAND AxisHandle, U16 DoPort, U8 ByteData)
-```
-
-##### Acm_AxDoGetByte
-
-```cpp
-U32 Acm_AxDoGetByte(HAND AxisHandle, U16 DoPort, PU8 ByteData)
-```
-
-##### Acm_AxDiGetByte
-
-```cpp
-U32 Acm_AxDiGetByte(HAND AxisHandle, U16 DiPort, PU8 ByteData)
-```
-
-##### Acm_AxSimStartSuspendVel
-
-```cpp
-U32 Acm_AxSimStartSuspendVel(HAND AxisHandle, U16 DriDir)
-```
-
-##### Acm_AxSimStartSuspendRel
-
-```cpp
-U32 Acm_AxSimStartSuspendRel(HAND AxisHandle,F64 Distance)
-```
-
-##### Acm_AxSimStartSuspendAbs
-
-```cpp
-U32 Acm_AxSimStartSuspendAbs(HAND AxisHandle,F64 EndPoint)
-```
-
-##### Acm_AxSimStart
-
-```cpp
-U32 Acm_AxSimStart(HAND AxisHandle)
-```
-
-##### Acm_AxSimStop
-
-```cpp
-U32 Acm_AxSimStop(HAND AxisHandle)
-```
-
-##### Acm_AxGetLatchData
-
-```cpp
-U32 Acm_AxGetLatchData(HAND AxisHandle, U32 PositionNo, PF64 Position)
-```
-
-##### Acm_AxStartSoftLatch
-
-```cpp
-U32 Acm_AxStartSoftLatch(U32 AxisHandle)
-```
-
-##### Acm_AxResetLatch
-
-```cpp
-U32 Acm_AxResetLatch(HAND AxisHandle)
-```
-
-##### Acm_AxGetLatchFlag
-
-```cpp
-U32 Acm_AxGetLatchFlag(HAND AxisHandle, PU8 LatchFlag)
-```
-
-##### Acm_AxTriggerLatch
-
-```cpp
-U32 Acm_AxTriggerLatch(HAND AxisHandle)
-```
-
-##### Acm_AxReadLatchBuffer
-
-```cpp
-U32 Acm_AxReadLatchBuffer(HAND AxisHandle, PF64 LatchDataArray, PU32 DataCnt)
-```
-
-##### Acm_AxResetLatchBuffer
-
-```cpp
-U32 Acm_AxResetLatchBuffer(HAND AxisHandle)
-```
-
-##### Acm_AxGetLatchBufferStatus
-
-```cpp
-U32 Acm_AxGetLatchBufferStatus(HAND AxisHandle, PU32 RemainCnt, PU32 SpaceCnt)
-```
-
-##### Acm_AxGearInAx
-
-```cpp
-U32 Acm_AxGearInAx(HAND AxisHandle, HAND MasAxisHandle, I32 Numerator, I32 Denominator, U32 RefSrc, U32 Absolute)
-```
-
-##### Acm_AxTangentInGp
-
-```cpp
-U32 Acm_AxTangentInGp(HAND AxisHandle, HAND MasGroupHandle, PI16 StartVectorArray, U8 Working_plane, I16 Direction)
-```
-
-##### Acm_AxGantryInAx
-
-```cpp
-U32	Acm_AxGantryInAx(HAND AxisHandle, HAND MasAxisHandle, I16 RefMasterSrc, I16 direction)
-```
-
-##### Acm_AxPhaseAx
-
-```cpp
-U32 Acm_AxPhaseAx(HAND AxisHandle, F64 Acc, F64 Dec, F64 PhaseSpeed, F64 PhaseDist)
-```
-
-##### Acm_AxSetChannelCmpSetting
-
-```cpp
-U32 Acm_AxSetChannelCmpSetting(HAND AxisHandle, U16 ChannelID, U32 CmpSrc, U32 CmpMethod, U32 CmpPulseMode, U32 CmpPulseWidth)
-```
-
-##### Acm_AxGetChannelCmpSetting
-
-```cpp
-U32 Acm_AxGetChannelCmpSetting(HAND AxisHandle, U16 ChannelID, PU32 CmpSrc, PU32 CmpMethod, PU32 CmpPulseMode, PU32 CmpPulseWidth)
-```
-
-##### Acm_AxResetChannelCmp
-
-```cpp
-U32 Acm_AxResetChannelCmp(HAND AxisHandle, U16 ChannelID)
-```
-
-##### Acm_AxAddChannelCmpDatas
-
-```cpp
-U32 Acm_AxAddChannelCmpDatas(HAND AxisHandle, U16 ChannelID, PF64 TableArray, U32 ArrayCount)
-```
-
-##### Acm_AxGetChannelCmpData
-
-```cpp
-U32 Acm_AxGetChannelCmpData(HAND AxisHandle, U16 ChannelID, PF64 CmpData)
-```
-
-##### Acm_AxLoadChannelNextData
-
-```cpp
-U32 Acm_AxLoadChannelNextData(HAND AxisHandle, U16 ChannelID)
-```
-
-##### Acm_AxGetCmpbufferRemainCount
-
-```cpp
-U32 Acm_AxGetCmpbufferRemainCount(HAND AxisHandle, U16 ChannelID,PU32 DataCount)
-```
-
-##### Acm_AxSetCmpAuto
-
-```cpp
-U32 Acm_AxSetCmpAuto(HAND AxisHandle, F64 Start, F64 End, F64 Interval)
-```
-
-##### Acm_AxGetCmpData
-
-```cpp
-U32 Acm_AxGetCmpData(HAND AxisHandle, PF64 CmpPosition)
-```
-
-##### Acm_AxSetCmpData
-
-```cpp
-U32 Acm_AxSetCmpData(HAND AxisHandle, F64 CmpPosition)
-```
-
-##### Acm_AxSetCmpBufferData
-
-```cpp
-U32 Acm_AxSetCmpBufferData(HAND AxisHandle, PF64 TableArray, I32 ArrayCount)
-```
-
-##### Acm_AxResetCmpData
-
-```cpp
-U32 Acm_AxResetCmpData(HAND AxisHandle)
-```
-
-##### Acm_AxGetCmpBufferStatus
-
-```cpp
-U32 Acm_AxGetCmpBufferStatus(HAND AxisHandle, PU32 CurIndex, PU32 RemainCnt, PU32 SpaceCnt)
-```
-
-##### Acm_AxResetMPGOffset
-
-```cpp
-U32 Acm_AxResetMPGOffset(HAND AxisHandle)
-```
-
-##### Acm_AxMovePTPBufferRel
-
-```cpp
-U32 Acm_AxMovePTPBufferRel(HAND AxisHandle, U16 MotionMode, PF64 PositionArray, PF64 FLArray, PF64 FHArray, PU16 TSArray, U32 ArrayLength)
-```
-
-##### Acm_AxMovePTPBufferAbs
-
-```cpp
-U32 Acm_AxMovePTPBufferAbs(HAND AxisHandle, U16 MotionMode, PF64 PositionArray, PF64 FLArray, PF64 FHArray, PU16 TSArray, U32 ArrayLength)
-```
-
-##### Acm_AxEnableCompensation
-
-```cpp
-U32 Acm_AxEnableCompensation(HAND AxisHandle,F64 ZStartPos)
-```
-
-##### Acm_AxGetCompensationValue
-
-```cpp
-U32 Acm_AxGetCompensationValue(HAND AxisHandle, F64 XData, F64 YData, PF64 PCompensationValue)
-```
-
-##### Acm_AxSetCompenPara
-
-```cpp
-U32 Acm_AxSetCompenPara(HAND AxisHandle, HAND GroupHandle, U32 XScanDataCnt, U32 YScanDataCnt, U32 CompMode)
-```
-
-##### Acm_AxDIStartMoveAbs
-
-```cpp
-U32 Acm_AxDIStartMoveAbs(HAND AxisHandle, U16 DIChannel, F64 Position)
-```
-
-##### Acm_AxDIStartMoveRel
-
-```cpp
-U32 Acm_AxDIStartMoveRel(HAND AxisHandle, U16 DIChannel, F64 Distance)
-```
-
-##### Acm_AxDIStartMoveVel
-
-```cpp
-U32 Acm_AxDIStartMoveVel(HAND AxisHandle, U16 DIChannel, U16 Direction)
-```
-
-##### Acm_AxDisableDIStart
-
-```cpp
-U32 Acm_AxDisableDIStart(HAND AxisHandle)
-```
-
-##### Acm_AxSetPWMTableOnTime
-
-```cpp
-U32 Acm_AxSetPWMTableOnTime(HAND AxisHandle, PU32 TimeTableArray, I32 ArrayCount)
-```
-
-##### Acm_AxGetINxStopStatus
-
-```cpp
-U32 Acm_AxGetINxStopStatus(HAND AxisHandle,PU32 Stop_Flag)
-```
-
-##### Acm_AxResetINxStopStatus
-
-```cpp
-U32 Acm_AxResetINxStopStatus(HAND AxisHandle)
-```
-
-##### Acm_AxJog
-
-```cpp
-U32 Acm_AxJog(HAND AxisHandle,U16 Direction)
-```
-
-##### Acm_AxSetCmpDO
-
-```cpp
-U32 Acm_AxSetCmpDO(HAND AxisHandle,U32 OFForON)
-```
-
-##### Acm_AxDownloadTorqueTable
-
-```cpp
-U32 Acm_AxDownloadTorqueTable(HAND AxisHandle, PF64 PositionArray, PF64 TorqueArray, U32 ArrayElements)
-```
-
-##### Acm_AxLoadTorqueTableFile
-
-```cpp
-U32 Acm_AxLoadTorqueTableFile(HAND AxisHandle, PI8 FilePath, PU32 PointsCount)
-```
-
-##### Acm_AxResetPVTTable
-
-```cpp
-U32 Acm_AxResetPVTTable(HAND AxisHandle)
-```
-
-##### Acm_AxLoadPVTTable
-
-```cpp
-U32 Acm_AxLoadPVTTable(HAND AxisHandle, PF64 Position, PF64 Velocity, PF64 Time, U32 ArrayElements)
-```
-
-##### Acm_AxCalculatePVTTableContinuous
-
-```cpp
-U32 Acm_AxCalculatePVTTableContinuous(HAND AxisHandle, PF64 Position, PF64 Velocity, PF64 JerkFactor, PF64 MaxVel, PF64 Acc, PF64 Dec, U32 ArrayElements, PF64 Time)
-```
-
-##### Acm_AxLoadPVTTableContinuous
-
-```cpp
-U32 Acm_AxLoadPVTTableContinuous(HAND AxisHandle, PF64 Position, PF64 Velocity, PF64 JerkFactor, PF64 MaxVel, PF64 Acc, PF64 Dec, F64 TimeDelay, U32 ArrayElements)
-```
-
-##### Acm_AxStartPVT
-
-```cpp
-U32 Acm_AxStartPVT(HAND AxisHandle, U8 Repeat)
-```
-
-##### Acm_AxStartAllPVT
-
-```cpp
-U32 Acm_AxStartAllPVT(PHAND AxisHandle, U8 Repeat, U32 ArrayElements)
-```
-
-##### Acm_AxCheckPTBuffer
-
-```cpp
-U32 Acm_AxCheckPTBuffer(HAND AxisHandle, PU16 Freespace)
-```
-
-##### Acm_AxAddPTData
-
-```cpp
-U32 Acm_AxAddPTData(HAND AxisHandle, F64 Position, F64 Time)
-```
-
-##### Acm_AxStartPT
-
-```cpp
-U32 Acm_AxStartPT(HAND AxisHandle, U8 Repeat)
-```
-
-##### Acm_AxStartAllPT
-
-```cpp
-U32 Acm_AxStartAllPT(PHAND AxisHandle, U8 Repeat, U32 ArrayElements)
-```
-
-##### Acm_AxResetPTData
-
-```cpp
-U32 Acm_AxResetPTData(HAND AxisHandle)
-```
-
-##### Acm_AxAddPVAData
-
-```cpp
-U32 Acm_AxAddPVAData(HAND AxisHandle, F64 Position, PF64 VelArray, PF64 AccArray, PF64 DecArray, U32 ArrayElements)
-```
-
-##### Acm_GpOpen
-
-```cpp
-U32 Acm_GpOpen(HAND DevHandle,PHAND GpHandle,USHORT GpID)
-```
-
-##### Acm_GpAddAxis
-
-```cpp
-U32 Acm_GpAddAxis(PHAND GpHandle,HAND AxHandle)
-```
-
-##### Acm_GpRemAxis
-
-```cpp
-U32 Acm_GpRemAxis(HAND GroupHandle, HAND AxisHandle)
-```
-
-##### Acm_GpClose
-
-```cpp
-U32 Acm_GpClose(PHAND GroupHandle)
-```
-
-##### Acm_GpGetState
-
-```cpp
-U32 Acm_GpGetState(HAND GroupHandle, PU16 State)
-```
-
-##### Acm_GpResetError
-
-```cpp
-U32 Acm_GpResetError(HAND GroupHandle)
-```
-
-##### Acm_GpIpoMask
-
-```cpp
-U32 Acm_GpIpoMask(HAND GroupHandle, HAND AxHandle, U32 Mask)
-```
-
-##### Acm_GpMoveLinearRel
-
-```cpp
-U32 Acm_GpMoveLinearRel(HAND GroupHandle, PF64 DistanceArray, PU32 ArrayElements)
-```
-
-##### Acm_GpMoveLinearAbs
-
-```cpp
-U32 Acm_GpMoveLinearAbs(HAND GroupHandle, PF64 PositionArray, PU32 ArrayElements)
-```
-
-##### Acm_GpMoveDirectRel
-
-```cpp
-U32 Acm_GpMoveDirectRel(HAND GroupHandle, PF64 DistanceArray, PU32 ArrayElements)
-```
-
-##### Acm_GpMoveDirectAbs
-
-```cpp
-U32 Acm_GpMoveDirectAbs(HAND GroupHandle, PF64 PositionArray, PU32 ArrayElements)
-```
-
-##### Acm_GpMoveCircularRel
-
-```cpp
-U32 Acm_GpMoveCircularRel(HAND GroupHandle, PF64 CenterArray, PF64 EndArray, PU32 ArrayElements, I16 Direction)
-```
-
-##### Acm_GpMoveCircularAbs
-
-```cpp
-U32 Acm_GpMoveCircularAbs(HAND GroupHandle, PF64 CenterArray, PF64 EndArray, PU32 ArrayElements, I16 Direction)
-```
-
-##### Acm_GpMoveCircularRel_3P
-
-```cpp
-U32 Acm_GpMoveCircularRel_3P(HAND GroupHandle, PF64	RefArray, PF64 EndArray, PU32 pArrayElements, I16 Direction)
-
-```
-
-##### Acm_GpMoveCircularAbs_3P
-
-```cpp
-U32 Acm_GpMoveCircularAbs_3P(HAND GroupHandle, PF64	RefArray, PF64 EndArray, PU32 pArrayElements, I16 Direction)
-```
-
-##### Acm_GpMoveCircularRel_Angle
-
-```cpp
-U32 Acm_GpMoveCircularRel_Angle(HAND GroupHandle, PF64 CenterArray, U16 Degree, PU32 ArrayElements, I16 Direction)
-
-```
-
-##### Acm_GpMoveCircularAbs_Angle
-
-```cpp
-U32 Acm_GpMoveCircularAbs_Angle(HAND GroupHandle, PF64 CenterArray, U16 Degree, PU32 ArrayElements, I16 Direction)
-```
-
-##### Acm_GpMoveArcRel_Angle
-
-```cpp
-U32 Acm_GpMoveArcRel_Angle(HAND GroupHandle, PF64 CenterArray, F64 Degree, PU32 ArrayElements, I16 Direction)
-```
-
-##### Acm_GpMoveArcAbs_Angle
-
-```cpp
-U32 Acm_GpMoveArcAbs_Angle(HAND GroupHandle, PF64 CenterArray, F64 Degree, PU32 ArrayElements, I16 Direction)
-```
-
-##### Acm_GpMove3DArcAbs
-
-```cpp
-U32 Acm_GpMove3DArcAbs(HAND GroupHandle, PF64 CenterArray, PF64 EndArray, PU32 pArrayElements, I16 Direction)
-```
-
-##### Acm_GpMove3DArcRel
-
-```cpp
-U32 Acm_GpMove3DArcRel(HAND GroupHandle, PF64 CenterArray, PF64 EndArray, PU32 pArrayElements, I16 Direction)
-
-```
-
-##### Acm_GpMove3DArcAbs_V
-
-```cpp
-U32 Acm_GpMove3DArcAbs_V(HAND GroupHandle, PF64 CenterArray, PF64 NVectorArray, F64 Degree, PU32 pArrayElements, I16 Direction)
-```
-
-##### Acm_GpMove3DArcRel_V
-
-```cpp
-U32 Acm_GpMove3DArcRel_V(HAND GroupHandle, PF64 CenterArray, PF64 NVectorArray, F64 Degree, PU32 pArrayElements, I16 Direction)
-```
-
-##### Acm_GpMove3DArcAbs_3P
-
-```cpp
-U32 Acm_GpMove3DArcAbs_3P(HAND GroupHandle, PF64 RefArray, PF64 EndArray, PU32 pArrayElements, I16 Direction, U16 cycCount)
-```
-
-##### Acm_GpMove3DArcRel_3P
-
-```cpp
-U32 Acm_GpMove3DArcRel_3P(HAND GroupHandle, PF64 RefArray, PF64 EndArray, PU32 pArrayElements, I16 Direction, U16 cycCount)
-```
-
-##### Acm_GpMove3DArcAbs_3PAngle
-
-```cpp
-U32 Acm_GpMove3DArcAbs_3PAngle(HAND GroupHandle, PF64 RefPoint_1, PF64 RefPoint_2, PU32 pArrayElements, I16 Direction, F64 Degree)
-```
-
-##### Acm_GpMove3DArcRel_3PAngle
-
-```cpp
-U32 Acm_GpMove3DArcRel_3PAngle(HAND GroupHandle, PF64 RefPoint_1, PF64 RefPoint_2, PU32 pArrayElements, I16 Direction, F64 Degree)
-
-```
-
-##### Acm_GpMoveHelixAbs
-
-```cpp
-U32 Acm_GpMoveHelixAbs(HAND GroupHandle, PF64 CenterArray, PF64 EndArray, PU32 pArrayElements, I16 Direction)
-```
-
-##### Acm_GpMoveHelixRel
-
-```cpp
-U32 Acm_GpMoveHelixRel(HAND GroupHandle, PF64 CenterArray, PF64 EndArray, PU32 pArrayElements, I16 Direction)
-
-```
-
-##### Acm_GpMoveHelixAbs_3P
-
-```cpp
-U32 Acm_GpMoveHelixAbs_3P(HAND GroupHandle, PF64 RefArray, PF64 EndArray, PU32 pArrayElements, I16 Direction)
-```
-
-##### Acm_GpMove3DArcRel_3PAngle
-
-```cpp
-U32 Acm_GpMove3DArcRel_3PAngle(HAND GroupHandle, PF64 RefPoint_1, PF64 RefPoint_2, PU32 pArrayElements, I16 Direction, F64 Degree)
-```
-
-##### Acm_GpMoveHelixAbs
-
-```cpp
-U32 Acm_GpMoveHelixAbs(HAND GroupHandle, PF64 CenterArray, PF64 EndArray, PU32 pArrayElements, I16 Direction)
-```
-
-##### Acm_GpMoveHelixRel
-
-```cpp
-U32 Acm_GpMoveHelixRel(HAND GroupHandle, PF64 CenterArray, PF64 EndArray, PU32 pArrayElements, I16 Direction)
-```
-
-##### Acm_GpMoveHelixAbs_3P
-
-```cpp
-U32 Acm_GpMoveHelixAbs_3P(HAND GroupHandle, PF64 RefArray, PF64 EndArray, PU32 pArrayElements, I16 Direction)
-```
-
-##### Acm_GpMoveHelixRel_3P
-
-```cpp
-U32 Acm_GpMoveHelixRel_3P(HAND GroupHandle, PF64 RefArray, PF64 EndArray, PU32 pArrayElements, I16 Direction)
-```
-
-##### Acm_GpMoveHelixRel_Angle
-
-```cpp
-U32 Acm_GpMoveHelixRel_Angle(HAND GroupHandle, PF64	CenterArray, PF64 EndArray, PU32 pArrayElements, I16 Direction)
-```
-
-##### Acm_GpMoveHelixAbs_Angle
-
-```cpp
-U32 Acm_GpMoveHelixAbs_Angle(HAND GroupHandle, PF64	CenterArray, PF64 EndArray, PU32 pArrayElements, I16 Direction)
-```
-
-##### Acm_GpMoveEllipticalRel
-
-```cpp
-U32 Acm_GpMoveEllipticalRel(HAND GroupHandle, PF64 CenterArray, PF64 EndArray, PU32 pArrayElements, I16 Direction, F64 RatioSemiAxes)
-```
-
-##### Acm_GpMoveEllipticalAbs
-
-```cpp
-U32 Acm_GpMoveEllipticalAbs(HAND GroupHandle, PF64 CenterArray, PF64 EndArray, PU32 pArrayElements, I16 Direction, F64 RatioSemiAxes)
-```
-
-##### Acm_GpLoadPath
-
-```cpp
-U32 Acm_GpLoadPath(HAND GroupHandle, PI8 FilePath, PHAND PathHandle, PU32 pTotalCount)
-```
-
-##### Acm_GpUnloadPath
-
-```cpp
-U32 Acm_GpUnloadPath(HAND GroupHandle, PHAND PathHandle)
-```
-
-##### Acm_GpMovePath
-
-```cpp
-U32 Acm_GpMovePath(HAND GroupHandle, HAND PathHandle)
-```
-
-##### Acm_GpMoveAllPath
-
-```cpp
-U32 Acm_GpMoveAllPath(PHAND GroupHandle, U32 ArrayElements)
-```
-
-##### Acm_GpAddPath
-
-```cpp
-U32 Acm_GpAddPath(HAND GroupHandle, U16 MoveCmd, U16 MoveMode, F64 FH, F64 FL, PF64 EndPoint_DataArray, PF64 CenPoint_DataArray, PU32 ArrayElements)
-```
-
-##### Acm_GpAddPath2
-
-```cpp
-U32 Acm_GpAddPath2(HAND GroupHandle, U16 MoveCmd, U16 MoveMode, F64 FH, F64 FL, F64 ACC, F64 DEC, PF64 EndPoint_DataArray, PF64 CenPoint_DataArray, PU32 ArrayElements)
-```
-
-##### Acm_GpLookAheadPath
-
-```cpp
-U32 Acm_GpLookAheadPath(HAND GroupHandle, U16 BufferSize, PI8 OutputFile)
-```
-
-##### Acm_GpResetPath
-
-```cpp
-U32 Acm_GpResetPath (PHAND GroupHandle)
-```
-
-##### Acm_GpGetPathStatus
-
-```cpp
-U32 Acm_GpGetPathStatus(HAND GroupHandle, PU32 pCurIndex, PU32 pCurCmdFunc, PU32 pRemainCount, PU32 pFreeSpaceCount)
-```
-
-##### Acm_GpMoveSelPath
-
-```cpp
-U32 Acm_GpMoveSelPath(HAND GroupHandle, HAND PathHandle, U32 StartIndex, U32 EndIndex, U8 Repeat)
-```
-
-##### Acm_GpGetPathIndexStatus
-
-```cpp
-U32 Acm_GpGetPathIndexStatus(HAND GroupHandle, U32 Index, PU16 CmdFunc, PU16 MoveMode, PF64 FH, PF64 FL, PF64 EndPoint_DataArray, PF64 CenPoint_DataArray, PU32 ArrayElements);
-
-```
-
-##### Acm_GpAddBSplinePath
-
-```cpp
-U32 Acm_GpAddBSplinePath(HAND GroupHandle, F64 FH, F64 FL, F64 *CtrlP0List, F64 *CtrlP1List, U32 CtrlPCount, F64 *NodeList, U32 NodeCount, U32 Degree, U32 CutPointCount)
-```
-
-##### Acm_GpAddCSplinePath
-
-```cpp
-U32 Acm_GpAddCSplinePath(HAND GroupHandle, F64 FH, F64 FL, F64 *CtrlP0List, F64 *CtrlP1List, F64 *Tightness, U32 CtrlPCount, U32 CutPointCount)
-
-```
-
-##### Acm_GpResumeMotion
-
-```cpp
-U32 Acm_GpResumeMotion(HAND GroupHandle)
-```
-
-##### Acm_GpPauseMotion
-
-```cpp
-U32 Acm_GpPauseMotion(HAND GroupHandle)
-```
-
-##### Acm_GpStopDec
-
-```cpp
-U32 Acm_GpStopDec(HAND GroupHandle)
-```
-
-##### Acm_GpStopDecEx
-
-```cpp
-U32 Acm_GpStopDecEx(HAND GroupHandle, F64 NewDec)
-```
-
-##### Acm_GpStopEmg
-
-```cpp
-U32 Acm_GpStopEmg(HAND GroupHandle)
-```
-
-##### Acm_GpChangeVel
-
-```cpp
-U32 Acm_GpChangeVel(HAND GroupHandle, F64 NewVelocity)
-```
-
-##### Acm_GpChangeVelByRate
-
-```cpp
-U32 Acm_GpChangeVelByRate(HAND GroupHandle, U32 Rate)
-```
-
-##### Acm_GpGetCmdVel
-
-```cpp
-U32 Acm_GpGetCmdVel(HAND GroupHandle, PF64 CmdVel)
-```
-
-##### Acm_GpGetINxStopStatus
-
-```cpp
-U32 Acm_GpGetINxStopStatus(HAND GroupHandle,PU32 Stop_Flag)
-```
-
-##### Acm_GpResetINxStopStatus
-
-```cpp
-U32 Acm_GpResetINxStopStatus(HAND GroupHandle)
-```
-
-##### Acm_GpGetPausePosition
-
-```cpp
-U32 Acm_GpGetPausePosition(HAND GroupHandle, PF64 RefPausePosition)
-```
-
-##### Acm_GpSetRawData
-
-```cpp
-U32 Acm_GpSetRawData(HAND GroupHandle, U8 index, F64 RawData)
-```
-
-##### Acm_GpGetRawData
-
-```cpp
-U32 Acm_GpGetRawData(HAND GroupHandle, U8 index, PF64 RawData)
-```
-
-##### Acm_DaqDiGetByte
-
-```cpp
-U32 Acm_DaqDiGetByte(HAND DeviceHandle, U16 DiPort, PU8 ByteData)
-```
-
-##### Acm_DaqDiGetBit
-
-```cpp
-U32 Acm_DaqDiGetBit(HAND DeviceHandle, U16 DiChannel, PU8 BitData)
-```
-
-##### Acm_DaqDoSetByte
-
-```cpp
-U32 Acm_DaqDoSetByte(HAND DeviceHandle, U16 DoPort, U8	ByteData)
-```
-
-##### Acm_DaqDoSetBit
-
-```cpp
-U32 Acm_DaqDoSetBit(HAND DeviceHandle, U16 DoChannel, U8 BitData)
-```
-
-##### Acm_DaqDiSetBit
-
-```cpp
-U32 Acm_DaqDiSetBit(HAND DeviceHandle, U16 DiChannel, U8 BitData)
-```
-
-##### Acm_DaqDoGetByte
-
-```cpp
-U32 Acm_DaqDoGetByte(HAND DeviceHandle, U16 DoPort, PU8 ByteData)
-```
-
-##### Acm_DaqDoGetBit
-
-```cpp
-U32 Acm_DaqDoGetBit(HAND DeviceHandle, U16 DoChannel, PU8 BitData)
-```
-
-##### Acm_DaqDiGetBytes
-
-```cpp
-U32 Acm_DaqDiGetBytes(HAND DeviceHandle, U16 StartPort, U16 NumPort, PU8 ByteDataArray)
-```
-
-##### Acm_DaqDoSetBytes
-
-```cpp
-U32 Acm_DaqDoSetBytes(HAND DeviceHandle, U16 StartPort, U16 NumPort, PU8 ByteDataArray)
-```
-
-##### Acm_DaqDoGetBytes
-
-```cpp
-U32 Acm_DaqDoGetBytes(HAND DeviceHandle, U16 StartPort, U16 NumPort, PU8 ByteDataArray)
-```
-
-##### Acm_DaqDiGetByteEx
-
-```cpp
-U32 Acm_DaqDiGetByteEx(HAND DeviceHandle, U16 RingNo, U16 SlaveIP, U16 DiPort, PU8 ByteData)
-```
-
-##### Acm_DaqDoSetByteEx
-
-```cpp
-U32 Acm_DaqDoSetByteEx(HAND DeviceHandle, U16 RingNo, U16 SlaveIP, U16 DoPort, U8 ByteData)
-```
-
-##### Acm_DaqDoGetByteEx
-
-```cpp
-U32 Acm_DaqDoGetByteEx(HAND DeviceHandle, U16 RingNo, U16 SlaveIP, U16 DoPort, PU8 ByteData)
-```
-
-##### Acm_DaqDoGetBitEx
-
-```cpp
-U32 Acm_DaqDoGetBitEx(HAND DeviceHandle, U16 RingNo, U16 SlaveIP, U16 DoChannel, PU8 BitData)
-```
-
-##### Acm_DaqAiGetRawData
-
-```cpp
-U32 Acm_DaqAiGetRawData(HAND DeviceHandle, U16 AiChannel, PU16 AiData)
-```
-
-##### Acm_DaqAiGetEngData
-
-```cpp
-U32 Acm_DaqAiGetEngData(HAND DeviceHandle, U16 AiChannel, PF32 AiData)
-```
-
-##### Acm_DaqAiGetVoltData
-
-```cpp
-U32 Acm_DaqAiGetVoltData(HAND DeviceHandle, U16	AiChannel, PF32	AiData)
-```
-
-##### Acm_DaqAiGetCurrData
-
-```cpp
-U32 Acm_DaqAiGetCurrData(HAND DeviceHandle, U16	AiChannel, PF32	AiData)
-```
-
-##### Acm_DaqAiZeroCalibration
-
-```cpp
-U32 Acm_DaqAiZeroCalibration(HAND DeviceHandle, U16	AiChannel)
-```
-
-##### Acm_DaqAiSpanCalibration
-
-```cpp
-U32 Acm_DaqAiSpanCalibration(HAND DeviceHandle, U16	AiChannel)
-```
-
-##### Acm_DaqAiGetChannelStatus
-
-```cpp
-U32 Acm_DaqAiGetChannelStatus(HAND DeviceHandle, U16 AiChannel, PU32 ChanStatus)
-```
-
-##### Acm_DaqAoSetRawData
-
-```cpp
-U32 Acm_DaqAoSetRawData(HAND DeviceHandle, U16 AoChannel, U16 AoData)
-```
-
-##### Acm_DaqAoSetEngData
-
-```cpp
-U32 Acm_DaqAoSetEngData(HAND DeviceHandle, U16 AoChannel, F32 AoData)
-```
-
-##### Acm_DaqAoSetVoltData
-
-```cpp
-U32 Acm_DaqAoSetVoltData(HAND DeviceHandle, U16	AoChannel, F32 AoData)
-```
-
-##### Acm_DaqAoSetCurrData
-
-```cpp
-U32 Acm_DaqAoSetCurrData(HAND DeviceHandle, U16	AoChannel, F32 AoData)
-```
-
-##### Acm_DaqAoGetRawData
-
-```cpp
-U32 Acm_DaqAoGetRawData(HAND DeviceHandle, U16 AoChannel, PU16 AoData)
-```
-
-##### Acm_DaqAoGetEngData
-
-```cpp
-U32 Acm_DaqAoGetEngData(HAND DeviceHandle, U16 AoChannel, PF32 AoData)
-```
-
-##### Acm_DaqAoGetVoltData
-
-```cpp
-U32 Acm_DaqAoGetVoltData(HAND DeviceHandle, U16	AoChannel, PF32 AoData)
-```
-
-##### Acm_DaqAoGetCurrData
-
-```cpp
-U32 Acm_DaqAoGetCurrData(HAND DeviceHandle, U16	AoChannel, PF32 AoData)
-```
-
-##### Acm_DaqAoSetCaliType
-
-```cpp
-U32 Acm_DaqAoSetCaliType(HAND DeviceHandle, U16	AoChannel, U16 TrimType)
-```
-
-##### Acm_DaqAoSetCaliValue
-
-```cpp
-U32 Acm_DaqAoSetCaliValue(HAND DeviceHandle, U16 AoChannel, U16 CaliData)
-```
-
-##### Acm_DaqAoCaliDone
-
-```cpp
-U32 Acm_DaqAoCaliDone(HAND DeviceHandle, U16 AoChannel, bool done)
-```
-
-##### Acm_DaqAoCaliDefault
-
-```cpp
-U32 Acm_DaqAoCaliDefault(HAND DeviceHandle, U16	AoChannel)
-```
-
-##### Acm_DaqAoGetChannelStatus
-
-```cpp
-U32 Acm_DaqAoGetChannelStatus(HAND DeviceHandle, U16 AoChannel, PU32 ChanStatus)
-```
-
-##### Acm_DaqSetScaledProperty
-
-```cpp
-U32 Acm_DaqSetScaledProperty(HAND DeviceHandle, PORT_TYPE Type, U16 Channel, F32 UpperBound, F32 LowerBound, U16 Resolution, I16 TransType)
-```
-
-##### Acm_DaqAiGetRawDataEx
-
-```cpp
-U32 Acm_DaqAiGetRawDataEx(HAND DeviceHandle, U16 RingNo, U16 SlaveIP, U16 AiChannel, PU16 AiData)
-```
-
-##### Acm_DaqAiGetEngDataEx
-
-```cpp
-U32 Acm_DaqAiGetEngDataEx(HAND DeviceHandle, U16 RingNo, U16 SlaveIP, U16 AiChannel, PF32 AiData)
-```
-
-##### Acm_DaqAiGetVoltDataEx
-
-```cpp
-U32 Acm_DaqAiGetVoltDataEx(HAND DeviceHandle, U16 RingNo, U16 SlaveIP, U16 AiChannel, PF32 AiData)
-```
-
-##### Acm_DaqAiGetCurrDataEx
-
-```cpp
-U32 Acm_DaqAiGetCurrDataEx(HAND DeviceHandle, U16 RingNo, U16 SlaveIP, U16 AiChannel, PF32 AiData)
-```
-
-##### Acm_DaqAiGetChannelStatusEx
-
-```cpp
-U32 Acm_DaqAiGetChannelStatusEx(HAND DeviceHandle, U16 RingNo, U16 SlaveIP, U16 AiChannel, PU32 ChanStatus)
-```
-
-##### Acm_DaqAoSetRawDataEx
-
-```cpp
-U32 Acm_DaqAoSetRawDataEx(HAND DeviceHandle, U16 RingNo, U16 SlaveIP, U16 AoChannel, U16 AoData)
-```
-
-##### Acm_DaqAoSetEngDataEx
-
-```cpp
-U32 Acm_DaqAoSetEngDataEx(HAND DeviceHandle, U16 RingNo, U16 SlaveIP, U16 AoChannel, F32 AoData)
-```
-
-##### Acm_DaqAoSetVoltDataEx
-
-```cpp
-U32 Acm_DaqAoSetVoltDataEx(HAND DeviceHandle, U16 RingNo, U16 SlaveIP, U16 AoChannel, F32 AoData)
-```
-
-##### Acm_DaqAoSetCurrDataEx
-
-```cpp
-U32 Acm_DaqAoSetCurrDataEx(HAND DeviceHandle, U16 RingNo, U16 SlaveIP, U16 AoChannel, F32 AoData)
-```
-
-##### Acm_DaqAoGetRawDataEx
-
-```cpp
-U32 Acm_DaqAoGetRawDataEx(HAND DeviceHandle, U16 RingNo, U16 SlaveIP, U16 AoChannel, PU16 AoData)
-```
-
-##### Acm_DaqAoGetEngDataEx
-
-```cpp
-U32 Acm_DaqAoGetEngDataEx(HAND DeviceHandle, U16 RingNo, U16 SlaveIP, U16 AoChannel, PF32 AoData)
-```
-
-##### Acm_DaqAoGetVoltDataEx
-
-```cpp
-U32 Acm_DaqAoGetVoltDataEx(HAND DeviceHandle, U16 RingNo, U16 SlaveIP, U16 AoChannel, PF32 AoData)
-```
-
-##### Acm_DaqAoGetCurrDataEx
-
-```cpp
-U32 Acm_DaqAoGetCurrDataEx(HAND DeviceHandle, U16 RingNo, U16 SlaveIP, U16 AoChannel, PF32 AoData)
-```
-
-##### Acm_DaqGetIOLinkStatus
-
-```cpp
-U32 Acm_DaqGetIOLinkStatus(HAND DeviceHandle, PU32 pStatus)
-```
-
-##### Acm_DaqCntTriggerCmp
-
-```cpp
-U32 Acm_DaqCntTriggerCmp(HAND DeviceHandle, U16 CntChannel)
-```
-
-##### Acm_DaqCntResetLatch
-
-```cpp
-U32 Acm_DaqCntResetLatch(HAND DeviceHandle, U16 CntChannel)
-```
-
-##### Acm_DaqCntResetCmp
-
-```cpp
-U32 Acm_DaqCntResetCmp(HAND DeviceHandle, U16 CntChannel)
-```
-
-##### Acm_DaqCntResetCnt
-
-```cpp
-U32 Acm_DaqCntResetCnt(HAND DeviceHandle, U16 CntChannel)
-```
-
-##### Acm_DaqCntGetCounterData
-
-```cpp
-U32 Acm_DaqCntGetCounterData(HAND DeviceHandle, U16 CntChannel, PF64 CounterData)
-```
-
-##### Acm_DaqCntSetCounterData
-
-```cpp
-U32 Acm_DaqCntSetCounterData(HAND DeviceHandle, U16 CntChannel, F64 CounterData)
-```
-
-##### Acm_DaqCntGetCounterFrequency
-
-```cpp
-U32 Acm_DaqCntGetCounterFrequency(HAND DeviceHandle, U16 CntChannel, PF64 Frequency)
-```
-
-##### Acm_DaqCntGetExtDriveData
-
-```cpp
-U32 Acm_DaqCntGetExtDriveData(HAND DeviceHandle, U16 CntChannel, PF64 CounterData)
-```
-
-##### Acm_DaqCntSetExtDriveData
-
-```cpp
-U32 Acm_DaqCntSetExtDriveData(HAND DeviceHandle, U16 CntChannel, F64 CounterData)
-```
-
-##### Acm_DaqCntGetLatchData
-
-```cpp
-U32 Acm_DaqCntGetLatchData(HAND DeviceHandle, U16 CntChannel, PF64 LatchData)
-```
-
-##### Acm_DaqCntGetCmpData
-
-```cpp
-U32 Acm_DaqCntGetCmpData(HAND DeviceHandle, U16 CntChannel, PF64 CmpData)
-```
-
-##### Acm_DaqCntSetCmpData
-
-```cpp
-U32 Acm_DaqCntSetCmpData(HAND DeviceHandle, U16 CntChannel, F64 CmpData)
-```
-
-##### Acm_DaqCntSetCmpTable
-
-```cpp
-U32 Acm_DaqCntSetCmpTable(HAND DeviceHandle, U16 CntChannel, PF64 TableArray, I32 ArrayCount)
-```
-
-##### Acm_DaqCntSetCmpAuto
-
-```cpp
-U32 Acm_DaqCntSetCmpAuto(HAND DeviceHandle, U16 CntChannel, F64 Start, F64 End, F64 Interval)
-```
-
-##### Acm_DaqCntGetLatchBufferStatus
-
-```cpp
-U32 Acm_DaqCntGetLatchBufferStatus(HAND DeviceHandle, U16 CntChannel, PU32 RemainCnt, PU32 SpaceCnt)
-```
-
-##### Acm_DaqCntReadLatchBuffer
-
-```cpp
-U32 Acm_DaqCntReadLatchBuffer(HAND DeviceHandle, U16 CntChannel, PF64 LatchDataArray, PU32 DataCnt)
-```
-
-##### Acm_DaqCntTriggerCmpEx
-
-```cpp
-U32 Acm_DaqCntTriggerCmpEx(HAND DeviceHandle, U16 RingNo, U16 SlaveIP, U16 CntChannel)
-```
-
-##### Acm_DaqCntTriggerLatchEx
-
-```cpp
-U32 Acm_DaqCntTriggerLatchEx(HAND DeviceHandle, U16 RingNo, U16 SlaveIP, U16 CntChannel)
-```
-
-##### Acm_DaqCntResetLatchEx
-
-```cpp
-U32 Acm_DaqCntResetLatchEx(HAND DeviceHandle, U16 RingNo, U16 SlaveIP, U16 CntChannel)
-```
-
-##### Acm_DaqCntResetCmpEx
-
-```cpp
-U32 Acm_DaqCntResetCmpEx(HAND DeviceHandle, U16 RingNo, U16 SlaveIP, U16 CntChannel)
-```
-
-##### Acm_DaqCntResetCntEx
-
-```cpp
-U32 Acm_DaqCntResetCntEx(HAND DeviceHandle, U16 RingNo, U16 SlaveIP, U16 CntChannel)
-```
-
-##### Acm_DaqCntGetCounterDataEx
-
-```cpp
-U32 Acm_DaqCntGetCounterDataEx(HAND DeviceHandle, U16 RingNo, U16 SlaveIP, U16 CntChannel, PF64 CounterData)
-```
-
-##### Acm_DaqCntSetCounterDataEx
-
-```cpp
-U32 Acm_DaqCntSetCounterDataEx(HAND DeviceHandle, U16 RingNo, U16 SlaveIP, U16 CntChannel, F64 CounterData)
-```
-
-##### Acm_DaqCntGetCounterFrequencyEx
-
-```cpp
-U32 Acm_DaqCntGetCounterFrequencyEx(HAND DeviceHandle, U16 RingNo, U16 SlaveIP, U16 CntChannel, PF64 Frequency)
-```
-
-##### Acm_DaqCntGetExtDriveDataEx
-
-```cpp
-U32 Acm_DaqCntGetExtDriveDataEx(HAND DeviceHandle, U16 RingNo, U16 SlaveIP, U16 CntChannel, PF64 CounterData)
-```
-
-##### Acm_DaqCntSetExtDriveDataEx
-
-```cpp
-U32 Acm_DaqCntSetExtDriveDataEx(HAND DeviceHandle, U16 RingNo, U16 SlaveIP, U16 CntChannel, F64 CounterData)
-```
-
-##### Acm_DaqCntGetLatchDataEx
-
-```cpp
-U32 Acm_DaqCntGetLatchDataEx(HAND DeviceHandle, U16 RingNo, U16 SlaveIP, U16 CntChannel, PF64 LatchData)
-```
-
-##### Acm_DaqCntGetCmpDataEx
-
-```cpp
-U32 Acm_DaqCntGetCmpDataEx(HAND DeviceHandle, U16 RingNo, U16 SlaveIP, U16 CntChannel, PF64 CmpData)
-```
-
-##### Acm_DaqCntSetCmpDataEx
-
-```cpp
-U32 Acm_DaqCntSetCmpDataEx(HAND DeviceHandle, U16 RingNo, U16 SlaveIP, U16 CntChannel, F64 CmpData)
-```
-
-##### Acm_DaqCntSetCmpTableEx
-
-```cpp
-U32 Acm_DaqCntSetCmpTableEx(HAND DeviceHandle, U16 RingNo, U16 SlaveIP, U16 CntChannel, PF64 TableArray, I32 ArrayCount)
-```
-
-##### Acm_DaqCntSetCmpAutoEx
-
-```cpp
-U32 Acm_DaqCntSetCmpAutoEx(HAND DeviceHandle, U16 RingNo, U16 SlaveIP, U16 CntChannel, F64 Start, F64 End, F64 Interval)
-```
-
-##### Acm_DaqCntGetLatchBufferStatusEx
-
-```cpp
-U32 Acm_DaqCntGetLatchBufferStatusEx(HAND DeviceHandle, U16 RingNo, U16 SlaveIP, U16 CntChannel, PU32 RemainCnt, PU32 SpaceCnt)
-```
-
-##### Acm_DaqCntReadLatchBufferEx
-
-```cpp
-U32 Acm_DaqCntReadLatchBufferEx(HAND DeviceHandle, U16 RingNo, U16 SlaveIP, U16 CntChannel, PF64 LatchDataArray, PU32 DataCnt)
-```
-
-##### Acm_AxPWMOut
-
-```cpp
-U32 Acm_AxPWMOut(HAND AxisHandle,U32 OFForON,U32 PulseCount)
-```
-
-##### Acm_AxGetPWMOutState
-
-```cpp
-U32 Acm_AxGetPWMOutState(HAND AxisHandle,PU32 OFForON)
-```
-
-##### Acm_DevECATOpen
-
-```cpp
-U32 Acm_DevECATOpen(U32 DeviceNumber, U16 Ring0SlaveCount, U16 Ring1SlaveCount, U16 Timeout, PHAND DeviceHandle)
-```
-
-##### Acm_DevReadMailBox
-
-```cpp
-U32 Acm_DevReadMailBox(HAND Handle, U16 par_id, U32 data_index, U32 data_count, PU32 DataBuffer)
-```
-
-##### Acm_DevReadMultiMailBox
-
-```cpp
-U32 Acm_DevReadMultiMailBox(HAND Handle, U8 object_id, PU16 par_id, PU32 DataBuffer, PU32 ErrorBuffer, U32 ArrayElements)
-```
-
-##### Acm_DevWriteMailBox
-
-```cpp
-U32 Acm_DevWriteMailBox(HAND Handle, U16 par_id, U32 data_index, U32 data_count, PU32 DataBuffer)
-```
-
-##### Acm_LoadENI
-
-```cpp
-U32 Acm_LoadENI(HAND DeviceHandle, PI8 FilePath)
-```
-
-##### Acm_DevGetMasInfo
-
-```cpp
-U32 Acm_DevGetMasInfo(HAND DeviceHandle, PVOID pMasInfo, PU16 SlaveIPArray, PU32 SlvCnt)
-```
-
-##### Acm_DevGetMasStates
-
-```cpp
-U32 Acm_DevGetMasStates(HAND DeviceHandle, U16 RingNo, PU16 SlvCounters, PU16 SlvStates)
-```
-
-##### Acm_DevGetSlaveInfo
-
-```cpp
-U32 Acm_DevGetSlaveInfo(HAND DeviceHandle, U16 RingNo, U16 SlaveIP, PVOID pInfo)
-```
-
-##### Acm_DevGetModuleInfo
-
-```cpp
-U32 Acm_DevGetModuleInfo(HAND DeviceHandle, U16 RingNo, U16 SlaveIP, PU32 ModIDArray, PU32 ModCnt)
-```
-
-##### Acm_DevGetSlaveDataCnt
-
-```cpp
-U32 Acm_DevGetSlaveDataCnt(HAND DeviceHandle, U16 RingNo, U16 SlaveIP, U8 DataType, PU32 DataCnt)
-```
-
-##### Acm_DevGetSlaveFwVersion
-
-```cpp
-U32 Acm_DevGetSlaveFwVersion(HAND DeviceHandle, U16 RingNo, U16 SlaveIP, OUT PI8 VersionInfo)
-```
-
-##### Acm_DevSetSlaveID
-
-```cpp
-U32 Acm_DevSetSlaveID(HAND DeviceHandle, U16 RingNo, U16 SlaveIP, U16 SlaveNewIP)
 ```
 
 
 ---
 
 ## Common Motion API 2.0 (AdvCmnAPI_CM2)
+##### Acm2_GetErrorMessage
+Get error message.
+```cpp
+U32 Acm2_GetErrorMessage(U32 ErrorCode, PI8 lpszError, U32 nMaxError)
+```
+
+##### Acm2_DevInitialize
+Initial the device.
+
+```cpp
+U32 Acm2_DevInitialize()
+```
+
 ##### Acm2_GetAvailableDevs
 Get all device list.
 ```cpp
 U32 Acm2_GetAvailableDevs(DEVLIST *DeviceList, U32 MaxEntries, PU32 OutEntries)
 ```
 
-##### Acm2_DevSaveAllMapFile
-Upload input/output mapping table from device.
-
+##### Acm2_GetObjectCount
+Get object count from object type
 ```cpp
-U32 Acm2_DevSaveAllMapFile(PI8 FilePath)
-```
-
-##### Acm2_DevLoadAllMapFile
-Download input/output mapping table to device.
-
-```cpp
-U32 Acm2_DevLoadAllMapFile(PI8 FilePath)
+U32 Acm2_GetObjectCount(ADV_OBJ_TYPE ObjType, PU32 ObjCnt)
 ```
 
 ##### Acm2_GetMappedPhysicalID
@@ -2639,87 +2764,11 @@ errCde = AdvMot.Acm2_GetAvailableDevs(dev_list, 10, byref(out_ent))
 errCde = AdvMot.Acm2_DevAllClose()
 ```
 
-##### Acm2_DevInitialize
-Initial the device.
+##### Acm2_GetLastError
+Get last error of system.
 
 ```cpp
-U32 Acm2_DevInitialize()
-```
-
-##### Acm2_AxGetPosition
-Get axis position by axis number, and position type.
-
-```cpp
-U32 Acm2_AxGetPosition(U32 AxID, POSITION_TYPE PosType, PF64 Position)
-```
-```python
-## Example code
-from ctypes import *
-from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI_CM2 as AdvMot
-from AcmP.AdvMotApi_CM2 import DEVLIST
-from AcmP.AdvMotDrv import POSITION_TYPE
-
-dev_list = (DEVLIST*10)()
-out_ent = c_uint32(0)
-errCde = c_uint32(0)
-## Get Available
-errCde = AdvMot.Acm2_GetAvailableDevs(dev_list, 10, byref(out_ent))
-## Initial device
-errCde = AdvMot.Acm2_DevInitialize()
-axid = c_uint32(0)
-pos_type = c_uint(POSITION_TYPE.POSITION_CMD.value)
-pos = c_double(0)
-## Get axis 0 command position
-errCde = AdvMot.Acm2_AxGetPosition(axid, pos_type, byref(pos))
-```
-
-##### Acm2_AxPTP
-Set axis move with position.
-
-```cpp
-U32 Acm2_AxPTP(U32 AxID, ABS_MODE ptpMode, F64 Distance)
-```
-
-##### Acm2_AxGetState
-Get axis state.
-
-```cpp
-U32 Acm2_AxGetState(U32 AxID, AXIS_STATUS_TYPE StatusType, PU32 State)
-```
-```python
-## Example code
-from ctypes import *
-from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI_CM2 as AdvMot
-from AcmP.AdvMotApi_CM2 import DEVLIST
-from AcmP.AdvMotDrv import POSITION_TYPE, ABS_MODE, AXIS_STATUS_TYPE
-
-dev_list = (DEVLIST*10)()
-out_ent = c_uint32(0)
-errCde = c_uint32(0)
-## Get Available
-errCde = AdvMot.Acm2_GetAvailableDevs(dev_list, 10, byref(out_ent))
-## Initial device
-errCde = AdvMot.Acm2_DevInitialize()
-axid = c_uint32(0)
-pos_type = c_uint(POSITION_TYPE.POSITION_CMD.value)
-pos = c_double(0)
-distance = c_double(1000)
-abs_mode = c_uint(ABS_MODE.MOVE_REL.value)
-state_type = c_uint(AXIS_STATUS_TYPE.AXIS_STATE.value)
-state = c_uint32(16)
-## Get axis 0 command position
-errCde = AdvMot.Acm2_AxGetPosition(axid, pos_type, byref(pos))
-## Move axis 0 to position 1000(command position)
-errCde = AdvMot.Acm2_AxPTP(axid, abs_mode, distance)
-## Check axis 0 status
-errCde = AdvMot.Acm2_AxGetState(axid, state_type, byref(state))
-```
-
-##### Acm2_SetProperty
-Set device/axis property.
-
-```cpp
-U32 Acm2_SetProperty(U32 ObjID, U32 PropertyID, F64 Value)
+U32 Acm2_GetLastError(ADV_OBJ_TYPE ObjType, U32 ObjLogicalID)
 ```
 
 ##### Acm2_GetProperty
@@ -2750,6 +2799,13 @@ errCde = AdvMot.Acm2_SetProperty(do_ch, property_id, val)
 get_val = c_double(0)
 ## Get local DO channel 0 property value
 errCde = AdvMot.Acm2_GetProperty(do_ch, property_id, byref(get_val))
+```
+
+##### Acm2_SetProperty
+Set device/axis property.
+
+```cpp
+U32 Acm2_SetProperty(U32 ObjID, U32 PropertyID, F64 Value)
 ```
 
 ##### Acm2_SetMultiProperty
@@ -2907,91 +2963,6 @@ Preview motion.
 U32 Acm2_DevPreviewMotion(U32 DevID, PI8 InputFile, PI8 OutputFile, U16 NumberOfAxes)
 ```
 
-##### Acm2_ChSetDOBit
-Set DO bit by channel.
-
-```cpp
-U32 Acm2_ChSetDOBit(U32 DoChannel, U32 BitData)
-```
-```python
-## Example code
-## Using the example code after LoadENI & Connect
-import time
-import os
-from ctypes import *
-from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI_CM2 as AdvMot
-from AcmP.AdvMotApi_CM2 import DEVLIST
-from AcmP.AdvMotPropID_CM2 import PropertyID2
-
-dev_list = (DEVLIST*10)()
-out_ent = c_uint32(0)
-errCde = c_uint32(0)
-## Get Available
-errCde = AdvMot.Acm2_GetAvailableDevs(dev_list, 10, byref(out_ent))
-## Initial device
-errCde = AdvMot.Acm2_DevInitialize()
-
-## Set DO channel, local DO on PCIE-1203 is 0~1, rest of device will set from channel 8~
-do_channel8 = c_uint32(8)
-do_channel14 = c_uint32(14)
-bit_data = c_uint32(DO_ONOFF.DO_ON.value)
-## Set DO(8) on
-errCde = AdvMot.Acm2_ChSetDOBit(do_channel8, bit_data)
-## Set DO(14) on
-errCde = AdvMot.Acm2_ChSetDOBit(do_channel14, bit_data)
-time.sleep(0.5)
-get_data8 = c_uint32(0)
-get_data14 = c_uint32(0)
-## Get DO(8) value
-errCde = AdvMot.Acm2_ChGetDOBit(do_channel8, byref(get_data8))
-## Get DO(14) value
-errCde = AdvMot.Acm2_ChGetDOBit(do_channel8, byref(get_data14))
-```
-
-##### Acm2_ChGetDOBit
-Get DO bit by channel.
-
-```cpp
-U32 Acm2_ChGetDOBit(U32 DoChannel, PU32 BitData)
-```
-```python
-## Example code
-from ctypes import *
-from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI_CM2 as AdvMot
-from AcmP.AdvMotApi_CM2 import DEVLIST
-from AcmP.AdvMotPropID_CM2 import PropertyID2
-
-dev_list = (DEVLIST*10)()
-out_ent = c_uint32(0)
-errCde = c_uint32(0)
-## Get Available
-errCde = AdvMot.Acm2_GetAvailableDevs(dev_list, 10, byref(out_ent))
-## Initial device
-errCde = AdvMot.Acm2_DevInitialize()
-
-do_ch = c_uint32(0)
-property_id = c_uint(PropertyID2.CFG_CH_DaqDoFuncSelect.value)
-val = c_double(1)
-## Set local DO channel 0 as gerneral DO
-errCde = AdvMot.Acm2_SetProperty(do_ch, property_id, val)
-get_val = c_double(0)
-## Get local DO channel 0 property value
-errCde = AdvMot.Acm2_GetProperty(do_ch, property_id, byref(get_val))
-## Set local DO channel 0 ON
-data = c_uint32(1)
-errCde = AdvMot.Acm2_ChSetDOBit(do_ch, data)
-## Get local DO channel 0 value
-get_data = c_uint32(0)
-errCde = AdvMot.Acm2_ChGetDOBit(do_ch, byref(get_data))
-```
-
-##### Acm2_GetLastError
-Get last error of system.
-
-```cpp
-U32 Acm2_GetLastError(ADV_OBJ_TYPE ObjType, U32 ObjLogicalID)
-```
-
 ##### Acm2_AxReturnPausePosition
 Get axis pause position.
 
@@ -3025,6 +2996,13 @@ Reset axis alarm logic.
 
 ```cpp
 U32 Acm2_AxResetAlm(U32 AxID, DO_ONOFF OnOff)
+```
+
+##### Acm2_AxPTP
+Set axis move with position.
+
+```cpp
+U32 Acm2_AxPTP(U32 AxID, ABS_MODE ptpMode, F64 Distance)
 ```
 
 ##### Acm2_AxMoveContinue
@@ -3085,7 +3063,7 @@ errCde = AdvMot.Acm2_AxGetPosition(ax_id, pos_type, byref(pos))
 Set axis moving home with direction and home mode.
 
 ```cpp
-U32 Acm2_AxHomeEx(U32 AxID, U32 DirMode)
+U32 Acm2_AxHome(U32 AxID, HOME_MODE HomeMode, MOTION_DIRECTION Direction)
 ```
 
 ##### Acm2_AxMoveGantryHome
@@ -3137,6 +3115,11 @@ Reset error of axis.
 U32 Acm2_AxResetError(U32 AxID)
 ```
 
+##### Acm2_AxEnableTrig
+```cpp
+U32 Acm2_AxEnableTrig(U32 AxID, TRIG_PRM TrigPrm)
+```
+
 ##### Acm2_DevResetAllError
 Reset all device error.
 
@@ -3167,6 +3150,47 @@ pos = c_double(0)
 errCde = AdvMot.Acm2_AxSetPosition(ax_id, pos_type, pos)
 ```
 
+##### Acm2_DevCheckAllAxReady
+Check whether axes are ready
+```cpp
+U32 Acm2_DevCheckAllAxReady(U32 Timeout)
+```
+
+##### Acm2_AxGetState
+Get axis state.
+
+```cpp
+U32 Acm2_AxGetState(U32 AxID, AXIS_STATUS_TYPE StatusType, PU32 State)
+```
+```python
+## Example code
+from ctypes import *
+from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI_CM2 as AdvMot
+from AcmP.AdvMotApi_CM2 import DEVLIST
+from AcmP.AdvMotDrv import POSITION_TYPE, ABS_MODE, AXIS_STATUS_TYPE
+
+dev_list = (DEVLIST*10)()
+out_ent = c_uint32(0)
+errCde = c_uint32(0)
+## Get Available
+errCde = AdvMot.Acm2_GetAvailableDevs(dev_list, 10, byref(out_ent))
+## Initial device
+errCde = AdvMot.Acm2_DevInitialize()
+axid = c_uint32(0)
+pos_type = c_uint(POSITION_TYPE.POSITION_CMD.value)
+pos = c_double(0)
+distance = c_double(1000)
+abs_mode = c_uint(ABS_MODE.MOVE_REL.value)
+state_type = c_uint(AXIS_STATUS_TYPE.AXIS_STATE.value)
+state = c_uint32(16)
+## Get axis 0 command position
+errCde = AdvMot.Acm2_AxGetPosition(axid, pos_type, byref(pos))
+## Move axis 0 to position 1000(command position)
+errCde = AdvMot.Acm2_AxPTP(axid, abs_mode, distance)
+## Check axis 0 status
+errCde = AdvMot.Acm2_AxGetState(axid, state_type, byref(state))
+```
+
 ##### Acm2_AxGetMotionIO
 Get axis motion IO status.
 
@@ -3179,6 +3203,44 @@ Set axis position.
 
 ```cpp
 U32 Acm2_AxSetPosition(U32 AxID, POSITION_TYPE PosType, F64 Position)
+```
+
+##### Acm2_DevSetAllPosition
+Set axes position
+```cpp
+U32 Acm2_DevSetAllPosition(POSITION_TYPE PosType, F64 Position)
+```
+
+##### Acm2_AxGetPosition
+Get axis position by axis number, and position type.
+
+```cpp
+U32 Acm2_AxGetPosition(U32 AxID, POSITION_TYPE PosType, PF64 Position)
+```
+```python
+## Example code
+from ctypes import *
+from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI_CM2 as AdvMot
+from AcmP.AdvMotApi_CM2 import DEVLIST
+from AcmP.AdvMotDrv import POSITION_TYPE
+
+dev_list = (DEVLIST*10)()
+out_ent = c_uint32(0)
+errCde = c_uint32(0)
+## Get Available
+errCde = AdvMot.Acm2_GetAvailableDevs(dev_list, 10, byref(out_ent))
+## Initial device
+errCde = AdvMot.Acm2_DevInitialize()
+axid = c_uint32(0)
+pos_type = c_uint(POSITION_TYPE.POSITION_CMD.value)
+pos = c_double(0)
+## Get axis 0 command position
+errCde = AdvMot.Acm2_AxGetPosition(axid, pos_type, byref(pos))
+```
+
+##### Acm2_AxGetMachPosition
+```cpp
+U32 Acm2_AxGetMachPosition(U32 AxID, PF64 Position)
 ```
 
 ##### Acm2_AxSetSpeedProfile
@@ -3247,6 +3309,26 @@ Enable axis external mode.
 
 ```cpp
 U32 Acm2_AxEnableExternalMode(U32 AxID, EXT_DRIVE_MODE ExtDrvMode)
+```
+
+##### Acm2_AxDownloadTorqueTable
+```cpp
+U32 Acm2_AxDownloadTorqueTable(U32 AxID, PF64 PositionArray, PF64 TorqueArray, U32 ArrayElements)
+```
+
+##### Acm2_AxLoadTorqueTableFile
+```cpp
+U32 Acm2_AxLoadTorqueTableFile(U32 AxID, PI8 FilePath, PU32 PointsCount)
+```
+
+##### Acm2_AxMoveTorque
+```cpp
+U32 Acm2_AxMoveTorque(U32 AxID, F64 Distance, F64 Torque, F64 TorqueSlope, F64 Velocity, F64 PressTime, U32 Mode)
+```
+
+##### Acm2_AxGetActTorque
+```cpp
+U32 Acm2_AxGetActTorque(U32 AxID, PF64 Torque)
 ```
 
 ##### Acm2_AxSoftJog
@@ -3321,6 +3403,11 @@ Load axis PVT table.
 
 ```cpp
 U32 Acm2_AxLoadPVTTable(U32 AxID, PF64 Position, PF64 Velocity, PF64 Time, U32 ArrayElements)
+```
+
+##### Acm2_AxCalculatePVTTableContinuous
+```cpp
+U32 Acm2_AxCalculatePVTTableContinuous(U32 AxID, PF64 Position, PF64 Velocity, PF64 JerkFactor, PF64 MaxVel, PF64 Acc, PF64 Dec, U32 ArrayElements, PF64 Time)
 ```
 
 ##### Acm2_AxLoadPVTTableContinuous
@@ -3473,6 +3560,11 @@ Set axis gear.
 U32 Acm2_AxGearIn(U32 PrimaryAxisID, U32 FollowingAxisID, GEAR_IN_PRM GearInParameter)
 ```
 
+##### Acm2_AxTangentInGp
+```cpp
+U32 Acm2_AxTangentInGp(U32 AxID, U32	PrimaryGpID, TANGENT_IN_PRM	TangentInParameter)
+```
+
 ##### Acm2_AxGantryIn
 Set axis gantry.
 
@@ -3620,11 +3712,21 @@ Check axes group.
 U32 Acm2_GpGetAxesInGroup(U32 GpID, PU32 AxisArray, PU32 ArrayElements)
 ```
 
+##### Acm2_GpUpdate
+```cpp
+U32 Acm2_GpUpdate(U32 GpID)
+```
+
 ##### Acm2_GpResetError
 Reset error of group.
 
 ```cpp
 U32 Acm2_GpResetError(U32 GpID)
+```
+
+##### Acm2_GpEnableTrig
+```cpp
+U32 Acm2_GpEnableTrig(U32 GpID, TRIG_PRM TrigPrm)
 ```
 
 ##### Acm2_GpLine
@@ -4521,6 +4623,11 @@ Stop group motion.
 U32 Acm2_GpMotionStop(U32 GpID, MOTION_STOP_MODE StopMode, F64 NewDec)
 ```
 
+##### Acm2_GpChangePos
+```cpp
+U32 Acm2_GpChangePos(U32 GpID, ABS_MODE Mode, PF64 DistanceArray, PU32 ArrayElements)
+```
+
 ##### Acm2_GpChangeVel
 Change velocity of group.
 
@@ -4866,6 +4973,46 @@ Wait axis between path.
 U32 Acm2_GpPathWaitForAxis(U32 GpID, PATH_AX_WAIT_PRM AxWaitPrm)
 ```
 
+##### Acm2_GpPathDIConditional
+```cpp
+U32 Acm2_GpPathDIConditional(U32 GpID, U32 MoveCmd, PATH_DI_WAIT_PRM PathDIPrm)
+```
+
+##### Acm2_GpPathDOConditional
+```cpp
+U32 Acm2_GpPathDOConditional(U32 GpID, U32 MoveCmd, PATH_DO_PRM PathDOPrm)
+```
+
+##### Acm2_GpPathAxisConditional
+```cpp
+U32 Acm2_GpPathAxisConditional(U32 GpID, U32 MoveCmd, PATH_AX_WAIT_PRM AxWaitPrm)
+```
+
+##### Acm2_GpPathVarConditional
+```cpp
+U32 Acm2_GpPathVarConditional(U32 GpID, U32 MoveCmd, PATH_VAR_PRM VarPrm)
+```
+
+##### Acm2_GpPathConditional
+```cpp
+U32 Acm2_GpPathConditional(U32 GpID, U32 MoveCmd)
+```
+
+##### Acm2_GpPathOperator 
+```cpp
+U32 Acm2_GpPathOperator(U32 GpID, PATH_OPERATOR_PRM OperatorPrm)
+```
+
+##### Acm2_GpPathStartRecordBuffer
+```cpp
+U32 Acm2_GpPathStartRecordBuffer(U32 GpID)
+```
+
+##### Acm2_GpPathEndRecordBuffer
+```cpp
+U32 Acm2_GpPathEndRecordBuffer(U32 GpID, VALIDATE_RESULT* OutResult)
+```
+
 ##### Acm2_GpLookAheadPath
 
 ```cpp
@@ -4878,8 +5025,88 @@ U32 Acm2_GpLookAheadPath(U32 GpID, U16 BufferSize, PI8 OutputFile)
 U32 Acm2_GpLookAheadPathFile(U32 GpID, U16 BufferSize, PI8 InputPathFile, PI8 OutputFile, PU32 PathCount)
 ```
 
-##### Acm2_GpLoadAndMovePath -->
+##### Acm2_GpLoadAndMovePath
+```cpp
+U32 Acm2_GpLoadAndMovePath(U32 GpID, PI8 FilePath, PU32 TotalCount)
+```
 
+##### Acm2_ChSetDOBit
+Set DO bit by channel.
+
+```cpp
+U32 Acm2_ChSetDOBit(U32 DoChannel, U32 BitData)
+```
+```python
+## Example code
+## Using the example code after LoadENI & Connect
+import time
+import os
+from ctypes import *
+from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI_CM2 as AdvMot
+from AcmP.AdvMotApi_CM2 import DEVLIST
+from AcmP.AdvMotPropID_CM2 import PropertyID2
+
+dev_list = (DEVLIST*10)()
+out_ent = c_uint32(0)
+errCde = c_uint32(0)
+## Get Available
+errCde = AdvMot.Acm2_GetAvailableDevs(dev_list, 10, byref(out_ent))
+## Initial device
+errCde = AdvMot.Acm2_DevInitialize()
+
+## Set DO channel, local DO on PCIE-1203 is 0~1, rest of device will set from channel 8~
+do_channel8 = c_uint32(8)
+do_channel14 = c_uint32(14)
+bit_data = c_uint32(DO_ONOFF.DO_ON.value)
+## Set DO(8) on
+errCde = AdvMot.Acm2_ChSetDOBit(do_channel8, bit_data)
+## Set DO(14) on
+errCde = AdvMot.Acm2_ChSetDOBit(do_channel14, bit_data)
+time.sleep(0.5)
+get_data8 = c_uint32(0)
+get_data14 = c_uint32(0)
+## Get DO(8) value
+errCde = AdvMot.Acm2_ChGetDOBit(do_channel8, byref(get_data8))
+## Get DO(14) value
+errCde = AdvMot.Acm2_ChGetDOBit(do_channel8, byref(get_data14))
+```
+
+##### Acm2_ChGetDOBit
+Get DO bit by channel.
+
+```cpp
+U32 Acm2_ChGetDOBit(U32 DoChannel, PU32 BitData)
+```
+```python
+## Example code
+from ctypes import *
+from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI_CM2 as AdvMot
+from AcmP.AdvMotApi_CM2 import DEVLIST
+from AcmP.AdvMotPropID_CM2 import PropertyID2
+
+dev_list = (DEVLIST*10)()
+out_ent = c_uint32(0)
+errCde = c_uint32(0)
+## Get Available
+errCde = AdvMot.Acm2_GetAvailableDevs(dev_list, 10, byref(out_ent))
+## Initial device
+errCde = AdvMot.Acm2_DevInitialize()
+
+do_ch = c_uint32(0)
+property_id = c_uint(PropertyID2.CFG_CH_DaqDoFuncSelect.value)
+val = c_double(1)
+## Set local DO channel 0 as gerneral DO
+errCde = AdvMot.Acm2_SetProperty(do_ch, property_id, val)
+get_val = c_double(0)
+## Get local DO channel 0 property value
+errCde = AdvMot.Acm2_GetProperty(do_ch, property_id, byref(get_val))
+## Set local DO channel 0 ON
+data = c_uint32(1)
+errCde = AdvMot.Acm2_ChSetDOBit(do_ch, data)
+## Get local DO channel 0 value
+get_data = c_uint32(0)
+errCde = AdvMot.Acm2_ChGetDOBit(do_ch, byref(get_data))
+```
 
 ##### Acm2_ChGetDIBit
 Get DI bit by channel.
@@ -5059,6 +5286,11 @@ Get AO data.
 U32 Acm2_ChGetAOData(U32 AoChannel, DAQ_DATA_TYPE Type, PF64 AoData)
 ```
 
+##### Acm2_ChGetAOStatus
+```cpp
+U32 Acm2_ChGetAOStatus(U32 AoChannel, PU32 ChanStatus)
+```
+
 ##### Acm2_ChSetAODataByRingNo
 Set AO data by ring number.
 
@@ -5073,6 +5305,16 @@ Get AO data by ring number.
 U32 Acm2_ChGetAODataByRingNo(U32 RingNo, U32 SlaveID, U32 AoChannel, DAQ_DATA_TYPE Type, PF64 AoData)
 ```
 
+##### Acm2_ChGetAOStatusByRingNo
+```cpp
+U32 Acm2_ChGetAOStatusByRingNo(U32 RingNo, U32 SubDeviceID, U32 AoChannel, PU32 ChanStatus)
+```
+
+##### Acm2_ChGetAIStatus
+```cpp
+U32 Acm2_ChGetAIStatus(U32 AiChannel, PU32 ChanStatus)
+```
+
 ##### Acm2_ChGetAIData
 Get AI data.
 
@@ -5080,11 +5322,21 @@ Get AI data.
 U32 Acm2_ChGetAIData(U32 AiChannel, DAQ_DATA_TYPE Type, PF64 AiData)
 ```
 
+##### Acm2_ChGetAIStatusByRingNo
+```cpp
+U32 Acm2_ChGetAIStatusByRingNo(U32 RingNo, U32 SubDeviceID, U32 AiChannel, PU32 ChanStatus)
+```
+
 ##### Acm2_ChGetAIDataByRingNo
 Get AI data by ring number.
 
 ```cpp
 U32 Acm2_ChGetAIDataByRingNo(U32 RingNo, U32 SlaveID, U32 AiChannel, DAQ_DATA_TYPE Type, PF64 AiData)
+```
+
+##### Acm2_ChSetScaledProperty
+```cpp
+U32 Acm2_ChSetScaledProperty(U32 ChID, ADV_OBJ_TYPE ObjType, F64 UpperBound, F64 LowerBound, U32 Resolution, DAQ_TRANS_TYPE TransType)
 ```
 
 ##### Acm2_ChGetCntData
@@ -5191,6 +5443,19 @@ Get compare do linked object.
 
 ```cpp
 U32 Acm2_ChGetLinkedCmpObject(U32 ChID, ADV_OBJ_TYPE *ObjType, PU32 ObjArray, PU32 ArrayElement)
+```
+
+##### Acm2_ChLinkSWCmp
+Link software compare channel with digital output.
+
+```cpp
+U32 Acm2_ChLinkSWCmp(U32 SWCmpID, U32 DOChannel)
+```
+
+##### Acm2_ChGetLinkedSWCmp
+Get software compare channel linked do channel.
+```cpp
+U32 Acm2_ChGetLinkedSWCmp(U32 SWCmpID, PU32 DOChannel)
 ```
 
 ##### Acm2_ChEnableCmp
@@ -5524,6 +5789,11 @@ Get compared buffer status.
 U32	Acm2_ChGetCmpBufferStatus(U32 CmpChannel, PBUFFER_STATUS bufferstatus)
 ```
 
+##### Acm2_ChGetCmpCounter
+```cpp
+U32 Acm2_ChGetCmpCounter(U32 ChID, PU32 CmpCounter)
+```
+
 ##### Acm2_ChLinkLatchAxis
 Link latch to axis.
 ```cpp
@@ -5812,13 +6082,6 @@ Get MDAQ data.
 U32 Acm2_DevMDaqGetData(U32 ChannelID, U32 StartIndex, U32 MaxCount, PF64 DataBuffer)
 ```
 
-##### Acm2_GetDSPFrmWareDwnLoadRate
-Get FW download rate.
-
-```cpp
-U32 Acm2_GetDSPFrmWareDwnLoadRate(U32 DevID, PF64 Percentage)
-```
-
 ##### Acm2_DevLoadENI
 Download ENI file.
 
@@ -6058,6 +6321,11 @@ while (get_sub_dev_state0.value != SUB_DEV_STATE.EC_SLAVE_STATE_OP.value) or (ge
     time.sleep(0.5)
 ```
 
+##### Acm2_DevWriteSDOComplete
+```cpp
+U32 Acm2_DevWriteSDOComplete(U32 RingNo, ECAT_ID_TYPE IDType, U32 SubDeviceID, U32 Index, U32 DataSize, PVOID pValue)
+```
+
 ##### Acm2_DevWriteSDO
 Write data by SDO.
 
@@ -6141,11 +6409,40 @@ Read data by reg.
 U32 Acm2_DevReadReg(U32 RingNo, ECAT_ID_TYPE IDType, U32 SubDeviceID, U32 Address, U32 Type, U32 DataSize, VOID *pValue)
 ```
 
+##### Acm2_DevWriteFoE
+```cpp
+U32 Acm2_DevWriteFoE(U32 RingNo, ECAT_ID_TYPE IDType, U32 SubDeviceID, PI8 FileName, PI8 FilePath, U32 Password)
+```
+
 ##### Acm2_DevReadSubDeviceCommErrCnt
 Read subdevice communication error counter.
 
 ```cpp
 U32 Acm2_DevReadSubDeviceCommErrCnt(U32 RingNo, PU32 ErrCntArray, PU32 ArrayElements)
+```
+
+##### Acm2_DevSaveAllMapFile
+Upload input/output mapping table from device.
+
+```cpp
+U32 Acm2_DevSaveAllMapFile(PI8 FilePath)
+```
+
+##### Acm2_DevSaveMapFile
+```cpp
+U32 Acm2_DevSaveMapFile(U32 RingNo, PI8 FilePath)
+```
+
+##### Acm2_DevLoadAllMapFile
+Download input/output mapping table to device.
+
+```cpp
+U32 Acm2_DevLoadAllMapFile(PI8 FilePath)
+```
+
+##### Acm2_DevLoadMapFile
+```cpp
+U32 Acm2_DevLoadMapFile(U32 RingNo, PI8 FilePath)
 ```
 
 ##### Acm2_Ax1DCompensateTable
@@ -6174,6 +6471,26 @@ Get compensate position by axis.
 
 ```cpp
 U32 Acm2_AxGetCompensatePosition(U32 AxID, PF64 Position)
+```
+
+##### Acm2_AxGetPreview1DCompensatePosition
+```cpp
+U32 Acm2_AxGetPreview1DCompensatePosition(U32 AxID, F64 Position, U32 Direction, PF64 PreviewPosition)
+```
+
+##### Acm2_AxGetPreview2DCompensatePosition
+```cpp
+U32 Acm2_AxGetPreview2DCompensatePosition(U32 AxID, U32 RelAxID, F64 Position, F64 RelPosition, U32 Direction, U32 RelDirection, PF64 PreviewPosition, PF64 PreviewRelPosition)
+```
+
+##### Acm2_AxGetPreviewZAxisCompensatePosition
+```cpp
+U32 Acm2_AxGetPreviewZAxisCompensatePosition(U32 AxID, U32 RelAxID, U32 ZAxID, F64 Position, F64 RelPosition, U32 Direction, U32 RelDirection, PF64 PreviewZPosition)
+```
+
+##### Acm2_DevMultiTrigInitial
+```cpp
+U32 Acm2_DevMultiTrigInitial(U32 RingNo, ECAT_ID_TYPE IDType, U32 SubDeviceID, U32 Enable, U32 PWM, U32 LTC, U32 MPG)
 ```
 
 ##### Acm2_DevOscChannelDataStart
@@ -6218,6 +6535,499 @@ Get Osc. channel status.
 U32  Acm2_DevGetOscChannelStatus(U32 DevID, PU32 Status)
 ```
 
+
+---
+
+## Log Functions
+##### Amc_SetApiLog
+Set API Log options
+
+```cpp
+U32 Amc_SetApiLog(const char* dir, const char* baseName, const AMCApiLogOptions* opt, U64 bufferSize)
+```
+
+```python
+import unittest
+import os
+import time
+import datetime
+from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI_CM2
+from AcmP.AdvCmnAPI_CM2 import AmcLogAPI
+from AcmP.AdvMotDrv import *
+from AcmP.AdvMotApi_CM2 import *
+from AcmP.AdvMotPropID_CM2 import PropertyID2
+from AcmP.AdvMotErr_CM2 import ErrorCode2
+from ctypes import *
+
+logOpt = AMC_API_LOG_OPT()
+logDir = b'D:\\'
+baseName = b'amc_api_log'
+bufferSize = 1024
+logOpt.sizePerFile = bufferSize
+AmcApi.Amc_SetApiLog(logDir, baseName, byref(logOpt), bufferSize)
+```
+
+##### Amc_StartApiLog
+```cpp
+U32 Amc_StartApiLog()
+```
+
+```python
+import unittest
+import os
+import time
+import datetime
+from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI_CM2
+from AcmP.AdvCmnAPI_CM2 import AmcLogAPI
+from AcmP.AdvMotDrv import *
+from AcmP.AdvMotApi_CM2 import *
+from AcmP.AdvMotPropID_CM2 import PropertyID2
+from AcmP.AdvMotErr_CM2 import ErrorCode2
+from ctypes import *
+
+Amc_StartApiLog()
+```
+
+##### Amc_StopApiLog
+```cpp
+U32 Amc_StopApiLog()
+```
+
+```python
+import unittest
+import os
+import time
+import datetime
+from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI_CM2
+from AcmP.AdvCmnAPI_CM2 import AmcLogAPI
+from AcmP.AdvMotDrv import *
+from AcmP.AdvMotApi_CM2 import *
+from AcmP.AdvMotPropID_CM2 import PropertyID2
+from AcmP.AdvMotErr_CM2 import ErrorCode2
+from ctypes import *
+
+Amc_StopApiLog()
+```
+
+##### Amc_OpenApiLogFile
+```cpp
+U32 Amc_OpenApiLogFile(const char* filePath, FILE** pFile)
+```
+
+```python
+import unittest
+import os
+import time
+import datetime
+from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI_CM2
+from AcmP.AdvCmnAPI_CM2 import AmcLogAPI
+from AcmP.AdvMotDrv import *
+from AcmP.AdvMotApi_CM2 import *
+from AcmP.AdvMotPropID_CM2 import PropertyID2
+from AcmP.AdvMotErr_CM2 import ErrorCode2
+from ctypes import *
+
+def convert_filetime_to_datetime(self, filetime_int: int):
+    """
+    將一個 64-bit Windows FILETIME (I64) 轉換為
+    人類可讀的 (human-readable) 本地時區 datetime 物件。
+
+    FILETIME 是自 1601-01-01 0000 UTC 起的 100 奈秒間隔數。
+    """
+    # 1. 定義 FILETIME 的起始時間 (epoch)
+    epoch = datetime.datetime(1601, 1, 1, tzinfo=datetime.timezone.utc)
+    # 2. 計算總共的微秒數 (microseconds)
+    # 1 微秒 = 10 個 (100奈秒) 間隔
+    microseconds_delta = filetime_int / 10
+    # 3. 建立時間差 (timedelta)
+    delta = datetime.timedelta(microseconds=microseconds_delta)
+    # 4. 計算出正確的 UTC 時間
+    utc_time = epoch + delta
+    # 5. 轉換為系統的本地時區 (例如: CST)
+    local_time = utc_time.astimezone(None)
+    return local_time
+
+pfile = c_void_p()
+file_name = b"D:\\TestLog_20251215_195932_443.dat"
+api_header = AMC_API_LOG_HEADER()
+out_str = create_string_buffer(1024)
+stopCnd = 0
+cnt = 0
+Amc_OpenApiLogFile(file_name, byref(pfile))
+while stopCnd != ErrorCode2.NoMoreLogData:
+    data_buffer = (c_uint8 * 1024)()
+    stopCnd = Amc_GetApiLogData(pfile, data_buffer, 1024, byref(api_header))
+    print(f'stopCnd:0x{stopCnd:x}')
+    print(f'header.len={api_header.dataLen}')
+    print(f"type={'Command' if api_header.type == AMC_API_LOG_DATA_TYPE.LogCommand.value else 'Response'}, functionId={api_header.functionId}")
+    if stopCnd == ErrorCode2.SUCCESS:
+        Amc_ApiLogToString(byref(api_header), data_buffer, out_str, 1024)
+        output = out_str.value.decode('utf-8')
+        print(f'{convert_filetime_to_datetime(api_header.timestamp)}|{output}')
+        cnt = cnt + 1
+        print(f'cnt:{cnt}\n')
+Amc_CloseApiLogFile(pfile)
+```
+
+##### Amc_GetApiLogData
+```cpp
+U32 Amc_GetApiLogData(FILE* pFile, U8* pDataBuff, U32 bufferSize, AMCApiLogHeader* pApiLogInfo)
+```
+
+##### Amc_CloseApiLogFile
+```cpp
+U32 Amc_CloseApiLogFile(FILE* pFile);
+```
+
+##### Amc_ApiLogToString
+```cpp
+U32 Amc_ApiLogToString(const AMCApiLogHeader* info, const U8* rawData, I8* outString, U64 outSize)
+```
+
+##### Amc_ApiLogGetStatus
+```cpp
+U32 Amc_ApiLogGetStatus(AMCAPILogStatus* status)
+```
+
+```python
+import unittest
+import os
+import time
+import datetime
+from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI_CM2
+from AcmP.AdvCmnAPI_CM2 import AmcLogAPI
+from AcmP.AdvMotDrv import *
+from AcmP.AdvMotApi_CM2 import *
+from AcmP.AdvMotPropID_CM2 import PropertyID2
+from AcmP.AdvMotErr_CM2 import ErrorCode2
+from ctypes import *
+
+getStatus = AMC_API_LOG_STATUS()
+Amc_ApiLogGetStatus(byref(getStatus))
+```
+
+##### Amc_DataLog_SetLog
+```cpp
+U32 Amc_DataLog_SetLog(U32 DevID, U32 Channel, const LogDataSource* source, U16 index)
+```
+
+```python
+import time
+import unittest
+import os
+from ctypes import *
+from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI_CM2, AmcLogAPI
+from AcmP.AdvMotErr_CM2 import ErrorCode2
+from AcmP.AdvMotDrv import *
+from AcmP.AdvMotApi_CM2 import *
+
+dataLogSource = AMC_DATA_LOG_SOURCE()
+dataLogSource.type = c_uint(AMC_DATA_LOG_SOURCE_TYPE.LOG_SOURCE_MOTION_AXIS.value)
+dataLogSource.selection[0] = c_uint32(0)
+dataLogSource.count = 1
+dataLogSource.items.smItems = AMC_DATA_LOG_SM_ITEMS()
+dataLogSource.items.smItems.cmd_pos = c_uint8(True)
+dataLogSource.items.smItems.act_pos = c_uint8(True)
+dataLogSource.items.smItems.cmd_vel = c_uint8(True)
+dataLogSource.items.smItems.act_vel = c_uint8(True)
+log_ch = c_uint32(1)
+log_index = c_uint16(0)
+Amc_DataLog_SetLog(devID, log_ch, byref(dataLogSource), log_index)
+```
+
+##### Amc_DataLog_GetLog
+```cpp
+U32 Amc_DataLog_GetLog(U32 DevID, U32 Channel, LogDataSource* source, U16 index)
+```
+
+```python
+import time
+import unittest
+import os
+from ctypes import *
+from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI_CM2, AmcLogAPI
+from AcmP.AdvMotErr_CM2 import ErrorCode2
+from AcmP.AdvMotDrv import *
+from AcmP.AdvMotApi_CM2 import *
+
+getDataLogSource = AMC_DATA_LOG_SOURCE()
+log_ch = c_uint32(1)
+log_index = c_uint16(0)
+Amc_DataLog_GetLog(devID, log_ch, byref(getDataLogSource), log_index)
+```
+
+##### Amc_DataLog_SetLogOption
+```cpp
+U32 Amc_DataLog_SetLogOption(U32 DevID, U32 Channel, const DataLogOptions* options)
+```
+
+```python
+import time
+import unittest
+import os
+from ctypes import *
+from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI_CM2, AmcLogAPI
+from AcmP.AdvMotErr_CM2 import ErrorCode2
+from AcmP.AdvMotDrv import *
+from AcmP.AdvMotApi_CM2 import *
+
+dataLogOption = AMC_DATA_LOG_OPTIONS()
+dataLogOption.isRotateFile = c_uint8(False)
+dataLogOption.maxLogFileCount = c_uint32(1)
+log_ch = c_uint32(1)
+Amc_DataLog_SetLogOption(devID, log_ch, byref(dataLogOption))
+```
+
+##### Amc_DataLog_GetLogOption
+```cpp
+U32 Amc_DataLog_GetLogOption(U32 DevID, U32 Channel, DataLogOptions* options)
+```
+
+```python
+import time
+import unittest
+import os
+from ctypes import *
+from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI_CM2, AmcLogAPI
+from AcmP.AdvMotErr_CM2 import ErrorCode2
+from AcmP.AdvMotDrv import *
+from AcmP.AdvMotApi_CM2 import *
+
+log_ch = c_uint32(1)
+getDataLogOption = AMC_DATA_LOG_OPTIONS()
+Amc_DataLog_GetLogOption(devID, log_ch, byref(getDataLogOption))
+```
+
+##### Amc_DataLog_SetLogFilePath
+```cpp
+U32 Amc_DataLog_SetLogFilePath(U32 DevID, U32 Channel, const char* dirPath, const char* fileName)
+```
+
+```python
+import time
+import unittest
+import os
+from ctypes import *
+from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI_CM2, AmcLogAPI
+from AcmP.AdvMotErr_CM2 import ErrorCode2
+from AcmP.AdvMotDrv import *
+from AcmP.AdvMotApi_CM2 import *
+
+log_ch = c_uint32(1)
+dirPath = b'/tmp'
+fileName = b'PyTestDataLog'
+Amc_DataLog_SetLogFilePath(devID, log_ch, dirPath, fileName)
+```
+
+##### Amc_DataLog_GetLogFilePath
+```cpp
+U32 Amc_DataLog_GetLogFilePath(U32 DevID, U32 Channel, char* dirPath, char* fileName)
+```
+
+```python
+import unittest
+import os
+import time
+import datetime
+from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI_CM2
+from AcmP.AdvCmnAPI_CM2 import AmcLogAPI
+from AcmP.AdvMotDrv import *
+from AcmP.AdvMotApi_CM2 import *
+from AcmP.AdvMotPropID_CM2 import PropertyID2
+from AcmP.AdvMotErr_CM2 import ErrorCode2
+from ctypes import *
+
+log_ch = c_uint32(1)
+getDirPath = create_string_buffer(256)
+getFileName = create_string_buffer(256)
+Amc_DataLog_GetLogFilePath(devID, log_ch, getDirPath, getFileName)
+```
+
+##### Amc_DataLog_GetRotatedLogFilePaths
+```cpp
+U32 Amc_DataLog_GetRotatedLogFilePaths(U32 DevID, U32 Channel, char* fileNamesBuffer, U32* bufferSize, PU32 fileCount)
+```
+
+```python
+import unittest
+import os
+import time
+import datetime
+from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI_CM2
+from AcmP.AdvCmnAPI_CM2 import AmcLogAPI
+from AcmP.AdvMotDrv import *
+from AcmP.AdvMotApi_CM2 import *
+from AcmP.AdvMotPropID_CM2 import PropertyID2
+from AcmP.AdvMotErr_CM2 import ErrorCode2
+from ctypes import *
+
+log_ch = c_uint32(1)
+fileBufferSize = c_uint32(1024)
+getFilePath = create_string_buffer(fileBufferSize.value)
+getFileCnt = c_uint32(0)
+Amc_DataLog_GetRotatedLogFilePaths(devID, log_ch, getFilePath, byref(fileBufferSize), byref(getFileCnt))
+```
+
+##### Amc_DataLog_SetLogHeader
+```cpp
+U32 Amc_DataLog_SetLogHeader(U32 DevID, U32 Channel, const char* header)
+```
+
+```python
+import unittest
+import os
+import time
+import datetime
+from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI_CM2
+from AcmP.AdvCmnAPI_CM2 import AmcLogAPI
+from AcmP.AdvMotDrv import *
+from AcmP.AdvMotApi_CM2 import *
+from AcmP.AdvMotPropID_CM2 import PropertyID2
+from AcmP.AdvMotErr_CM2 import ErrorCode2
+from ctypes import *
+
+log_ch = c_uint32(1)
+logHeader = b'Data Log Test from python'
+Amc_DataLog_SetLogHeader(devID, log_ch, logHeader)
+```
+
+##### Amc_DataLog_GetLogHeader
+```cpp
+U32 Amc_DataLog_GetLogHeader(U32 DevID, U32 Channel, char* header)
+```
+
+```python
+import unittest
+import os
+import time
+import datetime
+from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI_CM2
+from AcmP.AdvCmnAPI_CM2 import AmcLogAPI
+from AcmP.AdvMotDrv import *
+from AcmP.AdvMotApi_CM2 import *
+from AcmP.AdvMotPropID_CM2 import PropertyID2
+from AcmP.AdvMotErr_CM2 import ErrorCode2
+from ctypes import *
+
+log_ch = c_uint32(1)
+getLogHeader = create_string_buffer(256)
+Amc_DataLog_GetLogHeader(devID, log_ch, getLogHeader)
+```
+
+##### Amc_DataLog_GetStatus
+```cpp
+U32 Amc_DataLog_GetStatus(U32 DevID, U32 Channel, LogStatus* outStatus)
+```
+
+```python
+import unittest
+import os
+import time
+import datetime
+from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI_CM2
+from AcmP.AdvCmnAPI_CM2 import AmcLogAPI
+from AcmP.AdvMotDrv import *
+from AcmP.AdvMotApi_CM2 import *
+from AcmP.AdvMotPropID_CM2 import PropertyID2
+from AcmP.AdvMotErr_CM2 import ErrorCode2
+from ctypes import *
+
+log_ch = c_uint32(1)
+getDataLogStatus = AMC_DATA_LOG_STATUS()
+Amc_DataLog_GetStatus(devID, log_ch, byref(getDataLogStatus))
+```
+
+##### Amc_DataLog_StartLog
+```cpp
+U32 Amc_DataLog_StartLog(U32 DevID, U32 Channel)
+```
+
+```python
+import unittest
+import os
+import time
+import datetime
+from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI_CM2
+from AcmP.AdvCmnAPI_CM2 import AmcLogAPI
+from AcmP.AdvMotDrv import *
+from AcmP.AdvMotApi_CM2 import *
+from AcmP.AdvMotPropID_CM2 import PropertyID2
+from AcmP.AdvMotErr_CM2 import ErrorCode2
+from ctypes import *
+
+log_ch = c_uint32(1)
+Amc_DataLog_StartLog(devID, log_ch)
+```
+
+##### Amc_DataLog_StopLog
+```cpp
+U32 Amc_DataLog_StopLog(U32 DevID, U32 Channel)
+```
+
+```python
+import unittest
+import os
+import time
+import datetime
+from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI_CM2
+from AcmP.AdvCmnAPI_CM2 import AmcLogAPI
+from AcmP.AdvMotDrv import *
+from AcmP.AdvMotApi_CM2 import *
+from AcmP.AdvMotPropID_CM2 import PropertyID2
+from AcmP.AdvMotErr_CM2 import ErrorCode2
+from ctypes import *
+
+log_ch = c_uint32(1)
+Amc_DataLog_StopLog(devID, log_ch)
+```
+
+##### Amc_DataLog_ResetLog
+```cpp
+U32 Amc_DataLog_ResetLog(U32 DevID, U32 Channel)
+```
+
+```python
+import unittest
+import os
+import time
+import datetime
+from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI_CM2
+from AcmP.AdvCmnAPI_CM2 import AmcLogAPI
+from AcmP.AdvMotDrv import *
+from AcmP.AdvMotApi_CM2 import *
+from AcmP.AdvMotPropID_CM2 import PropertyID2
+from AcmP.AdvMotErr_CM2 import ErrorCode2
+from ctypes import *
+
+log_ch = c_uint32(1)
+Amc_DataLog_ResetLog(devID, log_ch)
+```
+
+##### Amc_DataLog_GetLogFile
+```cpp
+U32 Amc_DataLog_GetLogFile(U32 DevID, U32 Channel, const char* remoteFilePath, char* outBuffer, U32* bufferSize)
+```
+
+```python
+import unittest
+import os
+import time
+import datetime
+from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI_CM2
+from AcmP.AdvCmnAPI_CM2 import AmcLogAPI
+from AcmP.AdvMotDrv import *
+from AcmP.AdvMotApi_CM2 import *
+from AcmP.AdvMotPropID_CM2 import PropertyID2
+from AcmP.AdvMotErr_CM2 import ErrorCode2
+from ctypes import *
+
+bufferSize = 1024
+currSize = bufferSize
+fileBuffer = create_string_buffer(currSize)
+log_ch = c_uint32(1)
+filePath = b'/tmp/PyTestDataLog'
+Amc_DataLog_GetLogFile(devID, log_ch, filePath, fileBuffer, byref(bufferSize))
+```
 
 ---
 

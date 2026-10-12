@@ -15,6 +15,7 @@ from AcmP.AdvMotDrv import *
 from AcmP.AdvMotApi_CM2 import *
 from AcmP.AdvMotPropID_CM2 import PropertyID2
 from AcmP.AdvMotErr_CM2 import ErrorCode2
+from ctypes import *
 from colorama import init, Fore, Style
 global_link_type = 0
 global_run_swcmpch = 1

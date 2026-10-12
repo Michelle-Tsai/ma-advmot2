@@ -11,6 +11,8 @@
 AmcDataLog.h、AmcApiLogManager.h 抓參數名稱與 C 原型放進 docstring，並從
 AdvCmnAPI_CM2.h 的 typedef 找出 Acm2_* 的 enum 參數（例如 POSITION_TYPE）；參數數量
 和 argtypes 不一致時不採用名稱，並在 docstring 標註警告。
+
+python .\gen_api_pyi.py .\AcmP\AdvCmnAPI_CM2.py --headers D:\GitSync\AMCCore\AdvCmnAPI\Public --enums .\AcmP\AdvMotDrv.py
 """
 import argparse, ast, os, re
 

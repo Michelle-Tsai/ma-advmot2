@@ -341,8 +341,6 @@ class AdvCmnAPI:
     Acm_MasGetErrorTable = _bind("Acm_MasGetErrorTable", [c_void_p, c_uint16, POINTER(c_uint32), POINTER(c_uint32)])
     Acm_MasGetSlaveInfo = _bind("Acm_MasGetSlaveInfo", [c_void_p, c_uint16, c_uint16, POINTER(c_uint32)])
     Acm_MasLogComStatus = _bind("Acm_MasLogComStatus", [c_void_p, c_uint16])
-    Acm_MasTrigOut = _bind("Acm_MasTrigOut", [c_void_p, c_uint16])
-    Acm_MasGetRingStatus = _bind("Acm_MasGetRingStatus", [c_void_p, c_uint16, POINTER(c_uint16)])
 # Axis
     Acm_AxOpen = _bind("Acm_AxOpen", [c_void_p, c_uint16, POINTER(c_void_p)])
     Acm_AxOpenbyID = _bind("Acm_AxOpenbyID", [c_void_p, c_uint16, c_uint8, POINTER(c_void_p)])
@@ -505,6 +503,7 @@ class AdvCmnAPI:
     Acm_GpUnloadPath = _bind("Acm_GpUnloadPath", [c_void_p, POINTER(c_void_p)])
     Acm_GpMovePath = _bind("Acm_GpMovePath", [c_void_p, c_void_p])
     Acm_GpMoveAllPath = _bind("Acm_GpMoveAllPath", [POINTER(c_void_p), c_uint32])
+    Acm_GpAddPath = _bind("Acm_GpAddPath", [c_void_p, c_uint16, c_uint16, c_double, c_double, POINTER(c_double), POINTER(c_double), POINTER(c_uint32)])
     Acm_GpLookAheadPath = _bind("Acm_GpLookAheadPath", [c_void_p, c_uint16, c_char_p])
     Acm_GpResetPath = _bind("Acm_GpResetPath", [POINTER(c_void_p)])
     Acm_GpGetPathStatus = _bind("Acm_GpGetPathStatus", [c_void_p, POINTER(c_uint32), POINTER(c_uint32), POINTER(c_uint32), POINTER(c_uint32)])

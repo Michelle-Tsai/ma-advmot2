@@ -6,8 +6,9 @@ enum 參數 (ABS_MODE 等)：AdvMotDrv 的 enum 若為 int-based 可直接傳成
 
 from AcmP.AdvMotApi_CM2 import *
 from AcmP.AdvMotDrv import *
-from ctypes import _CArgObject, _CData, _Pointer
 from ctypes import *
+from ctypes import _CArgObject, _CData, _Pointer
+from ctypes import CDLL as CDLL, Array as Array, c_char as c_char, c_void_p as c_void_p
 from typing import Any, TypeAlias, TypeVar
 
 _T = TypeVar("_T", bound=_CData)
@@ -937,12 +938,6 @@ class AdvCmnAPI:
     def Acm_MasLogComStatus(DeviceHandle: _VoidPtrArg, RingNo: int, /) -> int:
         """U32 Acm_MasLogComStatus(HAND DeviceHandle, U16 RingNo)"""
     @staticmethod
-    def Acm_MasTrigOut(DeviceHandle: _VoidPtrArg, RingNo: int, /) -> int:
-        """U32 Acm_MasTrigOut(HAND DeviceHandle, U16 RingNo)"""
-    @staticmethod
-    def Acm_MasGetRingStatus(DeviceHandle: _VoidPtrArg, RingNo: int, pStatus: _PtrArg[c_uint16], /) -> int:
-        """U32 Acm_MasGetRingStatus(HAND DeviceHandle, U16 RingNo, PU16 pStatus)"""
-    @staticmethod
     def Acm_AxOpen(DeviceHandle: _VoidPtrArg, PhyAxis: int, AxisHandle: _PtrArg[c_void_p], /) -> int:
         """U32 Acm_AxOpen(HAND DeviceHandle, U16 PhyAxis, PHAND AxisHandle)"""
     @staticmethod
@@ -1425,6 +1420,9 @@ class AdvCmnAPI:
     @staticmethod
     def Acm_GpMoveAllPath(GroupHandle: _PtrArg[c_void_p], ArrayElements: int, /) -> int:
         """U32 Acm_GpMoveAllPath(PHAND GroupHandle, U32 ArrayElements)"""
+    @staticmethod
+    def Acm_GpAddPath(GroupHandle: _VoidPtrArg, MoveCmd: int, MoveMode: int, FH: float, FL: float, EndPoint_DataArray: _PtrArg[c_double], CenPoint_DataArray: _PtrArg[c_double], ArrayElements: _PtrArg[c_uint32], /) -> int:
+        """U32 Acm_GpAddPath(HAND GroupHandle, U16 MoveCmd, U16 MoveMode, F64 FH, F64 FL, PF64 EndPoint_DataArray, PF64 CenPoint_DataArray, PU32 ArrayElements)"""
     @staticmethod
     def Acm_GpLookAheadPath(GroupHandle: _VoidPtrArg, BufferSize: int, OutputFile: bytes | Array[c_char] | None, /) -> int:
         """U32 Acm_GpLookAheadPath(HAND GroupHandle, U16 BufferSize, PI8 OutputFile)"""

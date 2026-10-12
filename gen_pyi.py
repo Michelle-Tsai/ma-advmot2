@@ -6,6 +6,8 @@
 
 會實際 import 該檔以取得 ctypes 的 offset / sizeof，所以 .py 必須能正常 import。
 offset 與 sizeof 依執行此腳本的 Python 平台計算（請用 64-bit Python）。
+
+python .\gen_pyi.py .\AcmP\AdvMotApi_CM2.py
 """
 import sys, ctypes, ast, argparse, importlib.util, os
 from ctypes import *

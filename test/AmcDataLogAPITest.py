@@ -1,7 +1,7 @@
 import time
 import unittest
 import os
-import ctypes
+from ctypes import *
 from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI_CM2, AmcLogAPI
 from AcmP.AdvMotErr_CM2 import ErrorCode2
 from AcmP.AdvMotDrv import *

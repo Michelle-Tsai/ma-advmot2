@@ -1,4 +1,5 @@
-"""從 AdvCmnAPI_CM2.py（_bind 寫法）靜態產生 Pylance 用的 .pyi stub。
+"""
+從 AdvCmnAPI_CM2.py（_bind 寫法）靜態產生 Pylance 用的 .pyi stub。
 
 不會 import 目標檔，也不會載入 ADVMOT.dll / libadvmot.so。
 
@@ -12,7 +13,7 @@ AmcDataLog.h、AmcApiLogManager.h 抓參數名稱與 C 原型放進 docstring，
 AdvCmnAPI_CM2.h 的 typedef 找出 Acm2_* 的 enum 參數（例如 POSITION_TYPE）；參數數量
 和 argtypes 不一致時不採用名稱，並在 docstring 標註警告。
 
-python .\gen_api_pyi.py .\AcmP\AdvCmnAPI_CM2.py --headers D:\GitSync\AMCCore\AdvCmnAPI\Public --enums .\AcmP\AdvMotDrv.py
+python ./gen_api_pyi.py ./AcmP/AdvCmnAPI_CM2.py --headers D:/GitSync/AMCCore/AdvCmnAPI/Public --enums ./AcmP/AdvMotDrv.py
 """
 import argparse, ast, os, re
 

@@ -300,7 +300,7 @@ class AdvCmnAPI_CM2:
     def Acm2_GpMotionStop(GpID: int, StopMode: MOTION_STOP_MODE | int, NewDec: float, /) -> int:
         """U32 Acm2_GpMotionStop(U32 GpID, MOTION_STOP_MODE StopMode, F64 NewDec)"""
     @staticmethod
-    def Acm2_GpChangePos(GpID: int, Mode: ABS_MODE, DistanceArray: _PtrArg[c_double], ArrayElements: _PtrArg[c_uint32], /) -> int:
+    def Acm2_GpChangePos(GpID: int, Mode: ABS_MODE | int, DistanceArray: _PtrArg[c_double], ArrayElements: _PtrArg[c_uint32], /) -> int:
         """U32 Acm2_GpChangePos(U32 GpID, ABS_MODE Mode, PF64 DistanceArray, PU32 ArrayElements)"""
     @staticmethod
     def Acm2_GpChangeVel(GpID: int, NewVelocity: float, NewAcc: float, NewDec: float, /) -> int:

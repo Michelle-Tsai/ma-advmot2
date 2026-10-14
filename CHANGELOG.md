@@ -1,6 +1,10 @@
 # Change log
 All notable changes to this project will be documented in this file.
 
+## [0.1.14] - 2026-10-14
+### Fix
+- Sentence error
+
 ## [0.1.13] - 2026-10-12
 ### Add
 - Add pyi for pylance

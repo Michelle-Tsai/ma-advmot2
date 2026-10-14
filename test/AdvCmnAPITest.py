@@ -5,6 +5,7 @@ import os
 import numpy as np
 import xml.etree.ElementTree as xml
 import threading
+from ctypes import *
 from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI_CM2
 from AcmP.AdvMotApi_CM2 import *
 from AcmP.AdvMotDrv import *
@@ -85,7 +86,9 @@ class AdvCmnAPI_Test(unittest.TestCase):
         # excepted_dev_hex = '0x63003000'
         excepted_err = 0
         # excepted_dev = int(excepted_dev_hex, 16)
+        print(f'{self.test_GetAvailableDevs.__name__}')
         self.errCde = self.AdvMot.Acm2_GetAvailableDevs(self.devlist, self.maxEnt, byref(self.outEnt))
+        print(f'{ErrorCode2(self.errCde).name}')
         self.assertEqual(excepted_err, self.errCde, '{0} failed.'.format(self._testMethodName))
         for i in range(self.outEnt.value):
             print(f'Dev num:{self.devlist[i].dwDeviceNum:x}, name:{self.devlist[i].szDeviceName}')
@@ -3523,7 +3526,7 @@ if __name__ == '__main__':
     runner = unittest.TextTestRunner()
     # for i in range(5000):
         # get_available_devs = runner.run(JustGetAvailableDevices())
-    # get_available_devs = runner.run(JustGetAvailableDevices())
+    get_available_devs = runner.run(JustGetAvailableDevices())
     # get_device = runner.run(GetMDevice())
     # ax_ptp = runner.run(AxPTP_Check())
     # device_do = runner.run(DeviceDO())
@@ -3536,7 +3539,7 @@ if __name__ == '__main__':
     # dev_check_all_ax_ready = runner.run(DevCkAllAxReady())
     # ax_return_pause_pos = runner.run(AxReturnPausePos())
     # ax_reset_err = runner.run(AxResetErr())
-    ax_get_motion_io_status = runner.run(AxGetMotionIOStatus())
+    # ax_get_motion_io_status = runner.run(AxGetMotionIOStatus())
     # ax_get_m_ach_pos = runner.run(AxGetMachPos())
     # ax_pause = runner.run(AxPause())
     # ax_resume = runner.run(AxResume())

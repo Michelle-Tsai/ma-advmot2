@@ -118,7 +118,7 @@ class AdvCmnAPI_CM2:
     Acm2_GpResume = _bind("Acm2_GpResume", [c_uint32])
     Acm2_GpPause = _bind("Acm2_GpPause", [c_uint32])
     Acm2_GpMotionStop = _bind("Acm2_GpMotionStop", [c_uint32, c_uint, c_double])
-    Acm2_GpChangePos = _bind("Acm2_GpChangePos", [c_uint32, ABS_MODE, POINTER(c_double), POINTER(c_uint32)])
+    Acm2_GpChangePos = _bind("Acm2_GpChangePos", [c_uint32, c_uint, POINTER(c_double), POINTER(c_uint32)])
     Acm2_GpChangeVel = _bind("Acm2_GpChangeVel", [c_uint32, c_double, c_double, c_double])
     Acm2_GpChangeVelByRate = _bind("Acm2_GpChangeVelByRate", [c_uint32, c_uint32, c_double, c_double])
     Acm2_GpGetVel = _bind("Acm2_GpGetVel", [c_uint32, c_uint, POINTER(c_double)])

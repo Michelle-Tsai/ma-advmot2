@@ -3178,7 +3178,12 @@ class AdvCmnAPI_Test(unittest.TestCase):
                 tmp_ch = c_uint32(i)
                 self.errCde = self.AdvMot.Acm2_ChGetCntData(tmp_ch, byref(get_cnt_data))
                 print('[{0}]get_cnt_data:{1}'.format(i, get_cnt_data.value))
-        
+
+    def test_API(self):
+        err = c_uint32(ErrorCode2.SUCCESS.value)
+        err = self.AdvMot.Acm2_AxPTP(0, ABS_MODE.MOVE_REL, 1000)
+        print(f'{err}')
+
 def DownloadENISuite():
     tests = ['test_Initialize', 'test_LoadENI']
     suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
@@ -3519,14 +3524,20 @@ def JustGetAvailableDevices():
     suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
     return suite
 
+def testAPI():
+    tests = ['test_API']
+    suite = unittest.TestSuite(map(AdvCmnAPI_Test, tests))
+    return suite
+
 if __name__ == '__main__':
     # Test all case without order
     # unittest.main()
     # Test case with self-defined order
     runner = unittest.TextTestRunner()
+    test_api = runner.run(testAPI())
     # for i in range(5000):
         # get_available_devs = runner.run(JustGetAvailableDevices())
-    get_available_devs = runner.run(JustGetAvailableDevices())
+    # get_available_devs = runner.run(JustGetAvailableDevices())
     # get_device = runner.run(GetMDevice())
     # ax_ptp = runner.run(AxPTP_Check())
     # device_do = runner.run(DeviceDO())

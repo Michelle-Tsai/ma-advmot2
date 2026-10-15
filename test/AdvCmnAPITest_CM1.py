@@ -5,6 +5,7 @@ import os
 import numpy as np
 import xml.etree.ElementTree as xml
 import threading
+from ctypes import *
 from AcmP.AdvCmnAPI_CM2 import AdvCmnAPI
 from AcmP.AdvMotApi_CM2 import *
 from AcmP.AdvMotDrv import *
